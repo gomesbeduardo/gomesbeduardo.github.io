@@ -361,7 +361,7 @@ footer cite{font-style:normal;color:var(--muted)}
 .aviso-x{display:none;flex:none;width:44px;height:44px;place-items:center;border:0;border-radius:var(--r-pill);background:none;color:var(--muted);cursor:pointer}
 .aviso-x:hover{color:var(--fg)}
 .aviso.falha .aviso-x{display:inline-grid}
-@media (prefers-reduced-motion:reduce){.aviso-caixa,.aviso.on .aviso-caixa{transform:none;transition:opacity .2s!important}.aviso.tr .aviso-ok path{animation:none;stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.aviso-caixa{transform:none;transition:opacity .2s,visibility 0s .2s!important}.aviso.on .aviso-caixa{transform:none;transition:opacity .2s,visibility 0s!important}.aviso.tr .aviso-ok path{animation:none;stroke-dashoffset:0}}
 
 /* projeto */
 .proj main{padding-top:88px}
