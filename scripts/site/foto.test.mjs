@@ -23,7 +23,7 @@ const bloco = (src, inicio) => {
 };
 
 
-test('verso: rótulos da ficha em mono e c10 inalterada', () => {
+test('verso: rótulos da ficha em mono e c10 da spec 007', () => {
   assert.match(js, /Sou cofundador do YourMentor desde outubro de 2025, quando ele ainda se chamava Mentor\.Me\./);
   assert.match(js, /I have been a co-founder of YourMentor since October 2025, back when it was called Mentor\.Me\./);
   assert.match(css, /\.sp-ficha dt\{[^}]*var\(--f-mono\)/);

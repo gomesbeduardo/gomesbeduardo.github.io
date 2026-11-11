@@ -84,7 +84,7 @@ test('A3: YourMentor começa em out/2025 e cita Mentor.Me e a mudança de jun/20
 });
 
 test('A3b: na Trajetória o YourMentor vem logo depois do Ideathon (out/2025)', () => {
-  for (const [f, ide, ym] of [['site/index.html', 'Ideathon de SI da AMF</h3>', '<h3>YourMentor</h3>'], ['site/en/index.html', 'Ideathon</h3>', '<h3>YourMentor</h3>']]) {
+  for (const [f, ym] of [['site/index.html', '<h3>YourMentor</h3>'], ['site/en/index.html', '<h3>YourMentor</h3>']]) {
     const lis = ler(f).split('\n').filter((l) => l.includes('traj-card'));
     const i = lis.findIndex((l) => /<h3>[^<]*Ideathon/.test(l));
     assert.ok(i >= 0, f);
