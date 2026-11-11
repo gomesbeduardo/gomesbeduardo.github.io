@@ -86,5 +86,5 @@ A troca de língua é um link comum para a página equivalente na outra língua 
 ## Fora do escopo
 
 - Trocar o texto no lugar, sem navegar.
-- Redirecionamento pela língua do navegador e escolha de língua salva, decididos em 09/11 e não implementados no v1 (spec 000, P1).
+- Redirecionamento pela língua do navegador e escolha de língua salva, decididos em 09/11 e não implementados no v1 (fora por ora, decisão de 11/11/2026; spec 000).
 - Troca de língua na 404.
