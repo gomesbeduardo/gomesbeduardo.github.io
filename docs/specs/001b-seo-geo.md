@@ -1,7 +1,7 @@
 # Spec 001b: etapa 2, SEO e GEO
 
 Estado: rascunho, aguardando aprovação do responsável.
-Parte 3 de 4 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md` (esta), `001c-desempenho.md`. Pendências P1 a P9 no índice.
+Parte 3 de 4 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md` (esta), `001c-desempenho.md`. Decisões P1 a P9 e pendência P3b no índice.
 
 ## Objetivo da etapa
 
@@ -40,7 +40,7 @@ Por página e por língua, gerado por `src/components/Seo.astro`, com props `tit
 - `<link rel="alternate" hreflang="pt-BR" href=...>`, `hreflang="en"` e `hreflang="x-default"` (aponta para a PT), nas duas línguas, sempre os três.
 - `<html lang="pt-BR">` na PT e `lang="en"` na EN.
 - Open Graph: `og:type` (`profile` na home, `article` nos projetos), `og:title`, `og:description`, `og:url` (= canonical), `og:locale` (`pt_BR` / `en_US`), `og:locale:alternate`, `og:site_name` "Eduardo Bergoli Gomes", `og:image` com URL absoluta, `og:image:width` 1200, `og:image:height` 630, `og:image:alt`. Twitter: `twitter:card summary_large_image`, `twitter:title`, `twitter:description`, `twitter:image`.
-- Imagens OG: uma por página e língua, 1200×630 px, PNG, em `public/og/<pagina>-<lang>.png` (`home-pt.png`, `home-en.png`, `leadgate-pt.png` … 8 arquivos; a 404 usa a da home). Conteúdo: nome, uma linha (home: cargo e cidade; projeto: nome do projeto e a frase do card), na paleta P1 Ocre escura e nas fontes do site. Como se produzem é a P3 (recomendação: um template `scripts/site/og/modelo.html` capturado uma vez por script Playwright `scripts/site/og.mjs`, PNGs versionados).
+- Imagens OG: uma por página e língua, 1200×630 px, PNG, geradas no build em `dist/og/<pagina>-<lang>.png` e não versionadas (P3) (`home-pt.png`, `home-en.png`, `leadgate-pt.png` … 8 arquivos; a 404 usa a da home). Conteúdo: nome, uma linha (home: cargo e cidade; projeto: nome do projeto e a frase do card), na paleta P1 Ocre escura e nas fontes do site. A ferramenta que gera é a P3b, ainda aberta.
 - 404: `<meta name="robots" content="noindex">`; sem OG nem JSON-LD; mantém canonical.
 
 ### R3. Títulos e descrições
@@ -117,6 +117,5 @@ Um `<script type="application/ld+json">` por página, no `head`, gerado no build
 
 - Domínio próprio, Google Search Console, analytics de qualquer tipo.
 - Blog, feed RSS, páginas novas.
-- Geração de imagem OG no build (P3 decide; a recomendação é estática).
 - Metas de desempenho e fontes locais (001c).
 - Bloquear ou liberar agentes de IA por nome no `robots.txt` além de R1.

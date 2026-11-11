@@ -43,10 +43,10 @@ Pré-condição da etapa 1: a fila atual entrar na `staging` (spec 006, correç�
 - R1. Nada do que as specs 003 a 008 entregaram muda de comportamento: surpresas (`surpresas.js` e `.css`), virada da foto com ficha no verso (005), menu animado (#14), contato e rodapé com aviso de cópia (006), modal "Feito com o Claude Code" com a linha dos números do processo (008), PDFs em `/curriculo/`, tema (`tema.js`, `inicio.js`), transições (`transicoes.css`), correções de texto (007). O contrato é o conjunto dos `scripts/site/*.e2e.mjs` mais a paridade de capturas.
 - R2. A paridade (001a C1 e C4) vale no fim de cada etapa, com as únicas exceções declaradas em 001b R5 (texto que passa a vir de `curriculo.json`, listado no PR) e 001c R6 (máscara de imagem e fontes locais).
 - R3. Área sensível: dependências (R5 abaixo), `.github/workflows/*`, secrets. O worker propõe o diff no PR; a sessão principal aplica com o ok do responsável.
-- R4. Tailwind: tokens em `@theme` apontando para as variáveis atuais, sem Preflight na etapa 1 (P1), sem valor literal onde há token, conversão para utilitário permitida por componente desde que a paridade passe (001a R3).
-- R5. Dependências, lista fechada para aprovação (P9). Versões: a última estável no dia do scaffold, fixadas no `package-lock.json`; Node 24 (já nos workflows).
+- R4. Tailwind: tokens em `@theme` apontando para as variáveis atuais, sem Preflight nas etapas 1 e 2 e com Preflight na etapa 3 (P1, 001c R9), sem valor literal onde há token, conversão para utilitário permitida por componente desde que a paridade passe (001a R3).
+- R5. Dependências, lista fechada, aprovada em 11/11 (P9). Versões: a última estável no dia do scaffold, fixadas no `package-lock.json`; Node 24 (já nos workflows).
   - Etapa 1, produção: `astro`, `tailwindcss`, `@tailwindcss/vite`. Desenvolvimento: `playwright` (e2e e paridade; o Chromium dele entra no CI por `npx playwright install --with-deps chromium`), `pixelmatch`, `pngjs`.
-  - Etapa 2: `@astrojs/sitemap`.
+  - Etapa 2: `@astrojs/sitemap` e a ferramenta de imagem OG (P3b, pendente).
   - Etapa 3, produção: `gsap`, `lenis` (substituem `public/vendor/`), `sharp` (otimizador de imagem do Astro), os pacotes de fonte da P8. Desenvolvimento: `lighthouse`.
   - Fora: React, Preact, `shadcn`, `@astrojs/tailwind` (substituído pelo plugin Vite no Tailwind v4), qualquer action de terceiro nova nos workflows.
 - R6. Scripts do `package.json`: `dev` (`astro dev`), `build` (`astro build`), `test` (`astro build && node --test 'scripts/**/*.test.mjs'`), `e2e` (001a R8), `desempenho` (001c R5). Os scripts de `scripts/curriculo/` e `scripts/github/` não mudam.
@@ -63,24 +63,28 @@ Pré-condição da etapa 1: a fila atual entrar na `staging` (spec 006, correç�
 
 ## Fora do escopo da 001
 
-- Implementar as specs 002 e 008 (coleta, gerador, workflow com `schedule`).
+- Implementar as specs 002 e 008 (calendário sem JS, gerador da 008). O `schedule` do `publicar.yml` e o coletor que já existe em `scripts/github/` passam a rodar na etapa 1 (P7).
 - Fundo com nuances, grão e brilho (D8), redesenho de qualquer seção, pirâmide de projetos ou outra mudança visual do feedback que ainda não esteja em `site/`.
 - Domínio próprio, analytics, formulário de contato, blog, RSS.
 - React, `shadcn`, service worker, CDN.
 
 ## Perguntas abertas
 
-Cada uma com a recomendação primeiro e um exemplo. Resposta que só escolhe uma opção já escrita a sessão principal aplica no texto.
+Respostas do responsável em 11/11/2026, já aplicadas nas partes:
 
-- P1. Preflight do Tailwind (reset de margens, `line-height`, `box-sizing`). Recomendação: fora na etapa 1 e nas seguintes, porque quebra a paridade e o `style.css` já tem o reset do site. Exemplo: com Preflight, `h2` perde a margem padrão e a seção Sobre sobe 19 px, e o teste de paridade acusa milhares de pixels. Alternativa: ligar na etapa 3 e aceitar reescrever as regras afetadas até a paridade voltar a 0.
-- P2. Seção "Números do GitHub" na base de paridade: `site/index.html` tem números fixos no HTML; o Astro lê `src/data/github.json`. Recomendação: antes de capturar a base, um commit pequeno em `site/` com os números e o calendário de `github.json` (hoje `amostra: false`), para a seção entrar na paridade. Exemplo: se `site/` mostra 1234 contribuições e o JSON tem 1301, a captura falha na home nas quatro combinações. Alternativa: mascarar a seção na paridade da etapa 1 (perde a cobertura da seção). Não verificado se os números já coincidem.
-- P3. Imagens Open Graph (8 PNG de 1200×630, 001b R2). Recomendação: estáticas em `public/og/`, geradas uma vez por `scripts/site/og.mjs` (Playwright captura um template HTML com a paleta e as fontes do site) e versionadas; regerar à mão quando o texto mudar. Exemplo: `home-pt.png` com "Eduardo Bergoli Gomes" e "Desenvolvedor full stack · Santa Maria, RS" em fundo `#15120e`. Alternativa: gerar no build com `satori` ou `astro-og-canvas` (mais uma dependência e fontes carregadas no build).
-- P4. Fontes das 11 marcas da faixa da Stack (001c R3). Recomendação: continuam no Google Fonts com `text=` (cada arquivo tem poucos KB) e `media="print"` para não bloquear o render; só as três fontes do site viram locais. Exemplo: Outfit com `text=Astro` tem cerca de 1 KB; gerar e versionar 11 subsets locais custa mais manutenção do que economiza. Alternativa: tudo local, com subset gerado por `pyftsubset`/`glyphhanger` num script.
-- P5. Variação do runner no teste de desempenho (001c R5). Recomendação: mediana de 5 execuções do Lighthouse e de 5 interações; falha acima da meta sem nova tentativa; se em duas semanas o job falhar duas vezes com o `dist/` sem mudança, a meta de CI ganha margem de 10% (INP 220 ms, quadro 22 ms) e a meta de produto fica a mesma, medida no Chrome do responsável. Exemplo: INP do tema a 190 ms numa execução e 230 ms na seguinte, no mesmo commit. Alternativa: rodar o desempenho só em `workflow_dispatch`, fora do PR.
-- P6. `backdrop-filter` e `scrub` na Trajetória (001c R2, R6). Recomendação: medir primeiro; se as metas fecharem com eles, nada muda. Se não fecharem, o responsável escolhe entre reduzir o vidro (muda o visual, reabre a paridade com nova base aprovada) e manter o visual com a meta de quadro em 20 ms só fora da Trajetória. Exemplo: p95 de quadro a 28 ms durante o `scrub` da Trajetória e 14 ms no resto da página.
-- P7. `schedule` semanal no `publicar.yml` na etapa 1 (001a R10). Recomendação: ligar só `push` e `workflow_dispatch`; o `schedule` entra com a implementação da 002, quando o secret `GH_TOKEN_LEITURA` existir, para não mandar e-mail de falha toda segunda (o run agendado usa `--estrito`). Alternativa: ligar já e criar o secret antes do merge.
-- P8. Origem dos arquivos de fonte locais (001c R3). Recomendação: `@fontsource-variable/funnel-display`, `@fontsource-variable/funnel-sans` e `@fontsource/reddit-mono` (ou os equivalentes que existirem no dia; a disponibilidade exata não foi verificada), importando só o subset `latin`, com o `preload` escrito à mão no layout. Alternativa: a API de fontes do Astro (`fonts` em `astro.config`), que baixa e serve as fontes no build e gera o `preload`; recomendação contra enquanto estiver atrás de flag experimental.
-- P9. Aprovação da lista de dependências (R5) e da versão do Node (24). Recomendação: aprovar como está, sem pacote de UI. Exemplo: se o responsável quiser `shadcn`, entra React e a lista muda; sem isso, nenhum framework de ilha.
+- P1. Preflight do Tailwind: fora nas etapas 1 e 2; entra na etapa 3, com as regras afetadas reescritas até a paridade voltar a 0 pixels (001c R9).
+- P2. Números do GitHub na base de paridade: antes de capturar a base, um commit pequeno em `site/` alinha os números e o `#cal-dados` com `src/data/github.json`, e a base e o build usam o mesmo JSON (001a R5). Em 11/11 os números já coincidiam (2897 contribuições, 12 repositórios); o calendário não foi conferido.
+- P3. Imagens Open Graph: geradas no build, não versionadas (001b R2). A ferramenta segue aberta (abaixo).
+- P4. Fontes das 11 marcas da Stack: continuam no Google Fonts com `text=` e `media="print"`; só as três fontes do site viram locais (001c R3).
+- P5. Variação do runner: mediana de 5 execuções do Lighthouse e de 5 interações, falha acima da meta sem nova tentativa; se o job falhar duas vezes em duas semanas com o `dist/` sem mudança, a meta de CI ganha 10% (INP 220 ms, quadro 22 ms) e a meta de produto fica a mesma (001c R5).
+- P6. `backdrop-filter` e `scrub` na Trajetória: medir primeiro; se as metas fecharem, nada muda; se não, o responsável escolhe, com nova base de paridade aprovada (001c R2, R6).
+- P7. `schedule` semanal no `publicar.yml`: ligado já na etapa 1. O responsável cria o secret `GH_TOKEN_LEITURA` antes do merge da etapa 1; o run agendado roda com `--estrito` e faz o commit semanal da 002 R8 (001a R10).
+- P8. Fontes locais: pacotes `@fontsource-variable/funnel-display`, `@fontsource-variable/funnel-sans` e `@fontsource/reddit-mono` (ou os equivalentes que existirem no dia; o worker confere antes de instalar), só o subset `latin`, com `preload` escrito à mão (001c R3).
+- P9. Dependências de R5 e Node 24: aprovadas como estão, sem React nem `shadcn`. A ferramenta de imagem OG (P3) entra na lista quando for escolhida; qualquer pacote novo volta ao responsável.
+
+Ainda aberta:
+
+- P3b. Ferramenta que gera as 8 imagens Open Graph no build (001b R2). Pesquisa em andamento; as opções são o Chrome do runner (como os PDFs), Playwright, `satori` com `@resvg/resvg-js`, `astro-og-canvas` e `sharp` com SVG. Exemplo: `home-pt.png` com "Eduardo Bergoli Gomes" e "Desenvolvedor full stack · Santa Maria, RS" em fundo `#15120e`. Alternativa: gerar no build com `satori` ou `astro-og-canvas` (mais uma dependência e fontes carregadas no build).
 
 ## Suposições de baixo impacto
 

@@ -1,7 +1,7 @@
 # Spec 001a: etapa 1, Astro e Tailwind com paridade do site atual
 
 Estado: rascunho, aguardando aprovação do responsável.
-Parte 2 de 4 da spec 001. Ordem: `001-astro.md` (índice, decisões, regras transversais), `001a-paridade.md` (esta), `001b-seo-geo.md`, `001c-desempenho.md`. As pendências P1 a P9 estão numeradas no índice.
+Parte 2 de 4 da spec 001. Ordem: `001-astro.md` (índice, decisões, regras transversais), `001a-paridade.md` (esta), `001b-seo-geo.md`, `001c-desempenho.md`. As decisões P1 a P9 e a pendência P3b estão no índice.
 
 ## Objetivo da etapa
 
@@ -49,7 +49,7 @@ Nenhum redirecionamento é criado. Link interno nas páginas continua apontando 
 - Os valores vêm da paleta P1 Ocre, já em `site/style.css` e em `docs/design/paletas-pesquisa.md`: claro `#e9e1d2`, `#e0d6c4`, `#f1ebdf`, `#241d14`, `#5c503d`, `#c9bda6`, `#a89c86`, acento `#8a4f00` sobre `#fff8ec`; escuro `#15120e`, `#1b1712`, `#221d17`, `#f1e9dc`, `#b0a592`, `#3a3228`, `#5d5548`, acento `#e4a843` sobre `#17110a`. Nenhum valor novo.
 - Os nomes antigos (`--bg`, `--s4`, `--r-md`, `--t-h2`, `--f-mono`, `--ease` etc.) continuam definidos em `:root`, porque o CSS herdado e os JS de `public/` os usam. As cores que mudam com o tema ficam nas variáveis antigas, com os dois blocos escuros de F5 mantidos; o `@theme` só aponta para elas. Assim `bg-bg`, `text-fg` e os demais utilitários trocam de tema sem CSS extra.
 - A variante `dark:` do Tailwind é redefinida com `@custom-variant dark` para casar exatamente os dois seletores de F5. A variante não é obrigatória na etapa 1, porque as cores já trocam pelas variáveis.
-- O Preflight (reset do Tailwind) fica fora na etapa 1: ele muda margens, `line-height`, `box-sizing` de elementos e quebraria a paridade; o reset é o que já existe em `style.css`. Pendente (P1) se entra depois.
+- O Preflight (reset do Tailwind) fica fora na etapa 1: ele muda margens, `line-height`, `box-sizing` de elementos e quebraria a paridade; o reset é o que já existe em `style.css`. Ele entra na etapa 3 (P1, 001c R9).
 - Conversão de regras para utilitários: permitida por componente, desde que o resultado passe em C1 a C4; não é exigida. Markup novo usa utilitário e token, nunca valor literal quando há token. Nenhum `<select>`, `<button>` ou `<input>` nativo ganha estilo à mão fora do que `style.css` já faz.
 
 ### R4. JavaScript sem mudança de comportamento
@@ -62,7 +62,7 @@ Nenhum redirecionamento é criado. Link interno nas páginas continua apontando 
 ### R5. Dados lidos no build
 
 - `src/data/github.json` (contrato da spec 002, `versao: 1`): o componente `NumerosGithub` importa o JSON no build. Se `versao !== 1`, o build falha com a mensagem `github.json: versão X desconhecida; esperada 1`. Se `amostra === true`, a seção mostra, logo abaixo do título, o aviso em mono no estilo `.sec-label`: PT "Dados de exemplo: a coleta real entra com a spec 002." e EN "Sample data: real numbers arrive with spec 002." (texto inferido, baixo impacto). Com `amostra === false`, sem aviso. A data da coleta aparece como `dd/mm/aaaa` no fuso `America/Sao_Paulo`, como a 002 pede. A seção fica onde está hoje, entre Projetos e Contato (h2 "Números do GitHub"). O que mais a 002 delega (calendário sem JS) fica para a implementação da 002, depois desta etapa.
-- Os números de `site/index.html` hoje são fixos no HTML. Se diferirem de `src/data/github.json` no momento da base, a paridade da seção falha. Pendente (P2).
+- Os números de `site/index.html` hoje são fixos no HTML. Antes de capturar a base, um commit pequeno em `site/` alinha os números e o `#cal-dados` com `src/data/github.json`, e a base e o build usam o mesmo JSON, sem nova coleta entre os dois (P2). Em 11/11 os números já coincidiam (2897 e 12); o calendário não foi conferido.
 - `src/data/curriculo.json`: na etapa 1 não alimenta o HTML (o HTML de hoje é escrito à mão); só o gerador de PDF o lê (R6). Passa a alimentar o texto na etapa 2 (001b R5).
 - `public/dados/processo.json` (spec 008): gerado no CI antes do `astro build`, pelo gerador que a 008 define, com `--saida public/dados/processo.json` (ou o caminho que a 008 fixar); o Astro só copia para `dist/dados/processo.json`. A página continua buscando `/dados/processo.json` em tempo de execução, como a 008 manda; nada é lido no build. Em `dev` e em build local sem o arquivo, a página fica como a 008 descreve para 404 (parágrafo `hidden`).
 
@@ -105,7 +105,7 @@ Com JS desligado, o HTML gerado mostra o mesmo texto que `site/` mostra sem JS h
 
 ### R10. Troca de deploy e reversão
 
-- No PR da etapa 1, `pages.yml` passa a disparar só por `workflow_dispatch` (deixa de publicar `site/` no push), e `publicar.yml` volta a disparar em `push` na `main` e `workflow_dispatch`. O `schedule` semanal fica desligado até a spec 002 entrar (P7). O job `coletar` roda sem `--estrito` no push, então sem o secret ele avisa e mantém o `github.json` existente (002 R6), e o build segue.
+- No PR da etapa 1, `pages.yml` passa a disparar só por `workflow_dispatch` (deixa de publicar `site/` no push), e `publicar.yml` volta a disparar em `push` na `main` e `workflow_dispatch`. O `schedule` semanal (segunda, 06:00 UTC) também liga nesta etapa (P7): o responsável cria o secret `GH_TOKEN_LEITURA` antes do merge, o run agendado roda o coletor com `--estrito` e faz o commit semanal de `src/data/github.json` na `main` (002 R8). No push, o job `coletar` roda sem `--estrito`: se a coleta falhar, ele avisa e mantém o `github.json` existente (002 R6), e o build segue.
 - `ci.yml` ganha, depois dos testes e dos PDFs: `npm ci`, `npm run build`, instalação do Chromium e `npm run e2e`; sobe `scripts/site/paridade/saida/` como artefato quando existir.
 - Reversão: reverter o commit de merge na `main` devolve `pages.yml` ao push e republica `site/`, que não mudou. Nenhum outro passo.
 - Quem edita os workflows é a sessão principal com o ok do responsável; o worker entrega o diff proposto no PR sem aplicá-lo.
@@ -121,7 +121,7 @@ Com JS desligado, o HTML gerado mostra o mesmo texto que `site/` mostra sem JS h
 - C7. Dado `public/dados/processo.json` presente antes do build, então `dist/dados/processo.json` é idêntico; ausente, o build passa e `dist/dados/` não existe.
 - C8. Dado `npm run build` depois de `node scripts/curriculo/gerar.mjs`, então `dist/curriculo/curriculo-eduardo-gomes-pt.pdf` e `-en.pdf` existem e os links "Baixar currículo" do HTML apontam para eles.
 - C9. Dado `src/styles/global.css`, então o `@theme` tem todos os tokens de R3 com os valores de `site/style.css`, sem valor de cor, espaço ou raio fora dessa lista; `:root` mantém os nomes antigos; não há `@import "tailwindcss"` nem `@import "tailwindcss/preflight"` (teste `scripts/site/tema-tailwind.test.mjs`, regex no CSS fonte).
-- C10. Dado o PR da etapa 1, então `pages.yml` tem só `workflow_dispatch` em `on`, `publicar.yml` tem `push` em `main` e `workflow_dispatch` e nenhum `schedule`, `ci.yml` roda `npm run build` e `npm run e2e`, e todo `uses:` segue fixado por SHA de 40 hexadecimais (leitura manual do YAML, registrada no PR).
+- C10. Dado o PR da etapa 1, então `pages.yml` tem só `workflow_dispatch` em `on`, `publicar.yml` tem `push` em `main`, `workflow_dispatch` e o `schedule` da 002, o secret `GH_TOKEN_LEITURA` existe no repositório, `ci.yml` roda `npm run build` e `npm run e2e`, e todo `uses:` segue fixado por SHA de 40 hexadecimais (leitura manual do YAML, registrada no PR).
 - C11. Dado o merge na `main` e o run do `publicar.yml`, então `https://gomesbeduardo.github.io/`, `/en/`, `/projeto-leadgate.html`, `/en/projeto-lms.html`, `/curriculo/curriculo-eduardo-gomes-pt.pdf` e `/dados/processo.json` respondem 200 e uma URL inexistente responde 404 com a página 404 do site (conferência manual do responsável, registrada no PR).
 
 ## Testes de aceite
@@ -144,6 +144,6 @@ Com JS desligado, o HTML gerado mostra o mesmo texto que `site/` mostra sem JS h
 
 - Qualquer melhoria de SEO, GEO ou desempenho (001b e 001c).
 - Empacotar ou adiar JS, ilhas, fontes locais, imagens otimizadas (001c).
-- Preflight do Tailwind e conversão total do CSS para utilitários.
+- Preflight do Tailwind (etapa 3) e conversão total do CSS para utilitários.
 - Implementar a spec 002 (coleta, calendário sem JS) e a 008 (gerador); a etapa 1 só lê os JSON.
 - Remover `site/` e `pages.yml` (fim da etapa 3).

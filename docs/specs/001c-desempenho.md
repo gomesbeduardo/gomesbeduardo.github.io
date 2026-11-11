@@ -1,7 +1,7 @@
 # Spec 001c: etapa 3, tempo de resposta e teste de desempenho no CI
 
 Estado: rascunho, aguardando aprovação do responsável.
-Parte 4 de 4 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md`, `001c-desempenho.md` (esta). Pendências P1 a P9 no índice.
+Parte 4 de 4 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md`, `001c-desempenho.md` (esta). Decisões P1 a P9 e pendência P3b no índice.
 
 ## Objetivo da etapa
 
@@ -44,8 +44,8 @@ Tudo com `Emulation.setCPUThrottlingRate(4)` e a rede do perfil "mobile" do Ligh
 
 ### R3. Fontes locais com subset e preload
 
-- Funnel Display (700 e 800), Funnel Sans (400 a 600) e Reddit Mono (500) passam a ser servidas do próprio site, em WOFF2, subset `latin` (o que o site usa: PT e EN com acentos), com `font-display: swap` e `<link rel="preload" as="font" type="font/woff2" crossorigin>` só dos arquivos usados acima da dobra (display 800 e sans 400). Os `preconnect` ao Google Fonts saem. Como obter os arquivos é a P8 (recomendação: pacotes `@fontsource-variable/*` ou `@fontsource/*`, que já trazem os subsets por `unicode-range`).
-- As 11 famílias das marcas da Stack continuam no Google Fonts com `text=` (cada uma com poucos KB), carregadas pelo `<link>` de hoje, mas com `media="print" onload="this.media='all'"` para não bloquear o render. Trocar por local é a P4.
+- Funnel Display (700 e 800), Funnel Sans (400 a 600) e Reddit Mono (500) passam a ser servidas do próprio site, em WOFF2, subset `latin` (o que o site usa: PT e EN com acentos), com `font-display: swap` e `<link rel="preload" as="font" type="font/woff2" crossorigin>` só dos arquivos usados acima da dobra (display 800 e sans 400). Os `preconnect` ao Google Fonts saem. Os arquivos vêm dos pacotes `@fontsource-variable/*` e `@fontsource/*`, que já trazem os subsets por `unicode-range` (P8).
+- As 11 famílias das marcas da Stack continuam no Google Fonts com `text=` (cada uma com poucos KB), carregadas pelo `<link>` de hoje, mas com `media="print" onload="this.media='all'"` para não bloquear o render. Ficam no Google Fonts por decisão (P4).
 - Paridade: com os mesmos arquivos de fonte (mesma família, mesmos pesos), os glifos são iguais; a captura de 001a R7 espera `document.fonts.ready` nas duas origens.
 
 ### R4. Imagens pelo Astro
@@ -63,7 +63,7 @@ Script `scripts/site/desempenho.e2e.mjs` (Playwright, Chromium do `playwright`, 
 4. Quadro na rolagem: na home, injeta um laço de `requestAnimationFrame` que grava o intervalo entre quadros, rola do topo ao fim com `page.mouse.wheel(0, 120)` a cada 16 ms até `scrollY` parar de crescer, calcula o p95 dos intervalos. Falha se p95 > 20 ms. 3 execuções; vale a mediana dos p95.
 5. Saída: JSON em `scripts/site/desempenho/saida/relatorio.json` (pasta no `.gitignore`) e tabela no stdout; o CI sobe o JSON como artefato.
 
-Variação do runner: o `ubuntu-latest` com 2 vCPU e CPU 4x pode oscilar. A regra é a mediana de execuções repetidas, não "repete até passar". Se as metas falharem só pela variação do runner, é a P5.
+Variação do runner: o `ubuntu-latest` com 2 vCPU e CPU 4x pode oscilar. A regra é a mediana de execuções repetidas, não "repete até passar". Se o job falhar duas vezes em duas semanas com o `dist/` sem mudança, a meta de CI ganha 10% (INP 220 ms, quadro 22 ms); a meta de produto fica a mesma, medida no Chrome do responsável (P5).
 
 No Chrome do responsável (F4): painel Performance, CPU 4x, mesmas interações; o PR registra INP e o maior quadro de rolagem vistos; a meta é a mesma. Divergência grande entre o CI e o Chrome dele (uma passa, a outra falha) é anotada no PR e não bloqueia o merge sozinha.
 
@@ -74,6 +74,10 @@ No Chrome do responsável (F4): painel Performance, CPU 4x, mesmas interações;
 ### R7. Fim de `site/` e de `pages.yml`
 
 No PR desta etapa, depois de C1 a C7 passarem: `site/` sai do repositório, `pages.yml` sai, `scripts/site/paridade.e2e.mjs` sai (não há mais referência), e `ci.yml` e `publicar.yml` perdem os passos que citam `site/`. Os `.e2e.mjs` seguem contra `dist/`. Quem edita os workflows é a sessão principal com ok do responsável. A reversão depois disso é reverter o merge desta etapa (o site da etapa 2 volta), não mais voltar ao `site/` estático.
+
+### R9. Preflight do Tailwind
+
+O Preflight entra nesta etapa (P1): `global.css` passa a importar o Tailwind completo, com o reset dele. As regras de `style.css` que mudam por causa do reset (margens de título, `line-height`, `box-sizing`, listas, botões) são reescritas até a paridade de 001a C1 voltar a 0 pixels fora das exceções de R6. O reset antigo de `style.css` sai no que o Preflight cobre. Se uma diferença não fechar, é decisão do responsável com nova base aprovada, como em R6.
 
 ### R8. CI
 
@@ -90,6 +94,7 @@ No PR desta etapa, depois de C1 a C7 passarem: `site/` sai do repositório, `pag
 - C7. Dado `npm run e2e` com a máscara de R4, então a paridade de 001a C1 passa (0 px fora da máscara, dimensões iguais) e todos os e2e passam.
 - C8. Dado o PR da etapa 3 mesclado, então `site/`, `pages.yml` e `paridade.e2e.mjs` não existem mais, `ci.yml` tem o job `desempenho`, e `https://gomesbeduardo.github.io/` responde 200 com o build novo (manual no PR).
 - C9. Dado o Chrome do responsável com CPU 4x, então as interações da tabela ficam abaixo de 200 ms e o pior quadro de rolagem registrado fica abaixo de 20 ms (manual, registro no PR).
+- C10. Dado `src/styles/global.css` da etapa 3, então ele importa o Preflight do Tailwind, e a paridade de C7 passa com ele ligado (teste `scripts/site/tema-tailwind.test.mjs` atualizado e `npm run e2e`).
 
 ## Testes de aceite
 
@@ -102,6 +107,7 @@ No PR desta etapa, depois de C1 a C7 passarem: `site/` sai do repositório, `pag
 | T5 | C7 | `site/` e `dist/` | `npm run e2e` | paridade 0 px com máscara; e2e verdes | e2e |
 | T6 | C1 | `dist/` no CI | job `desempenho` do `ci.yml` | verde, artefato `relatorio.json` | CI, no PR |
 | T7 | C8, C9 | PR e site publicado | leitura do repositório; `curl`; painel Performance | arquivos ausentes; 200; números registrados | manual, no PR |
+| T8 | C10 | `global.css` e `dist/` | `node --test scripts/site/tema-tailwind.test.mjs` e `npm run e2e` | Preflight importado; paridade 0 px | unidade e e2e |
 
 ## Fora do escopo da etapa 3
 
