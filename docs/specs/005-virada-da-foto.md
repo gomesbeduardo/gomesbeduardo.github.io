@@ -1,6 +1,6 @@
 # Spec 005: virada da foto do topo
 
-Estado: aprovada pelo responsável em 11/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026; comportamento no celular alterado e reaprovado no mesmo dia (D3, C6 e A5).
 
 ## Pedido literal
 
@@ -26,7 +26,7 @@ Cinco cliques seguidos na foto do topo viram o card e mostram a curiosidade c10 
 
 - D1. A foto vira como uma carta de duas faces, no mesmo tamanho do início ao fim, com o bloco ocre atrás o tempo todo.
 - D2. O verso traz uma ficha com fatos que já estão no site.
-- D3. No celular, o verso cresce na largura da coluna e volta aos 160 px ao desvirar.
+- D3. No celular, o card vira no mesmo tamanho da foto (160×200 px) e nada abaixo dele se mexe. O verso mostra a frase da c10, a contagem e o botão; a ficha aparece só no computador. Substitui a decisão anterior (o verso crescia até 360 px), que o responsável achou grande demais ao ver no celular.
 
 ## Comportamento
 
@@ -40,7 +40,7 @@ Cinco cliques seguidos na foto do topo viram o card e mostram a curiosidade c10 
 
 ### Celular (até 860 px)
 
-- C6. Virado, o card ocupa a largura da coluna até 360 px e a altura que o texto pedir. A troca de tamanho acontece no meio do giro, quando o card está de lado. O conteúdo abaixo pode descer; ao desvirar, o card volta aos 160 px.
+- C6. O card gira no tamanho da foto (160×200 px), como no computador, sem troca de tamanho. O verso mostra a frase da c10, a contagem e o botão "virar de volta", sem o rótulo e sem a ficha, e o texto cabe sem corte nem rolagem de 320 px a 860 px. O botão mantém o alvo de toque de 44 px.
 - C7. Nada passa da largura da tela em 390 px, virado ou não.
 
 ### Movimento reduzido
@@ -74,7 +74,7 @@ Os rótulos da ficha ("No YourMentor", "Antes", "Base"; EN "At YourMentor", "Bef
 - A2. Dado o card virado em 1280 px, então o bloco ocre está visível na mesma posição de antes do giro, e o verso mostra o rótulo, o destaque, os três campos da ficha, a contagem e o botão (print nos temas claro e escuro).
 - A3. Dado o card virado, quando se aperta Esc, então o card desvira e o foco volta ao botão da foto; a face de costas não recebe foco pelo Tab em nenhum dos dois estados (Playwright).
 - A4. Dado `prefers-reduced-motion: reduce`, quando se vira o card, então nenhum `transform` de rotação é aplicado e a troca dura até 150 ms (Playwright).
-- A5. Dado o site em 390 px, quando se vira o card, então ele tem no máximo 360 px de largura, nada passa da largura da tela, e ao desvirar volta a 160 px (Playwright e print).
+- A5. Dado o site em 320, 360, 390 e 414 px, quando se vira o card, então a caixa da `.photo` e o topo do `h1` medem o mesmo antes, durante e depois (tolerância de 1 px), o verso não tem rolagem nem texto cortado (`scrollHeight` igual a `clientHeight`), a ficha não aparece e nada passa da largura da tela (Playwright e print).
 - A6. Dado `site/surpresas.js`, então os textos da ficha existem em PT e EN, iguais à tabela acima, e o verso não cita CS50 nem Coderace (teste em `scripts/site/conteudo.test.mjs`).
 - A7. Dado o card virado com o mouse sobre ele, quando o mouse se move, então o card não inclina (Playwright).
 - A8. Os cartões da Trajetória e o `.sp-mais` continuam virando como hoje (Playwright: virar um cartão da Trajetória e conferir o verso).
