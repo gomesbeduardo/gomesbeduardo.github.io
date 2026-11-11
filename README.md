@@ -14,7 +14,7 @@ Sou desenvolvedor full stack, com foco em IA aplicada e automação. Faço está
 No site você encontra:
 
 - os projetos [leadgate](https://github.com/gomesbeduardo/leadgate) (assistente de IA que qualifica leads, com 570 testes) e [InfoHub InovAMF](https://github.com/gomesbeduardo/infohub-inovamf), além do LMS de treinamento técnico da CentralEng, em validação com os colaboradores;
-- a trajetória, de um `hello, world` em C no CS50 em 2018 ao ToPark, startup da primeira turma da incubadora InovAMF, ao 1º lugar no Ideathon de SI da AMF em 2025, ao 2º lugar em 2026 e ao título do Coderace 2026;
+- a trajetória, de um `hello, world` em C no CS50 em 2018 ao ToPark, startup da primeira turma da incubadora InovAMF, ao 1º lugar no Ideathon de SI da AMF em 2025, ao 2º lugar em 2026 e ao título do CodeRace 2026;
 - os números do meu GitHub dos últimos 12 meses, com o calendário de contribuições;
 - o currículo em PDF, nas duas línguas.
 
