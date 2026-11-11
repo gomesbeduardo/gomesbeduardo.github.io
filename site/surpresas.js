@@ -287,7 +287,7 @@
     limparFoto(host);
     host._origem = origem;
     cur = { el: host, origem: origem, fora: false, fechar: function (dev) { desvirarFoto(host, dev); } };
-    if (window.gsap) { window.gsap.killTweensOf(btn); window.gsap.set(btn, { rotationX: 0, rotationY: 0 }); }
+    if (window.gsap) { window.gsap.killTweensOf(host); window.gsap.set(host, { rotationX: 0, rotationY: 0 }); }
     var v = el('div', 'sp-verso');
     v.setAttribute('role', 'group'); v.setAttribute('aria-label', T.curio); v.setAttribute('aria-live', 'polite');
     v.appendChild(el('p', 'sec-label', T.curio));

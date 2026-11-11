@@ -274,14 +274,16 @@
 
       if (fine && S.tilt.on) {
         // Foto do topo: o conjunto (foto e bloco de destaque) inclina até 2°, como os cards de projeto.
+        // A inclinação mora na .photo, fora do contexto 3D do .photo-card: dentro dele a metade que recua cai atrás do plano
+        // do card e o clique do mouse não chega ao botão.
         $$('.photo-btn').forEach(function (btn) {
-          var cartaPhoto = btn.closest('.photo');
+          var cartaPhoto = btn.closest('.photo'); if (!cartaPhoto) return;
           btn.addEventListener('mousemove', function (e) {
-            if (cartaPhoto && (cartaPhoto.classList.contains('virado') || cartaPhoto.classList.contains('girando'))) return; // virado ou girando: sem inclinação
-            var r = btn.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
-            gsap.to(btn, { rotationY: px * 4, rotationX: -py * 4, transformPerspective: 1200, duration: 0.4, ease: 'expo.out', overwrite: 'auto' });
+            if (cartaPhoto.classList.contains('virado') || cartaPhoto.classList.contains('girando')) return; // virado ou girando: sem inclinação
+            var r = cartaPhoto.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+            gsap.to(cartaPhoto, { rotationY: px * 4, rotationX: -py * 4, transformPerspective: 1200, duration: 0.4, ease: 'expo.out', overwrite: 'auto' });
           });
-          btn.addEventListener('mouseleave', function () { gsap.to(btn, { rotationX: 0, rotationY: 0, duration: 0.5, ease: 'expo.out', overwrite: 'auto' }); });
+          btn.addEventListener('mouseleave', function () { gsap.to(cartaPhoto, { rotationX: 0, rotationY: 0, duration: 0.5, ease: 'expo.out', overwrite: 'auto' }); });
         });
       }
 
