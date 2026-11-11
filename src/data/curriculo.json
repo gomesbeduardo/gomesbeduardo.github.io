@@ -2,29 +2,32 @@
   "provisorio": true,
   "comum": {
     "nome": "Eduardo Bergoli Gomes",
-    "local": "Brasil",
+    "local": "Santa Maria, RS",
     "email": "eduardobgomes100@gmail.com",
     "linkedin": "https://www.linkedin.com/in/eduardo-gomes-pb/",
     "github": "https://github.com/gomesbeduardo",
-    "site": "https://gomesbeduardo.github.io"
+    "site": "https://gomesbeduardo.github.io",
+    "localEn": "Santa Maria, Brazil"
   },
   "pt": {
     "idioma": "pt-BR",
     "arquivo": "curriculo-eduardo-gomes-pt.pdf",
-    "titulo": "Desenvolvedor Full Stack",
+    "titulo": "Desenvolvedor full stack, IA aplicada e automação",
     "rotulos": {
       "resumo": "Resumo",
       "comoTrabalho": "Como trabalho",
       "experiencia": "Experiência",
       "projetos": "Projetos",
       "premios": "Prêmios",
+      "voluntariado": "Voluntariado",
       "formacao": "Formação",
+      "certificacoes": "Certificações",
       "stack": "Stack",
       "idiomas": "Idiomas",
       "atual": "atual",
       "geradoEm": "Currículo gerado a partir de gomesbeduardo.github.io"
     },
-    "resumo": "Desenvolvedor full stack na CentralEng, empresa de engenharia de climatização. Lá desenvolvi o LMS de treinamento técnico que 20 colaboradores usam hoje e lidero o desenvolvimento do sistema de gestão de PMOC. Desde out/2026 faço estágio de desenvolvimento no time de Inovação da Asten AVMB. Estudo Sistemas de Informação na AMF.",
+    "resumo": "Desenvolvedor full stack na CentralEng, empresa de engenharia de climatização, em meio período e sob demanda. Lá fiz sozinho um LMS de treinamento técnico, hoje em validação com colaboradores, e levantei e modelei o sistema de gestão de PMOC. Desde out/2026 faço estágio de desenvolvimento no time de Inovação da Asten AVMB. Estudo Sistemas de Informação na AMF.",
     "comoTrabalho": "Escrevo uma spec curta com critérios de aceite antes do código e o teste antes da implementação (TDD). Cada mudança entra por PR, com revisão e CI rodando testes, checagem de tipos e build. Em recurso com IA, separo um conjunto de avaliação que fica fora do ajuste do prompt e rodo uma vez, no fim.",
     "experiencia": [
       {
@@ -33,19 +36,21 @@
         "inicio": "out/2026",
         "fim": null,
         "itens": [
-          "Assumi o projeto de um dashboard para as reuniões internas da empresa e participo de outros projetos do time.",
-          "O painel de chamados está em produção e é usado nas reuniões da direção: importa as planilhas de cada mês, guarda as cargas com versão e gera indicadores por situação e SLA.",
+          "Assumi o projeto do dash-asten, painel para as reuniões internas da empresa, exibido em TV, e participo de outros projetos do time.",
+          "O painel mostra KPIs por situação, SLA vencido e chamados abertos há 60 dias ou mais. Importa as planilhas de cada mês, guarda as cargas com versão e está em produção nas reuniões da direção.",
+          "Desenvolvimento por specs com agentes de IA e aprovação humana antes do merge; PRD com mais de 100 decisões.",
           "React, TypeScript, Vite, Tailwind CSS, Vercel Functions e PostgreSQL com Prisma; testes com Vitest e Playwright."
         ]
       },
       {
-        "cargo": "Desenvolvedor Full Stack e Analista de TI",
+        "cargo": "Desenvolvedor full stack e analista de TI",
         "organizacao": "CentralEng, engenharia de climatização",
         "inicio": "mai/2026",
-        "fim": null,
+        "fim": "atual, sob demanda",
         "itens": [
-          "Desenvolvi o LMS de treinamento técnico da equipe, usado por 20 colaboradores.",
-          "Lidero o desenvolvimento do sistema de gestão de PMOC.",
+          "Fiz sozinho o LMS de treinamento técnico, da arquitetura aos testes, com PRD (20 requisitos), ADRs e backlog de 36 itens. Ele está em validação com colaboradores.",
+          "Levantei os requisitos e modelei o sistema de gestão de PMOC.",
+          "Montei a integração contínua com lint e build a cada push.",
           "Integro os sistemas internos e automatizo tarefas que a equipe fazia à mão.",
           "Cuido da infraestrutura de TI, dos bancos de dados e do suporte aos usuários."
         ]
@@ -56,16 +61,17 @@
         "inicio": "jun/2026",
         "fim": null,
         "itens": [
-          "Plataforma que conecta mentores a pessoas que querem aprender. Cuido da concepção do produto, da estratégia de negócio e do modelo de monetização."
+          "Plataforma que conecta mentores a pessoas que querem aprender. Fiz o back-end em Python, FastAPI e PostgreSQL e defini a arquitetura, o modelo de dados e a monetização."
         ]
       },
       {
         "cargo": "Professor bolsista",
         "organizacao": "Projeto Jovem e Tecnologia (JET), AMF",
         "inicio": "fev/2026",
-        "fim": "set/2026",
+        "fim": "out/2026",
         "itens": [
-          "Dei aulas de tecnologia para 100 alunos de 4 escolas públicas, do nível básico ao intermediário-avançado, e usei ferramentas de IA em exercícios práticos com eles."
+          "Dei aulas de Python, HTML, CSS, Arduino e uso responsável de IA para mais de 100 alunos de 4 escolas públicas. Depois do primeiro semestre, o projeto ganhou 2 escolas a mais, por indicação da coordenação.",
+          "Dei um workshop de 80 minutos sobre IA para professores da AMF."
         ]
       },
       {
@@ -74,7 +80,8 @@
         "inicio": "out/2025",
         "fim": "abr/2026",
         "itens": [
-          "Organizei documentação de projetos, notas fiscais e controles financeiros e automatizei rotinas do setor."
+          "Organizei documentação de projetos, notas fiscais e controles financeiros e automatizei rotinas do setor.",
+          "Fui promovido de auxiliar administrativo a desenvolvedor em 7 meses, depois de automatizar rotinas do setor."
         ]
       }
     ],
@@ -88,7 +95,7 @@
       {
         "nome": "LMS de treinamento técnico",
         "link": "https://github.com/gomesbeduardo/plataforma-LMS-corp",
-        "descricao": "Plataforma de cursos com progresso por colaborador, avaliações e certificado em PDF. A versão privada está em produção na CentralEng, com 20 colaboradores.",
+        "descricao": "Plataforma de cursos com progresso por colaborador, avaliações e certificado em PDF. A versão privada está em validação com colaboradores na CentralEng.",
         "stack": "Next.js, TypeScript, Prisma, PostgreSQL, Docker"
       },
       {
@@ -96,9 +103,20 @@
         "link": "https://github.com/gomesbeduardo/infohub-inovamf",
         "descricao": "Jornada do empreendedor do InfoHub (AMF) até o InovAMF. Projeto da disciplina de Arquitetura de Sistemas, feito em dupla.",
         "stack": "Next.js, TypeScript, Prisma, PostgreSQL"
+      },
+      {
+        "nome": "ToPark",
+        "link": null,
+        "descricao": "Fundador, de abr/2024 a out/2025. Startup de reserva antecipada de vagas de estacionamento, selecionada para a primeira turma da incubadora InovAMF. Fiz o back-end em Python, o modelo de negócio e a captação de estacionamentos parceiros.",
+        "stack": "Python"
       }
     ],
     "premios": [
+      {
+        "titulo": "2º lugar no Ideathon de Sistemas de Informação da AMF",
+        "detalhe": "Edição de 2026.",
+        "quando": "2026"
+      },
       {
         "titulo": "1º lugar no Coderace 2026 (AMF)",
         "detalhe": "AgroPlanner, plataforma de apoio à decisão com IA, em equipe: 15 entrevistas com usuários antes do código e entrega em 10 horas de maratona.",
@@ -110,6 +128,28 @@
         "quando": "out/2025"
       }
     ],
+    "voluntariado": [
+      {
+        "titulo": "Vice-presidente do Diretório Acadêmico de Sistemas de Informação",
+        "detalhe": "Secretário do diretório desde mar/2025.",
+        "quando": "atual"
+      },
+      {
+        "titulo": "Assistente financeiro da organização do Code Race 2026",
+        "detalhe": "Atuo só nas finanças, sem papel na avaliação das equipes.",
+        "quando": "desde mar/2026"
+      },
+      {
+        "titulo": "Comissão organizadora do IX Code Race",
+        "detalhe": "28 horas.",
+        "quando": "2025"
+      },
+      {
+        "titulo": "Comissão organizadora da Semana Acadêmica de Sistemas de Informação",
+        "detalhe": "40 horas.",
+        "quando": "2025"
+      }
+    ],
     "formacao": [
       {
         "curso": "Bacharelado em Sistemas de Informação",
@@ -118,35 +158,76 @@
         "fim": "dez/2028 (previsto)"
       }
     ],
+    "certificacoes": [
+      {
+        "nome": "Fundamentos de Python",
+        "detalhe": "Rocketseat"
+      },
+      {
+        "nome": "O Básico de Git e GitHub",
+        "detalhe": "Rocketseat"
+      },
+      {
+        "nome": "NLW Pocket JavaScript",
+        "detalhe": "Rocketseat"
+      },
+      {
+        "nome": "Cria Summit 2025",
+        "detalhe": "8 horas"
+      }
+    ],
     "stack": [
-      { "grupo": "Linguagens", "itens": "TypeScript, JavaScript, Python, SQL" },
-      { "grupo": "Front end", "itens": "React, Next.js, Tailwind CSS" },
-      { "grupo": "Back end e dados", "itens": "Node.js, Express, Prisma, PostgreSQL, Supabase" },
-      { "grupo": "Qualidade e operação", "itens": "Vitest, Playwright, GitHub Actions, Docker, Linux, Git" },
-      { "grupo": "Integrações", "itens": "n8n, APIs REST" }
+      {
+        "grupo": "Linguagens",
+        "itens": "TypeScript, JavaScript, Python, SQL"
+      },
+      {
+        "grupo": "Front end",
+        "itens": "React, Next.js, Vite, Tailwind CSS, shadcn/ui, Recharts"
+      },
+      {
+        "grupo": "Back end e dados",
+        "itens": "Node.js, Express, Python, FastAPI, Prisma, PostgreSQL, Neon, Supabase, Vercel Functions, SheetJS"
+      },
+      {
+        "grupo": "Qualidade e operação",
+        "itens": "Vitest, Playwright, GitHub Actions, GitLab, Docker, Portainer, Linux, Git, Codex"
+      },
+      {
+        "grupo": "Automação e integrações",
+        "itens": "n8n, APIs REST; integração RPA que recebe dados em JSON de um sistema externo e envia notificações por WhatsApp e e-mail, com scripts de validação em Python (RestrictedPython, em sandbox)"
+      }
     ],
     "idiomas": [
-      { "idioma": "Português", "nivel": "nativo" },
-      { "idioma": "Inglês", "nivel": "avançado" }
+      {
+        "idioma": "Português",
+        "nivel": "nativo"
+      },
+      {
+        "idioma": "Inglês",
+        "nivel": "avançado"
+      }
     ]
   },
   "en": {
     "idioma": "en",
     "arquivo": "curriculo-eduardo-gomes-en.pdf",
-    "titulo": "Full-Stack Developer",
+    "titulo": "Full-stack developer, applied AI and automation",
     "rotulos": {
       "resumo": "Summary",
       "comoTrabalho": "How I work",
       "experiencia": "Experience",
       "projetos": "Projects",
       "premios": "Awards",
+      "voluntariado": "Volunteering",
       "formacao": "Education",
+      "certificacoes": "Certifications",
       "stack": "Stack",
       "idiomas": "Languages",
       "atual": "present",
       "geradoEm": "Résumé generated from gomesbeduardo.github.io"
     },
-    "resumo": "Full-stack developer at CentralEng, an HVAC engineering company. I built the technical training LMS that 20 employees use today, and I lead development of the PMOC maintenance management system. Since Oct/2026 I have been a development intern on the Innovation team at Asten AVMB. I study Information Systems at AMF.",
+    "resumo": "Full-stack developer at CentralEng, an HVAC engineering company, part time and on demand. There I built a technical training LMS on my own, now in validation with employees, and gathered requirements for and modeled the PMOC maintenance management system. Since Oct/2026 I have been a development intern on the Innovation team at Asten AVMB. I study Information Systems at AMF.",
     "comoTrabalho": "I write a short spec with acceptance criteria before the code, and the test before the implementation (TDD). Each change goes through a PR, with review and CI running tests, type checks and build. For AI features, I keep an evaluation set out of prompt tuning and run it once, at the end.",
     "experiencia": [
       {
@@ -155,19 +236,21 @@
         "inicio": "Oct/2026",
         "fim": null,
         "itens": [
-          "I took over the project of a dashboard for the company's internal meetings and take part in other team projects.",
-          "The ticket dashboard is in production and used in management meetings: it imports each month's spreadsheets, stores versioned loads and produces indicators by status and SLA.",
+          "I took over the dash-asten project, a dashboard for the company's internal meetings, shown on a TV, and take part in other team projects.",
+          "The dashboard shows KPIs by status, overdue SLA and tickets open for 60 days or more. It imports each month's spreadsheets, stores versioned loads and is in production in management meetings.",
+          "Spec-driven development with AI agents and human approval before merge; a PRD with more than 100 decisions.",
           "React, TypeScript, Vite, Tailwind CSS, Vercel Functions and PostgreSQL with Prisma; tests with Vitest and Playwright."
         ]
       },
       {
-        "cargo": "Full-Stack Developer and IT Analyst",
+        "cargo": "Full-stack developer and IT analyst",
         "organizacao": "CentralEng, HVAC engineering",
         "inicio": "May/2026",
-        "fim": null,
+        "fim": "present, on demand",
         "itens": [
-          "I built the team's technical training LMS, used by 20 employees.",
-          "I lead development of the PMOC maintenance management system.",
+          "I built the technical training LMS on my own, from architecture to tests, with a PRD (20 requirements), ADRs and a 36-item backlog. It is in validation with employees.",
+          "I gathered requirements for and modeled the PMOC maintenance management system.",
+          "I set up continuous integration with lint and build on every push.",
           "I integrate the internal systems and automate tasks the team used to do by hand.",
           "I look after the IT infrastructure, the databases and user support."
         ]
@@ -178,16 +261,17 @@
         "inicio": "Jun/2026",
         "fim": null,
         "itens": [
-          "A platform that connects mentors with people who want to learn. I run product design, business strategy and the monetization model."
+          "A platform that connects mentors with people who want to learn. I built the back end in Python, FastAPI and PostgreSQL and defined the architecture, the data model and the monetization."
         ]
       },
       {
         "cargo": "Scholarship teacher",
         "organizacao": "JET Project (Youth and Technology), AMF",
         "inicio": "Feb/2026",
-        "fim": "Sep/2026",
+        "fim": "Oct/2026",
         "itens": [
-          "I taught technology to 100 students from 4 public schools, from beginner to upper-intermediate level, and used AI tools with them in hands-on exercises."
+          "I taught Python, HTML, CSS, Arduino and responsible use of AI to more than 100 students from 4 public schools. After the first semester the project grew by 2 more schools, on the coordination's recommendation.",
+          "I gave an 80-minute workshop on AI for AMF teachers."
         ]
       },
       {
@@ -196,7 +280,8 @@
         "inicio": "Oct/2025",
         "fim": "Apr/2026",
         "itens": [
-          "I organized project documentation, invoices and financial controls, and automated the department's routines."
+          "I organized project documentation, invoices and financial controls, and automated the department's routines.",
+          "I was promoted from administrative assistant to developer in 7 months, after automating the department's routines."
         ]
       }
     ],
@@ -210,7 +295,7 @@
       {
         "nome": "Technical training LMS",
         "link": "https://github.com/gomesbeduardo/plataforma-LMS-corp",
-        "descricao": "Course platform with progress per employee, assessments and PDF certificates. The private version runs in production at CentralEng, used by 20 employees.",
+        "descricao": "Course platform with progress per employee, assessments and PDF certificates. The private version is in validation with employees at CentralEng.",
         "stack": "Next.js, TypeScript, Prisma, PostgreSQL, Docker"
       },
       {
@@ -218,9 +303,20 @@
         "link": "https://github.com/gomesbeduardo/infohub-inovamf",
         "descricao": "The entrepreneur's journey from InfoHub (AMF) to InovAMF. Systems Architecture course project, built as a pair.",
         "stack": "Next.js, TypeScript, Prisma, PostgreSQL"
+      },
+      {
+        "nome": "ToPark",
+        "link": null,
+        "descricao": "Founder, from Apr/2024 to Oct/2025. A startup for booking parking spots in advance, selected for the first cohort of the InovAMF incubator. I built the Python back end, the business model and the recruitment of partner parking lots.",
+        "stack": "Python"
       }
     ],
     "premios": [
+      {
+        "titulo": "2nd place, Information Systems Ideathon at AMF",
+        "detalhe": "2026 edition.",
+        "quando": "2026"
+      },
       {
         "titulo": "1st place, Coderace 2026 (AMF)",
         "detalhe": "AgroPlanner, an AI decision-support platform, built as a team: 15 user interviews before any code and delivery within a 10-hour hackathon.",
@@ -232,6 +328,28 @@
         "quando": "Oct/2025"
       }
     ],
+    "voluntariado": [
+      {
+        "titulo": "Vice-president of the Information Systems Student Council",
+        "detalhe": "Council secretary since Mar/2025.",
+        "quando": "present"
+      },
+      {
+        "titulo": "Financial assistant on the Code Race 2026 organizing team",
+        "detalhe": "I work only on finances, with no role in judging the teams.",
+        "quando": "since Mar/2026"
+      },
+      {
+        "titulo": "Organizing committee of the 9th Code Race",
+        "detalhe": "28 hours.",
+        "quando": "2025"
+      },
+      {
+        "titulo": "Organizing committee of the Information Systems Academic Week",
+        "detalhe": "40 hours.",
+        "quando": "2025"
+      }
+    ],
     "formacao": [
       {
         "curso": "B.Sc. in Information Systems",
@@ -240,16 +358,55 @@
         "fim": "Dec/2028 (expected)"
       }
     ],
+    "certificacoes": [
+      {
+        "nome": "Python Fundamentals",
+        "detalhe": "Rocketseat"
+      },
+      {
+        "nome": "Git and GitHub Basics",
+        "detalhe": "Rocketseat"
+      },
+      {
+        "nome": "NLW Pocket JavaScript",
+        "detalhe": "Rocketseat"
+      },
+      {
+        "nome": "Cria Summit 2025",
+        "detalhe": "8 hours"
+      }
+    ],
     "stack": [
-      { "grupo": "Languages", "itens": "TypeScript, JavaScript, Python, SQL" },
-      { "grupo": "Front end", "itens": "React, Next.js, Tailwind CSS" },
-      { "grupo": "Back end and data", "itens": "Node.js, Express, Prisma, PostgreSQL, Supabase" },
-      { "grupo": "Quality and operations", "itens": "Vitest, Playwright, GitHub Actions, Docker, Linux, Git" },
-      { "grupo": "Integrations", "itens": "n8n, REST APIs" }
+      {
+        "grupo": "Languages",
+        "itens": "TypeScript, JavaScript, Python, SQL"
+      },
+      {
+        "grupo": "Front end",
+        "itens": "React, Next.js, Vite, Tailwind CSS, shadcn/ui, Recharts"
+      },
+      {
+        "grupo": "Back end and data",
+        "itens": "Node.js, Express, Python, FastAPI, Prisma, PostgreSQL, Neon, Supabase, Vercel Functions, SheetJS"
+      },
+      {
+        "grupo": "Quality and operations",
+        "itens": "Vitest, Playwright, GitHub Actions, GitLab, Docker, Portainer, Linux, Git, Codex"
+      },
+      {
+        "grupo": "Automation and integrations",
+        "itens": "n8n, REST APIs; an RPA integration that receives JSON data from an external system and sends WhatsApp and email notifications, with Python validation scripts (RestrictedPython, sandboxed)"
+      }
     ],
     "idiomas": [
-      { "idioma": "Portuguese", "nivel": "native" },
-      { "idioma": "English", "nivel": "advanced" }
+      {
+        "idioma": "Portuguese",
+        "nivel": "native"
+      },
+      {
+        "idioma": "English",
+        "nivel": "advanced"
+      }
     ]
   }
 }
