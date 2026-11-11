@@ -1,0 +1,255 @@
+{
+  "provisorio": true,
+  "comum": {
+    "nome": "Eduardo Bergoli Gomes",
+    "local": "Brasil",
+    "email": "eduardobgomes100@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/eduardo-gomes-pb/",
+    "github": "https://github.com/gomesbeduardo",
+    "site": "https://gomesbeduardo.github.io"
+  },
+  "pt": {
+    "idioma": "pt-BR",
+    "arquivo": "curriculo-eduardo-gomes-pt.pdf",
+    "titulo": "Desenvolvedor Full Stack",
+    "rotulos": {
+      "resumo": "Resumo",
+      "comoTrabalho": "Como trabalho",
+      "experiencia": "Experiência",
+      "projetos": "Projetos",
+      "premios": "Prêmios",
+      "formacao": "Formação",
+      "stack": "Stack",
+      "idiomas": "Idiomas",
+      "atual": "atual",
+      "geradoEm": "Currículo gerado a partir de gomesbeduardo.github.io"
+    },
+    "resumo": "Desenvolvedor full stack na CentralEng, empresa de engenharia de climatização. Lá desenvolvi o LMS de treinamento técnico que 20 colaboradores usam hoje e lidero o desenvolvimento do sistema de gestão de PMOC. Desde out/2026 faço estágio de desenvolvimento no time de Inovação da Asten AVMB. Estudo Sistemas de Informação na AMF.",
+    "comoTrabalho": "Escrevo uma spec curta com critérios de aceite antes do código e o teste antes da implementação (TDD). Cada mudança entra por PR, com revisão e CI rodando testes, checagem de tipos e build. Em recurso com IA, separo um conjunto de avaliação que fica fora do ajuste do prompt e rodo uma vez, no fim.",
+    "experiencia": [
+      {
+        "cargo": "Estagiário de desenvolvimento, time de Inovação",
+        "organizacao": "Asten AVMB",
+        "inicio": "out/2026",
+        "fim": null,
+        "itens": [
+          "Assumi o projeto de um dashboard para as reuniões internas da empresa e participo de outros projetos do time.",
+          "O painel de chamados está em produção e é usado nas reuniões da direção: importa as planilhas de cada mês, guarda as cargas com versão e gera indicadores por situação e SLA.",
+          "React, TypeScript, Vite, Tailwind CSS, Vercel Functions e PostgreSQL com Prisma; testes com Vitest e Playwright."
+        ]
+      },
+      {
+        "cargo": "Desenvolvedor Full Stack e Analista de TI",
+        "organizacao": "CentralEng, engenharia de climatização",
+        "inicio": "mai/2026",
+        "fim": null,
+        "itens": [
+          "Desenvolvi o LMS de treinamento técnico da equipe, usado por 20 colaboradores.",
+          "Lidero o desenvolvimento do sistema de gestão de PMOC.",
+          "Integro os sistemas internos e automatizo tarefas que a equipe fazia à mão.",
+          "Cuido da infraestrutura de TI, dos bancos de dados e do suporte aos usuários."
+        ]
+      },
+      {
+        "cargo": "Cofundador",
+        "organizacao": "YourMentor",
+        "inicio": "jun/2026",
+        "fim": null,
+        "itens": [
+          "Plataforma que conecta mentores a pessoas que querem aprender. Cuido da concepção do produto, da estratégia de negócio e do modelo de monetização."
+        ]
+      },
+      {
+        "cargo": "Professor bolsista",
+        "organizacao": "Projeto Jovem e Tecnologia (JET), AMF",
+        "inicio": "fev/2026",
+        "fim": "set/2026",
+        "itens": [
+          "Dei aulas de tecnologia para cerca de 30 alunos de escola pública por semana, do nível básico ao intermediário-avançado, e usei ferramentas de IA em exercícios práticos com eles."
+        ]
+      },
+      {
+        "cargo": "Auxiliar administrativo",
+        "organizacao": "CentralEng, engenharia de climatização",
+        "inicio": "out/2025",
+        "fim": "abr/2026",
+        "itens": [
+          "Organizei documentação de projetos, notas fiscais e controles financeiros e automatizei rotinas do setor."
+        ]
+      }
+    ],
+    "projetos": [
+      {
+        "nome": "leadgate",
+        "link": "https://github.com/gomesbeduardo/leadgate",
+        "descricao": "Triagem de leads com IA para uma empresa de climatização. Conversa com o cliente até ter os dados de que vendas precisa e envia um JSON validado. O código confere cada resposta do modelo (Zod e regras fixas) antes de seguir. Cerca de 570 testes automatizados e um conjunto de avaliação reservado, rodado uma vez.",
+        "stack": "TypeScript, Node.js, Docker, n8n"
+      },
+      {
+        "nome": "LMS de treinamento técnico",
+        "link": "https://github.com/gomesbeduardo/plataforma-LMS-corp",
+        "descricao": "Plataforma de cursos com progresso por colaborador, avaliações e certificado em PDF. A versão privada está em produção na CentralEng, com 20 colaboradores.",
+        "stack": "Next.js, TypeScript, Prisma, PostgreSQL, Docker"
+      },
+      {
+        "nome": "InfoHub InovAMF",
+        "link": "https://github.com/gomesbeduardo/infohub-inovamf",
+        "descricao": "Jornada do empreendedor do InfoHub (AMF) até o InovAMF. Projeto da disciplina de Arquitetura de Sistemas, feito em dupla.",
+        "stack": "Next.js, TypeScript, Prisma, PostgreSQL"
+      }
+    ],
+    "premios": [
+      {
+        "titulo": "1º lugar no Coderace 2026 (AMF)",
+        "detalhe": "AgroPlanner, plataforma de apoio à decisão com IA, em equipe: 15 entrevistas com usuários antes do código e entrega em 10 horas de maratona.",
+        "quando": "jun/2026"
+      },
+      {
+        "titulo": "1º lugar no 1º Ideathon de Sistemas de Informação da AMF",
+        "detalhe": "Equipe Mentor.Me.",
+        "quando": "out/2025"
+      }
+    ],
+    "formacao": [
+      {
+        "curso": "Bacharelado em Sistemas de Informação",
+        "instituicao": "Antonio Meneghetti Faculdade (AMF)",
+        "inicio": "fev/2024",
+        "fim": "dez/2028 (previsto)"
+      }
+    ],
+    "stack": [
+      { "grupo": "Linguagens", "itens": "TypeScript, JavaScript, Python, SQL" },
+      { "grupo": "Front end", "itens": "React, Next.js, Tailwind CSS" },
+      { "grupo": "Back end e dados", "itens": "Node.js, Express, Prisma, PostgreSQL, Supabase" },
+      { "grupo": "Qualidade e operação", "itens": "Vitest, Playwright, GitHub Actions, Docker, Linux, Git" },
+      { "grupo": "Integrações", "itens": "n8n, APIs REST" }
+    ],
+    "idiomas": [
+      { "idioma": "Português", "nivel": "nativo" },
+      { "idioma": "Inglês", "nivel": "avançado" }
+    ]
+  },
+  "en": {
+    "idioma": "en",
+    "arquivo": "curriculo-eduardo-gomes-en.pdf",
+    "titulo": "Full-Stack Developer",
+    "rotulos": {
+      "resumo": "Summary",
+      "comoTrabalho": "How I work",
+      "experiencia": "Experience",
+      "projetos": "Projects",
+      "premios": "Awards",
+      "formacao": "Education",
+      "stack": "Stack",
+      "idiomas": "Languages",
+      "atual": "present",
+      "geradoEm": "Résumé generated from gomesbeduardo.github.io"
+    },
+    "resumo": "Full-stack developer at CentralEng, an HVAC engineering company. I built the technical training LMS that 20 employees use today, and I lead development of the PMOC maintenance management system. Since Oct/2026 I have been a development intern on the Innovation team at Asten AVMB. I study Information Systems at AMF.",
+    "comoTrabalho": "I write a short spec with acceptance criteria before the code, and the test before the implementation (TDD). Each change goes through a PR, with review and CI running tests, type checks and build. For AI features, I keep an evaluation set out of prompt tuning and run it once, at the end.",
+    "experiencia": [
+      {
+        "cargo": "Development intern, Innovation team",
+        "organizacao": "Asten AVMB",
+        "inicio": "Oct/2026",
+        "fim": null,
+        "itens": [
+          "I took over the project of a dashboard for the company's internal meetings and take part in other team projects.",
+          "The ticket dashboard is in production and used in management meetings: it imports each month's spreadsheets, stores versioned loads and produces indicators by status and SLA.",
+          "React, TypeScript, Vite, Tailwind CSS, Vercel Functions and PostgreSQL with Prisma; tests with Vitest and Playwright."
+        ]
+      },
+      {
+        "cargo": "Full-Stack Developer and IT Analyst",
+        "organizacao": "CentralEng, HVAC engineering",
+        "inicio": "May/2026",
+        "fim": null,
+        "itens": [
+          "I built the team's technical training LMS, used by 20 employees.",
+          "I lead development of the PMOC maintenance management system.",
+          "I integrate the internal systems and automate tasks the team used to do by hand.",
+          "I look after the IT infrastructure, the databases and user support."
+        ]
+      },
+      {
+        "cargo": "Co-founder",
+        "organizacao": "YourMentor",
+        "inicio": "Jun/2026",
+        "fim": null,
+        "itens": [
+          "A platform that connects mentors with people who want to learn. I run product design, business strategy and the monetization model."
+        ]
+      },
+      {
+        "cargo": "Scholarship teacher",
+        "organizacao": "JET Project (Youth and Technology), AMF",
+        "inicio": "Feb/2026",
+        "fim": "Sep/2026",
+        "itens": [
+          "I taught technology to about 30 public-school students a week, from beginner to upper-intermediate level, and used AI tools with them in hands-on exercises."
+        ]
+      },
+      {
+        "cargo": "Administrative assistant",
+        "organizacao": "CentralEng, HVAC engineering",
+        "inicio": "Oct/2025",
+        "fim": "Apr/2026",
+        "itens": [
+          "I organized project documentation, invoices and financial controls, and automated the department's routines."
+        ]
+      }
+    ],
+    "projetos": [
+      {
+        "nome": "leadgate",
+        "link": "https://github.com/gomesbeduardo/leadgate",
+        "descricao": "AI lead triage for an HVAC company. It chats with the customer until it has the data sales needs, then sends a validated JSON. The code checks each model answer (Zod and fixed rules) before moving on. About 570 automated tests and a held-out evaluation set, run once.",
+        "stack": "TypeScript, Node.js, Docker, n8n"
+      },
+      {
+        "nome": "Technical training LMS",
+        "link": "https://github.com/gomesbeduardo/plataforma-LMS-corp",
+        "descricao": "Course platform with progress per employee, assessments and PDF certificates. The private version runs in production at CentralEng, used by 20 employees.",
+        "stack": "Next.js, TypeScript, Prisma, PostgreSQL, Docker"
+      },
+      {
+        "nome": "InfoHub InovAMF",
+        "link": "https://github.com/gomesbeduardo/infohub-inovamf",
+        "descricao": "The entrepreneur's journey from InfoHub (AMF) to InovAMF. Systems Architecture course project, built as a pair.",
+        "stack": "Next.js, TypeScript, Prisma, PostgreSQL"
+      }
+    ],
+    "premios": [
+      {
+        "titulo": "1st place, Coderace 2026 (AMF)",
+        "detalhe": "AgroPlanner, an AI decision-support platform, built as a team: 15 user interviews before any code and delivery within a 10-hour hackathon.",
+        "quando": "Jun/2026"
+      },
+      {
+        "titulo": "1st place, 1st Information Systems Ideathon at AMF",
+        "detalhe": "Team Mentor.Me.",
+        "quando": "Oct/2025"
+      }
+    ],
+    "formacao": [
+      {
+        "curso": "B.Sc. in Information Systems",
+        "instituicao": "Antonio Meneghetti Faculdade (AMF)",
+        "inicio": "Feb/2024",
+        "fim": "Dec/2028 (expected)"
+      }
+    ],
+    "stack": [
+      { "grupo": "Languages", "itens": "TypeScript, JavaScript, Python, SQL" },
+      { "grupo": "Front end", "itens": "React, Next.js, Tailwind CSS" },
+      { "grupo": "Back end and data", "itens": "Node.js, Express, Prisma, PostgreSQL, Supabase" },
+      { "grupo": "Quality and operations", "itens": "Vitest, Playwright, GitHub Actions, Docker, Linux, Git" },
+      { "grupo": "Integrations", "itens": "n8n, REST APIs" }
+    ],
+    "idiomas": [
+      { "idioma": "Portuguese", "nivel": "native" },
+      { "idioma": "English", "nivel": "advanced" }
+    ]
+  }
+}

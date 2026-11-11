@@ -1,0 +1,27 @@
+docs/privado/
+node_modules/
+dist/
+.astro/
+prototipo/
+.playwright-mcp/
+
+# PDFs do currículo são gerados no build (spec 003)
+public/curriculo/*.pdf
+
+# Arquivos de ambiente da máquina que aparecem na raiz; não são do projeto
+.bash_profile
+.bashrc
+.profile
+.zprofile
+.zshrc
+.gitconfig
+.gitmodules
+.ripgreprc
+.idea
+.vscode
+.mcp.json
+.claude/
+.impeccable/
+
+# Screenshots das auditorias do protótipo (48 MB); ficam só na máquina
+docs/design/auditoria/*.png

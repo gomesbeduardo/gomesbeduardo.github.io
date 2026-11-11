@@ -1,0 +1,113 @@
+# Publica o site no GitHub Pages (spec 002, seção "Workflow e secret"; spec 003, R5).
+#
+# Quando religado, dispara em push na main, toda segunda às 06:00 UTC (03:00 em Brasília) e à mão.
+# Jobs: testes -> coletar (números do GitHub; commit do JSON em schedule/dispatch) -> build -> deploy.
+# Secret necessário: GH_TOKEN_LEITURA (fine-grained PAT do usuário, só leitura). Nunca escreva o token aqui.
+# Versões das actions fixadas por SHA de commit; a tag vai no comentário.
+name: Publicar site
+
+# Desligado até a migração para o Astro (spec 001): a v1 estática publica pelo pages.yml.
+# Para religar, volte o push na main e o schedule.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '24'
+
+jobs:
+  testes:
+    name: Testes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Testes dos scripts (coletor e currículo)
+        run: node --test 'scripts/**/*.test.mjs'
+
+  coletar:
+    name: Coletar números do GitHub
+    needs: testes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # commit semanal do JSON (spec 002, R8: mantém o cron vivo e guarda o último dado bom)
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Coletar (estrito no run agendado, para falhar e avisar por e-mail)
+        env:
+          GH_TOKEN_LEITURA: ${{ secrets.GH_TOKEN_LEITURA }}
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            node scripts/github/coletar.mjs --estrito
+          else
+            node scripts/github/coletar.mjs
+          fi
+      - name: Commit do JSON quando mudou (só schedule e workflow_dispatch)
+        if: github.event_name != 'push'
+        run: |
+          if git diff --quiet -- src/data/github.json; then
+            echo "src/data/github.json sem mudança; nada a commitar"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/github.json
+          git commit -m "chore(dados): números do GitHub de $(date -u +%F)"
+          git push
+      - name: Guardar o JSON para o build
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: github-json
+          path: src/data/github.json
+          if-no-files-found: error
+          retention-days: 7
+
+  build:
+    name: Build do site
+    needs: coletar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Usar o JSON coletado neste run
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+        with:
+          name: github-json
+          path: src/data
+      - name: Gerar os PDFs do currículo (Chrome do runner)
+        run: node scripts/curriculo/gerar.mjs
+      - name: Instalar dependências
+        run: npm ci # depende do scaffold do Astro (package.json e package-lock.json)
+      - name: Build do Astro
+        run: npm run build
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: dist
+
+  deploy:
+    name: Deploy no Pages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
