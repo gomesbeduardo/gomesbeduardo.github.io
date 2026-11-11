@@ -1,6 +1,6 @@
 # Spec 001d: troca de língua sem perder o ponto de leitura
 
-Estado: aguardando aprovação do responsável.
+Estado: aprovada pelo responsável em 11/11/2026.
 Parte 5 de 5 da spec 001. Entra na etapa 1, como a última fatia, depois que a paridade de 001a passar. Vale também nas etapas 2 e 3.
 
 ## Pedido literal
