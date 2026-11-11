@@ -1,6 +1,6 @@
 # Spec 001b: etapa 2, SEO e GEO
 
-Estado: rascunho, aguardando aprovação do responsável.
+Estado: aprovada pelo responsável em 11/11/2026.
 Parte 3 de 4 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md` (esta), `001c-desempenho.md`. Decisões P1 a P9 e P3b no índice.
 
 ## Objetivo da etapa

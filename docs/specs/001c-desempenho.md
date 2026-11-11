@@ -1,6 +1,6 @@
 # Spec 001c: etapa 3, tempo de resposta e teste de desempenho no CI
 
-Estado: rascunho, aguardando aprovação do responsável.
+Estado: aprovada pelo responsável em 11/11/2026.
 Parte 4 de 4 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md`, `001c-desempenho.md` (esta). Decisões P1 a P9 e P3b no índice.
 
 ## Objetivo da etapa
