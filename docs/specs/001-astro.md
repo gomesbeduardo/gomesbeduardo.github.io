@@ -34,7 +34,7 @@ Quem usa: o visitante (recrutador, tech lead) e os buscadores e assistentes de I
 |---|---|---|---|
 | 1 | `feat/astro-paridade` | scaffold do Astro, Tailwind com os tokens, páginas e componentes, JS e vendor sem mudança, leitura de `github.json` e `processo.json`, PDFs no build, testes contra `dist/`, troca de deploy | 001a C1 a C11 |
 | 2 | `feat/astro-seo` | `robots.txt`, sitemap, `llms.txt`, `head` por página, JSON-LD, texto sem JS, fatos de `curriculo.json` | 001b C1 a C8 |
-| 3 | `feat/astro-desempenho` | módulos por componente, GSAP e Lenis sob demanda, fontes locais, imagens otimizadas, teste de desempenho no CI, saída de `site/` e `pages.yml` | 001c C1 a C9 |
+| 3 | `feat/astro-desempenho` | módulos por componente, GSAP e Lenis sob demanda, fontes locais, imagens otimizadas, teste de desempenho no CI, saída de `site/` e `pages.yml` | 001c C1 a C10 |
 
 Pré-condição da etapa 1: a fila atual entrar na `staging` (spec 006, correção do menu #14, spec 007, spec 008). A referência de paridade é o `site/` da `staging` nesse momento (001a F1).
 
