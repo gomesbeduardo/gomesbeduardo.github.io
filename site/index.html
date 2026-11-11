@@ -229,12 +229,9 @@
 <section id="contato"><div class="wrap">
   <p class="sec-label reveal" aria-hidden="true">07 / CONTATO</p>
   <h2 class="reveal">Contato</h2>
-  <div class="mail-row reveal">
-    <a class="mail" href="mailto:eduardobgomes100@gmail.com">eduardobgomes100@<wbr>gmail.com</a>
-    <button class="btn" id="copy-email" type="button"><svg class="icon"><use href="#i-copy"/></svg><span>Copiar e-mail</span></button>
-  </div>
   <p class="mono">Santa Maria, RS</p>
   <ul class="links">
+    <li class="stag"><button type="button" data-copiar-email aria-label="Copiar e-mail"><span class="lbl">E-mail</span> <svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg></button></li>
     <li class="stag"><a href="https://www.linkedin.com/in/eduardo-gomes-pb/" rel="noopener"><span class="lbl">LinkedIn</span> <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
     <li class="stag"><a href="https://github.com/gomesbeduardo" rel="noopener"><span class="lbl">GitHub</span> <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></li>
     <li class="stag"><a href="curriculo/curriculo-eduardo-gomes-pt.pdf" download><span class="lbl">Baixar currículo</span> <svg class="icon" aria-hidden="true"><use href="#i-down"/></svg></a></li>
@@ -242,11 +239,18 @@
 </div></section>
 </main>
 <footer><div class="wrap">
+  <div class="foot-grid">
+  <div class="foot-quote">
   <blockquote><p lang="en">In the face of ambiguity, refuse the temptation to guess.</p></blockquote>
   <cite>Tim Peters, The <span class="sp" data-c="c6" data-modo="repl">Zen of Python</span></cite>
   <p class="foot-claude"><button class="btn claude-btn" id="claude-btn" type="button" aria-haspopup="dialog" aria-controls="sobre-site"><span class="pulse" aria-hidden="true"></span><span>Feito com o Claude Code</span><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg></button></p>
   <p class="foot-spec">Feito a partir de uma <span class="sp-cola"><span class="sp" data-c="c9" data-modo="folha">spec</span>.</span></p>
-  <small>Eduardo Bergoli Gomes.</small>
+  </div>
+  <nav class="foot-col foot-nav" aria-label="Navegação do rodapé"><h2 class="foot-t">Navegação</h2><ul><li><a href="#sobre">Sobre</a></li><li><a href="#trajetoria">Trajetória</a></li><li><a href="#experiencia">Experiência</a></li><li><a href="#projetos">Projetos</a></li><li><a href="#numeros">Números</a></li><li><a href="#contato">Contato</a></li></ul></nav>
+  <div class="foot-col foot-contato"><h2 class="foot-t">Contato</h2><ul><li><button type="button" data-copiar-email aria-label="Copiar e-mail">E-mail</button></li><li><a href="https://www.linkedin.com/in/eduardo-gomes-pb/" rel="noopener">LinkedIn</a></li><li><a href="https://github.com/gomesbeduardo" rel="noopener">GitHub</a></li><li><a href="curriculo/curriculo-eduardo-gomes-pt.pdf" download>Baixar currículo</a></li></ul></div>
+  </div>
+  <p class="foot-sobre"><span class="foot-t">Sobre este site</span> Escrito em HTML, CSS e JavaScript, sem framework, com GSAP e Lenis. Fontes Funnel Display, Funnel Sans e Reddit Mono. Publicado no GitHub Pages. <a href="https://github.com/gomesbeduardo/gomesbeduardo.github.io" rel="noopener">Código do site</a></p>
+  <div class="foot-fim"><p>© <span data-ano>2026</span> Eduardo Bergoli Gomes · Santa Maria, RS</p><span class="foot-lang"><a href="./" aria-current="true" lang="pt-BR" hreflang="pt-BR">PT</a><span aria-hidden="true">·</span><a href="en/" lang="en" hreflang="en" aria-label="English">EN</a></span><a href="#" data-topo>Voltar ao topo ↑</a></div>
 </div></footer>
 <dialog class="modal" id="sobre-site" aria-labelledby="sobre-site-t" data-lenis-prevent>
 <div class="modal-in">

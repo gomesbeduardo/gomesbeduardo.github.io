@@ -25,12 +25,13 @@ test('1. texto das páginas de projeto ocupa a largura toda até 860px', () => {
   assert.match(b, /\.proj section p\s*\{[^}]*max-width:\s*none/);
 });
 
-test('2. e-mail quebra só depois do @', () => {
-  assert.match(css, /\.mail\{[^}]*overflow-wrap:\s*break-word/);
-  assert.doesNotMatch(css, /\.mail\{[^}]*overflow-wrap:\s*anywhere/);
+test('2. e-mail por extenso saiu das páginas; o aviso quebra o endereço sem estourar a tela (spec 006)', () => {
+  // Antes: .mail com <wbr> depois do @. A spec 006 removeu o endereço do Contato; ele só aparece no aviso de cópia.
   for (const f of HOMES) {
-    assert.match(ler(f), /<a class="mail"[^>]*>eduardobgomes100@<wbr>gmail\.com<\/a>/, f);
+    assert.doesNotMatch(ler(f), /class="mail"|<wbr>/, f);
   }
+  assert.doesNotMatch(css, /\.mail\{/);
+  assert.match(css, /\.aviso-end\{[^}]*overflow-wrap:\s*anywhere/);
   assert.match(ler('site/main.js'), /writeText\('eduardobgomes100@gmail\.com'\)/);
 });
 
