@@ -52,6 +52,8 @@ Exemplo: repo A tem TypeScript 60 000 e CSS 10 000; repo B tem TypeScript 20 000
 
 Sem repositório ou sem bytes: `linguagens` = `[]`, sem erro.
 
+Repositórios ignorados (decisão do responsável em 11/11/2026): `centralEng_AI_Chatbot` fica fora da soma de linguagens, porque tem cerca de 18 MB de ambiente virtual Python commitado (com ele a barra dava Python 89% e Cython 1,7%). A lista fica em `REPOS_IGNORADOS` (`scripts/github/lib.mjs`), aceita `--ignorar <repo>` no coletor e é gravada no JSON como `linguagensIgnoram`. Contribuições e `reposPublicos` não mudam.
+
 ### R5. Calendário
 
 Cada `contributionDays` do GraphQL vira um dia `{ data, contagem, nivel, diaSemana }`. `nivel` mapeia F7 para 0 a 4 na ordem dada (`NONE` → 0 … `FOURTH_QUARTILE` → 4); os quartis são os do GitHub, não recalculados, para o desenho bater com o perfil. `maximoDia` = maior `contagem` da janela. As semanas ficam na ordem do GitHub (domingo a sábado, `diaSemana` 0 a 6).

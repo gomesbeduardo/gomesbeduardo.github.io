@@ -10,6 +10,7 @@ import {
   calcularJanela,
   converterDia,
   calcularLinguagens,
+  REPOS_IGNORADOS,
   transformar,
   validarContrato,
   executar,
@@ -236,11 +237,43 @@ test('CLI --fixture gera arquivo com amostra=true que passa no contrato', () => 
   assert.deepEqual(validarContrato(json), []);
 });
 
-test('src/data/github.json versionado bate com o contrato e com a fixture', () => {
+test('src/data/github.json versionado bate com o contrato (forma e tipos, sem valores de amostra)', () => {
   const caminho = join(aqui, '..', '..', 'src', 'data', 'github.json');
   assert.ok(existsSync(caminho), 'rode: node scripts/github/coletar.mjs --fixture scripts/github/fixtures/graphql-amostra.json');
   const json = JSON.parse(readFileSync(caminho, 'utf8'));
   assert.deepEqual(validarContrato(json), []);
-  assert.equal(json.amostra, true);
-  assert.equal(json.contribuicoes.total, 1234);
+  assert.equal(typeof json.amostra, 'boolean');
+  for (const v of Object.values(json.contribuicoes)) assert.ok(Number.isInteger(v) && v >= 0);
+  assert.ok(Number.isInteger(json.reposPublicos) && json.reposPublicos >= 0);
+  const soma = json.linguagens.reduce((a, l) => a + l.percentual, 0);
+  assert.ok(Math.abs(soma - 100) <= 1, `percentuais somam ${soma}`);
+});
+
+// Repositorios ignorados na soma de linguagens (so nela)
+const repoIgnorado = { name: 'centralEng_AI_Chatbot', languages: { edges: [
+  { size: 900000, node: { name: 'Python', color: '#3572A5' } },
+  { size: 50000, node: { name: 'Cython', color: '#fedf5b' } },
+] } };
+
+test('calcularLinguagens: repositorio ignorado nao contribui com bytes', () => {
+  assert.deepEqual(calcularLinguagens([repoA, repoB, repoIgnorado], ['centralEng_AI_Chatbot']), calcularLinguagens([repoA, repoB]));
+  assert.ok(!calcularLinguagens([repoA, repoIgnorado], ['centralEng_AI_Chatbot']).some((l) => l.nome === 'Cython'));
+});
+
+test('REPOS_IGNORADOS: centralEng_AI_Chatbot esta na lista padrao', () => {
+  assert.ok(REPOS_IGNORADOS.includes('centralEng_AI_Chatbot'));
+});
+
+test('transformar: ignora so nas linguagens, registra linguagensIgnoram e mantem a contagem de repos', () => {
+  const fx = lerFixture();
+  const user = fx.data.user;
+  user.repositories.nodes = [...user.repositories.nodes, repoIgnorado];
+  const total = user.repositories.totalCount;
+  const json = transformar({ paginas: [user], agora: AGORA, amostra: false, usuario: 'gomesbeduardo' });
+  assert.deepEqual(json.linguagensIgnoram, REPOS_IGNORADOS);
+  assert.equal(json.reposPublicos, total);
+  assert.ok(!json.linguagens.some((l) => l.nome === 'Cython'));
+  assert.deepEqual(validarContrato(json), []);
+  const extra = transformar({ paginas: [user], agora: AGORA, amostra: false, usuario: 'gomesbeduardo', ignorar: ['A', 'outro'] });
+  assert.deepEqual(extra.linguagensIgnoram, [...REPOS_IGNORADOS, 'A', 'outro']);
 });

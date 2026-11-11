@@ -5,6 +5,8 @@ import { dirname } from 'node:path';
 export const VERSAO_CONTRATO = 1;
 export const USUARIO_PADRAO = 'gomesbeduardo';
 export const NOME_SECRET = 'GH_TOKEN_LEITURA';
+// Repositorios que nao entram na soma de linguagens (ex.: virtualenv versionado inflando Python). So afeta `linguagens`.
+export const REPOS_IGNORADOS = ['centralEng_AI_Chatbot'];
 export const URL_GRAPHQL = 'https://api.github.com/graphql';
 const DIAS_JANELA = 364; // 365 dias inclusivos, dentro do teto de um ano (R1)
 const MAX_LINGUAGENS = 5;
@@ -61,9 +63,10 @@ export function converterDia(dia) {
 }
 
 // R4: bytes por linguagem somados em todos os repositórios, top 5, percentual sobre o total.
-export function calcularLinguagens(repos) {
+export function calcularLinguagens(repos, ignorar = []) {
   const soma = new Map();
   for (const repo of repos) {
+    if (ignorar.includes(repo?.name)) continue;
     for (const aresta of repo?.languages?.edges ?? []) {
       const nome = aresta.node.name;
       const atual = soma.get(nome) ?? { nome, bytes: 0, cor: aresta.node.color ?? null };
@@ -99,7 +102,8 @@ export function validarResposta(corpo, { primeira = true } = {}) {
 }
 
 // R2, R3, R4, R5: monta o JSON do contrato a partir das páginas (data.user) já validadas.
-export function transformar({ paginas, agora, amostra, usuario }) {
+export function transformar({ paginas, agora, amostra, usuario, ignorar = [] }) {
+  const ignorados = [...REPOS_IGNORADOS, ...ignorar.filter((r) => !REPOS_IGNORADOS.includes(r))];
   const primeira = paginas[0];
   const col = primeira.contributionsCollection;
   const cal = col.contributionCalendar;
@@ -121,7 +125,8 @@ export function transformar({ paginas, agora, amostra, usuario }) {
       restritas: col.restrictedContributionsCount,
     },
     reposPublicos: primeira.repositories.totalCount,
-    linguagens: calcularLinguagens(repos),
+    linguagens: calcularLinguagens(repos, ignorados),
+    linguagensIgnoram: ignorados,
     calendario: {
       totalDias: todosDias.length,
       maximoDia: todosDias.reduce((m, d) => Math.max(m, d.contagem), 0),
@@ -150,6 +155,7 @@ export function validarContrato(json) {
   const c = json.contribuicoes ?? {};
   for (const k of ['total', 'commits', 'pullRequests', 'issues', 'revisoes', 'restritas']) inteiro(c[k], `contribuicoes.${k}`);
   inteiro(json.reposPublicos, 'reposPublicos');
+  if (json.linguagensIgnoram !== undefined && !(Array.isArray(json.linguagensIgnoram) && json.linguagensIgnoram.every((r) => typeof r === 'string'))) erros.push('linguagensIgnoram deve ser lista de textos');
   if (!Array.isArray(json.linguagens)) erros.push('linguagens deve ser lista');
   else {
     if (json.linguagens.length > MAX_LINGUAGENS) erros.push(`linguagens tem mais de ${MAX_LINGUAGENS}`);
@@ -212,7 +218,7 @@ async function consultar({ fetch, token, login, janela }) {
 }
 
 // Ponto de entrada do CLI, com dependências injetáveis. Devolve o código de saída (R6, R7).
-export async function executar({ env = process.env, fetch = globalThis.fetch, saida, fixture, agora = new Date().toISOString(), estrito = false, usuario = USUARIO_PADRAO, log = console } = {}) {
+export async function executar({ env = process.env, fetch = globalThis.fetch, saida, fixture, agora = new Date().toISOString(), estrito = false, usuario = USUARIO_PADRAO, ignorar = [], log = console } = {}) {
   if (!saida) throw new Error('saida obrigatoria');
   const existente = existsSync(saida);
   const falhar = (motivo) => {
@@ -229,12 +235,12 @@ export async function executar({ env = process.env, fetch = globalThis.fetch, sa
     if (fixture) {
       const corpo = JSON.parse(readFileSync(fixture, 'utf8'));
       const usuarioGraphQL = validarResposta(corpo);
-      json = transformar({ paginas: [usuarioGraphQL], agora, amostra: true, usuario });
+      json = transformar({ paginas: [usuarioGraphQL], agora, amostra: true, usuario, ignorar });
     } else {
       const token = env[NOME_SECRET];
       if (!token) return falhar(`secret ${NOME_SECRET} ausente`);
       const paginas = await consultar({ fetch, token, login: usuario, janela: calcularJanela(agora) });
-      json = transformar({ paginas, agora, amostra: false, usuario });
+      json = transformar({ paginas, agora, amostra: false, usuario, ignorar });
     }
     const erros = validarContrato(json);
     if (erros.length > 0) throw new Error(`contrato invalido: ${erros.join('; ')}`);
