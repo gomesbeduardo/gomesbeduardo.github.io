@@ -36,11 +36,11 @@ Quem usa: o visitante (recrutador, tech lead) e os buscadores e assistentes de I
 | 2 | `feat/astro-seo` | `robots.txt`, sitemap, `llms.txt`, `head` por página, JSON-LD, texto sem JS, fatos de `curriculo.json` | 001b C1 a C9 |
 | 3 | `feat/astro-desempenho` | módulos por componente, GSAP e Lenis sob demanda, fontes locais, imagens otimizadas, teste de desempenho no CI, saída de `site/` e `pages.yml` | 001c C1 a C10 |
 
-Pré-condição da etapa 1: a fila atual entrar na `staging` (spec 006, correção do menu #14, spec 007, spec 008). A referência de paridade é o `site/` da `staging` nesse momento (001a F1).
+Pré-condição da etapa 1: a implementação da spec 007 entrar na `staging`. A spec 006 e a correção do menu (#14) entraram em 11/11. A spec 008 é implementada depois da etapa 1, direto no Astro, sem passar por `site/` (decisão do responsável em 11/11/2026). A referência de paridade é o `site/` da `staging` quando a etapa 1 começa (001a F1).
 
 ## Regras transversais
 
-- R1. Nada do que as specs 003 a 008 entregaram muda de comportamento: surpresas (`surpresas.js` e `.css`), virada da foto com ficha no verso (005), menu animado (#14), contato e rodapé com aviso de cópia (006), modal "Feito com o Claude Code" com a linha dos números do processo (008), PDFs em `/curriculo/`, tema (`tema.js`, `inicio.js`), transições (`transicoes.css`), correções de texto (007). O contrato é o conjunto dos `scripts/site/*.e2e.mjs` mais a paridade de capturas.
+- R1. Nada do que as specs 003 a 007 entregaram muda de comportamento, e a 008, implementada depois da etapa 1, segue o mesmo contrato a partir do PR dela: surpresas (`surpresas.js` e `.css`), virada da foto com ficha no verso (005), menu animado (#14), contato e rodapé com aviso de cópia (006), modal "Feito com o Claude Code" com a linha dos números do processo (008), PDFs em `/curriculo/`, tema (`tema.js`, `inicio.js`), transições (`transicoes.css`), correções de texto (007). O contrato é o conjunto dos `scripts/site/*.e2e.mjs` mais a paridade de capturas.
 - R2. A paridade (001a C1 e C4) vale no fim de cada etapa, com as únicas exceções declaradas em 001b R5 (texto que passa a vir de `curriculo.json`, listado no PR) e 001c R6 (máscara de imagem e fontes locais).
 - R3. Área sensível: dependências (R5 abaixo), `.github/workflows/*`, secrets. O worker propõe o diff no PR; a sessão principal aplica com o ok do responsável.
 - R4. Tailwind: tokens em `@theme` apontando para as variáveis atuais, sem Preflight nas etapas 1 e 2 e com Preflight na etapa 3 (P1, 001c R9), sem valor literal onde há token, conversão para utilitário permitida por componente desde que a paridade passe (001a R3).
