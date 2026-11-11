@@ -122,6 +122,12 @@ for (const a of ARQUIVOS_LMS) {
   });
 }
 
+test('marca: nenhum elemento referencia o símbolo #si-claude', () => {
+  for (const f of ['site/index.html', 'site/en/index.html']) {
+    assert.doesNotMatch(ler(f), /si-claude/, f);
+  }
+});
+
 test('foto: o arquivo existe no site', () => {
   assert.ok(existsSync(join(raiz, 'site/img/eduardo-gomes.jpg')));
 });
