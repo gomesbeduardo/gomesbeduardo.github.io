@@ -97,11 +97,15 @@ section{padding:var(--section) 0 0}
 :root[data-mode="dark"] .theme .i-moon{display:block}
 .menu{position:fixed;top:68px;right:var(--gutter);z-index:50;width:min(300px,calc(100% - 2*var(--gutter)));padding:8px;border-radius:22px;display:flex;flex-direction:column;gap:2px}
 .menu[hidden]{display:none}
-.menu a{display:flex;align-items:center;min-height:48px;padding:0 16px;border-radius:14px;text-decoration:none;font-size:1.15rem;font-weight:600;transition:background-color .2s}
+.menu{transform-origin:100% 0;transform:translateY(-6px) scale(.92);opacity:0;will-change:transform,opacity;transition:transform .2s cubic-bezier(.4,0,1,1),opacity .2s cubic-bezier(.4,0,1,1)}
+.menu.is-open{transform:none;opacity:1;transition:transform .35s cubic-bezier(.34,1.4,.64,1),opacity .25s var(--ease)}
+.menu a{display:flex;align-items:center;min-height:48px;padding:0 16px;border-radius:14px;text-decoration:none;font-size:1.15rem;font-weight:600;opacity:0;transform:translateY(6px);transition:opacity .15s ease-in,transform .15s ease-in,background-color .2s}
+.menu.is-open a{opacity:1;transform:none;transition:opacity .3s var(--ease),transform .35s var(--ease),background-color .2s;transition-delay:calc(var(--i,0)*30ms + 60ms),calc(var(--i,0)*30ms + 60ms),0s}
 .menu a:hover{background:color-mix(in srgb,var(--fg) 7%,transparent)}
 .menu a:active{background:color-mix(in srgb,var(--fg) 12%,transparent)}
 @media (max-width:899.98px){.top.has-menu{justify-content:flex-end}.top.has-menu nav,.top.has-menu .sep{display:none}.menu-btn{display:inline-flex}}
 @media (min-width:900px){.menu{display:none!important}}
+@media (prefers-reduced-motion:reduce){.menu,.menu.is-open{transform:none;transition:opacity .1s linear}.menu a,.menu.is-open a{opacity:1;transform:none;transition:background-color .2s;transition-delay:0s}}
 
 /* botões */
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;text-decoration:none;font:inherit;font-size:1rem;font-weight:600;line-height:1.2;letter-spacing:.005em;border:1px solid var(--line-strong);background:transparent;color:var(--fg);cursor:pointer;transition:background-color .15s ease-out,border-color .15s ease-out,color .15s ease-out}
