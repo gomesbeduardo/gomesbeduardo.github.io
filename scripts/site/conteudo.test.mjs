@@ -115,9 +115,9 @@ for (const a of ARQUIVOS_LMS) {
     // meta description também
     const meta = bruto.match(/<meta name="description" content="([^"]*)"/)?.[1];
     if (meta && /LMS/.test(meta)) assert.match(meta, /valida/i);
-    // linhas da tabela de Stack que citam o LMS sem a Asten não podem ter a etiqueta de produção
+    // nenhuma linha da tabela de Stack que cite o LMS (com ou sem outros projetos) leva a etiqueta de produção
     for (const li of bruto.match(/<li><span class="n">[\s\S]*?<\/li>/g) ?? []) {
-      if (/\bLMS\b/.test(li) && !/Asten/.test(li)) assert.doesNotMatch(li, /em produção|in production/);
+      if (/\bLMS\b/.test(li)) assert.doesNotMatch(li, /em produção|in production/);
     }
   });
 }
