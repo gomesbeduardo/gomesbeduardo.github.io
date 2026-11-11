@@ -371,7 +371,7 @@
   }
 
   // Esc fecha a peça aberta; clique fora fecha as que não ficam presas ao texto.
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && cur) fecharAtual(true); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && cur && !document.querySelector('.aviso.falha.on')) fecharAtual(true); }); // o aviso de falha do e-mail fica por cima: o primeiro Esc é dele
   document.addEventListener('pointerdown', function (e) {
     if (cur && cur.fora && !cur.el.contains(e.target) && !(cur.origem && cur.origem.contains(e.target))) fecharAtual(false);
   });
