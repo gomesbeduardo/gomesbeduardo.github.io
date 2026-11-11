@@ -1,6 +1,6 @@
 # Spec 005: virada da foto do topo
 
-Estado: aprovada pelo responsável em 11/11/2026; comportamento no celular alterado e reaprovado no mesmo dia (D3, C6 e A5).
+Estado: aprovada pelo responsável em 11/11/2026; comportamento no celular e borda da foto alterados e reaprovados no mesmo dia (D3, C1a, C6 e A5).
 
 ## Pedido literal
 
@@ -33,6 +33,7 @@ Cinco cliques seguidos na foto do topo viram o card e mostram a curiosidade c10 
 ### Computador (largura acima de 860 px)
 
 - C1. A frente é a foto atual. O verso é uma face do mesmo tamanho da moldura (a largura das colunas 9 a 12 e a proporção 4:5), com fundo `--raised`, borda `--line-strong` e canto `--r-md`.
+- C1a. A borda de 1 px (`--line-strong`) aparece em volta da foto e do verso o tempo todo: antes do giro, em cada quadro do giro, com o card virado e depois de desvirar. Nenhum quadro mostra a foto sem a borda nem a borda chegando atrasada (pedido do responsável, 11/11/2026).
 - C2. O giro é no eixo vertical, de 0° a 180°, em cerca de 500 ms, com a curva `--ease` do site. Desvirar faz o caminho de volta. As duas faces não aparecem espelhadas em nenhum momento.
 - C3. O bloco ocre fica parado no lugar, atrás do card, durante e depois do giro.
 - C4. Nada no topo muda de lugar: a caixa da `.photo` e a posição do nome ficam iguais, com tolerância de 1 px, antes, durante e depois do giro.
@@ -74,6 +75,7 @@ Os rótulos da ficha ("No YourMentor", "Antes", "Base"; EN "At YourMentor", "Bef
 - A2. Dado o card virado em 1280 px, então o bloco ocre está visível na mesma posição de antes do giro, e o verso mostra o rótulo, o destaque, os três campos da ficha, a contagem e o botão (print nos temas claro e escuro).
 - A3. Dado o card virado, quando se aperta Esc, então o card desvira e o foco volta ao botão da foto; a face de costas não recebe foco pelo Tab em nenhum dos dois estados (Playwright).
 - A4. Dado `prefers-reduced-motion: reduce`, quando se vira o card, então nenhum `transform` de rotação é aplicado e a troca dura até 150 ms (Playwright).
+- A1a. Dado o site em 1280 px e em 390 px, quando se vira e se desvira o card, então a borda aparece em todos os prints tirados a cada 40 ms, com o card de frente, de lado e de costas (Playwright).
 - A5. Dado o site em 320, 360, 390 e 414 px, quando se vira o card, então a caixa da `.photo` e o topo do `h1` medem o mesmo antes, durante e depois (tolerância de 1 px), o verso não tem rolagem nem texto cortado (`scrollHeight` igual a `clientHeight`), a ficha não aparece e nada passa da largura da tela (Playwright e print).
 - A6. Dado `site/surpresas.js`, então os textos da ficha existem em PT e EN, iguais à tabela acima, e o verso não cita CS50 nem Coderace (teste em `scripts/site/conteudo.test.mjs`).
 - A7. Dado o card virado com o mouse sobre ele, quando o mouse se move, então o card não inclina (Playwright).
