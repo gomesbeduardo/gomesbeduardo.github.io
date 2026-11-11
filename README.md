@@ -1,7 +1,7 @@
 <a href="https://gomesbeduardo.github.io/">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/readme/inicio-escuro.png">
-    <img alt="Página inicial do portfólio de Eduardo Gomes, com o nome em letras grandes e os botões Ver projetos e Baixar currículo" src="docs/readme/inicio-claro.png">
+    <img alt="Página inicial do portfólio de Eduardo Gomes, com o nome em letras grandes, a foto em moldura e os botões Ver projetos e Baixar currículo" src="docs/readme/inicio-claro.png">
   </picture>
 </a>
 
