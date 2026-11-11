@@ -61,7 +61,7 @@ Toda informação que a página mostra existe no HTML de `dist/` como texto: nom
 
 - nenhum elemento com texto fica com `opacity: 0`, `visibility: hidden`, `display: none` ou fora da tela por `transform` esperando animação; o estado inicial de reveal é visível e o JS é que esconde e revela;
 - os contadores mostram o valor final (`1234`, não `0` ou `data-v`);
-- o calendário de contribuições existe como HTML gerado no build (`<div>` por dia com `title="7 contribuições em 02/03/2026"` e classe de nível 0 a 4), e `main.js` deixa de desenhá-lo; o JSON `#cal-dados` sai. Isso cumpre a exigência "sem JS para isso" da spec 002 e vale mesmo que a 002 ainda não tenha coleta real;
+- o calendário de contribuições existe como HTML gerado no build (um elemento por dia com o nível de 0 a 4 e o texto do dia em `sr-only`, sem `title`, conforme a spec 002b R5), e `main.js` deixa de desenhá-lo; o JSON `#cal-dados` sai. Isso cumpre a exigência "sem JS para isso" da spec 002 e vale mesmo que a 002 ainda não tenha coleta real;
 - a frase digitada do hero existe no HTML com o texto final (o JS a apaga e redigita);
 - o menu do celular: os links existem no HTML; abrir sem JS não é exigido (comportamento de hoje).
 
