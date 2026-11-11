@@ -1,6 +1,6 @@
 # Spec 006: e-mail que copia com aviso e rodapé completo
 
-Estado: rascunho, aguardando aprovação do responsável.
+Estado: aprovada pelo responsável em 11/11/2026, com a P1 respondida pela recomendação (manter C9 e C13).
 
 ## Pedido literal
 
@@ -73,4 +73,4 @@ A seção Contato mostra o endereço `eduardobgomes100@gmail.com` por extenso, n
 
 ## Perguntas abertas
 
-- P1. A linha sobre o site (C9) e a linha final nas páginas de projeto (C13) foram propostas pela sessão principal para cobrir "outras informações". Recomendação: manter as duas.
+Nenhuma. A P1 (linha sobre o site e linha final nas páginas de projeto) foi aprovada com a spec, como recomendado.
