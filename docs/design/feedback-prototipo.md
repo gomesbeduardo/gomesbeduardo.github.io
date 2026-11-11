@@ -127,6 +127,7 @@ Pedido: "mais detalhes de animação e decoração no background, nos cards, efe
 
 ## Para a spec 001 (migração para Astro)
 
+- SEO e GEO como foco da migração (pedido de 11/11: "lembre de focar no GEO e SEO com o astro"; o Tailwind entra junto com o Astro). A spec 001 deve cobrir: `sitemap.xml` e `robots.txt`; dados estruturados JSON-LD (`Person` e `ProfilePage` na home, `CreativeWork` ou `SoftwareSourceCode` por projeto, com `sameAs` para GitHub e LinkedIn); `hreflang`, canonical e Open Graph com imagem por página nas duas línguas; `llms.txt` com o resumo do perfil e dos projetos para buscadores de IA; todo o texto no HTML gerado no build, legível sem JS; títulos e descrições únicos; fatos consistentes entre site, currículo e LinkedIn; meta de Core Web Vitals verdes.
 - Tailwind e shadcn (pedido de 11/11: "Se quiser use tailwind e shadcn"; "pode levar pra spec do Astro"). Recomendação da sessão: Tailwind v4 no Astro, com os tokens atuais de `prototipo/style.css` (cores, espaçamento, raios, tipografia) virando o tema dele; shadcn só se alguma ilha virar React, e o carrossel de projetos é o único candidato. No protótipo continua CSS puro.
 - Configuração favorita no lab de fundo: B só nuances, paleta B0, tema escuro, grão, brilho, vidro, nome F3 letra a letra.
 - Tema: "Segue o sistema e vamos criar um DS bem feito que encaixe tanto no claro, quanto escuro. Passe handoff que vou usar o claude design." Brief em `docs/design/handoff-claude-design.md`.
