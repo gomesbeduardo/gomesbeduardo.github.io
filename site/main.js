@@ -126,6 +126,68 @@
     });
   }
 
+  // ---------- Contato e rodapé (spec 006): copiar e-mail com aviso, ano e "Voltar ao topo" ----------
+  function setupContato(reduce) {
+    $$('[data-ano]').forEach(function (el) { el.textContent = String(new Date().getFullYear()); });
+
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('[data-topo]'); if (!a) return;
+      e.preventDefault();
+      function chega() {
+        var m = document.getElementById('conteudo'); if (!m) return;
+        if (!m.hasAttribute('tabindex')) m.setAttribute('tabindex', '-1');
+        m.focus({ preventScroll: true });
+      }
+      if (lenisRef && !reduce) {
+        var dur = Math.min(1.2, Math.max(0.8, 0.8 + scrollY / 15000));
+        lenisRef.scrollTo(0, { duration: dur, easing: easeIO, onComplete: chega });
+      } else { scrollTo(0, 0); chega(); }
+    });
+
+    var botoes = $$('[data-copiar-email]'); if (!botoes.length) return;
+    var TXT = EN
+      ? { ok: 'Email copied', falha: "Couldn't copy. Copy it by hand:", app: 'Open in your email app', fechar: 'Close' }
+      : { ok: 'E-mail copiado', falha: 'Não deu para copiar. Copie à mão:', app: 'Abrir no app de e-mail', fechar: 'Fechar' };
+    var el = document.createElement('div');
+    el.className = 'aviso'; el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite');
+    el.innerHTML = '<div class="aviso-caixa"><svg class="aviso-ok" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg>' +
+      '<div class="aviso-txt"><p class="aviso-t"></p><p class="aviso-end">eduardobgomes100@gmail.com</p>' +
+      '<a class="aviso-app" href="mailto:eduardobgomes100@gmail.com"></a></div>' +
+      '<button class="aviso-x" type="button" aria-label="' + TXT.fechar + '"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button></div>';
+    document.body.appendChild(el);
+    var titulo = $('.aviso-t', el), app = $('.aviso-app', el), x = $('.aviso-x', el);
+    var timer = 0, origem = null;
+    app.textContent = TXT.app;
+
+    function esconder(devolveFoco) {
+      clearTimeout(timer); el.classList.remove('on');
+      if (devolveFoco && origem) origem.focus({ preventScroll: true });
+    }
+    function mostrarOk() {
+      clearTimeout(timer);
+      el.classList.remove('falha', 'tr'); titulo.textContent = TXT.ok;
+      void el.offsetWidth; el.classList.add('on', 'tr'); // reinicia o traço do ícone a cada clique
+      timer = setTimeout(function () { esconder(false); }, 2500);
+    }
+    function mostrarFalha() {
+      clearTimeout(timer);
+      el.classList.remove('tr'); el.classList.add('falha', 'on'); titulo.textContent = TXT.falha;
+      app.focus();
+    }
+    function copiarEmail(btn) {
+      origem = btn;
+      if (!navigator.clipboard || !navigator.clipboard.writeText) { mostrarFalha(); return; }
+      try {
+        navigator.clipboard.writeText('eduardobgomes100@gmail.com').then(mostrarOk).catch(mostrarFalha);
+      } catch (er) { mostrarFalha(); }
+    }
+    botoes.forEach(function (b) { b.addEventListener('click', function () { copiarEmail(b); }); });
+    x.addEventListener('click', function () { esconder(true); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && el.classList.contains('falha') && el.classList.contains('on')) esconder(true);
+    });
+  }
+
   // ---------- Calendário (dados reais, ver #cal-dados no HTML) ----------
   function buildCalendar() {
     var cal = $('#cal'), src = $('#cal-dados'); if (!cal || !src) return;
@@ -194,14 +256,7 @@
       row.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch') row.classList.toggle('paused'); });
     });
 
-    // Copiar e-mail
-    var cp = $('#copy-email');
-    if (cp) cp.addEventListener('click', function () {
-      if (navigator.clipboard) navigator.clipboard.writeText('eduardobgomes100@gmail.com');
-      var t = $('span', cp), u = $('use', cp);
-      t.textContent = EN ? 'Copied' : 'Copiado'; u.setAttribute('href', '#i-check');
-      setTimeout(function () { t.textContent = EN ? 'Copy email' : 'Copiar e-mail'; u.setAttribute('href', '#i-copy'); }, 1500);
-    });
+    setupContato(reduce);
 
     if (mm) mm.add('(prefers-reduced-motion: no-preference)', function () {
       var lenis;
