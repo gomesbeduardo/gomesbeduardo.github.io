@@ -206,7 +206,7 @@
     if (mm) mm.add('(prefers-reduced-motion: no-preference)', function () {
       var lenis;
       if (S.lenis.on && window.Lenis) {
-        lenis = new Lenis({ duration: S.lenis.duration }); lenisRef = lenis;
+        lenis = new Lenis({ duration: S.lenis.duration }); lenisRef = lenis; window.__lenis = lenis;
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
         gsap.ticker.lagSmoothing(0);
@@ -269,6 +269,17 @@
           row.addEventListener('mouseleave', function () {
             gsap.to(card, { rotationX: 0, rotationY: 0, y: 0, duration: 0.5, ease: 'expo.out', overwrite: 'auto' });
           });
+        });
+      }
+
+      if (fine && S.tilt.on) {
+        // Foto do topo: o conjunto (foto e bloco de destaque) inclina até 2°, como os cards de projeto.
+        $$('.photo-btn').forEach(function (btn) {
+          btn.addEventListener('mousemove', function (e) {
+            var r = btn.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+            gsap.to(btn, { rotationY: px * 4, rotationX: -py * 4, transformPerspective: 1200, duration: 0.4, ease: 'expo.out', overwrite: 'auto' });
+          });
+          btn.addEventListener('mouseleave', function () { gsap.to(btn, { rotationX: 0, rotationY: 0, duration: 0.5, ease: 'expo.out', overwrite: 'auto' }); });
         });
       }
 
