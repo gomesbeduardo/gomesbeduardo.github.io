@@ -122,6 +122,32 @@ for (const a of ARQUIVOS_LMS) {
   });
 }
 
+for (const h of HOMES) {
+  const linhasStack = () => ler(h.arquivo).match(/<li><span class="n">[\s\S]*?<\/li>/g) ?? [];
+  const producao = /em produção|in production/;
+
+  test(`Stack (${h.id}): linhas numeradas 01..N em sequência`, () => {
+    const nums = linhasStack().map((li) => li.match(/<span class="n">(\d+)<\/span>/)?.[1]);
+    assert.ok(nums.length > 0);
+    assert.deepEqual(nums, nums.map((_, i) => String(i + 1).padStart(2, '0')));
+  });
+
+  test(`Stack (${h.id}): linha com LMS ou InfoHub nunca leva etiqueta de produção`, () => {
+    const alvo = linhasStack().filter((li) => /\bLMS\b|InfoHub/.test(li));
+    assert.ok(alvo.length >= 3);
+    for (const li of alvo) assert.doesNotMatch(li, producao, li);
+  });
+
+  test(`Stack (${h.id}): exatamente 2 linhas cujo local é só o painel da Asten, ambas em produção`, () => {
+    const alvo = linhasStack().filter((li) => {
+      const where = li.match(/<span class="where">([\s\S]*?)<\/span>/)?.[1] ?? '';
+      return /^(painel da Asten|Asten dashboard)\b/.test(where);
+    });
+    assert.equal(alvo.length, 2);
+    for (const li of alvo) assert.match(li, producao, li);
+  });
+}
+
 test('marca: nenhum elemento referencia o símbolo #si-claude', () => {
   for (const f of ['site/index.html', 'site/en/index.html']) {
     assert.doesNotMatch(ler(f), /si-claude/, f);
