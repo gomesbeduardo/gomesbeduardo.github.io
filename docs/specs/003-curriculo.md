@@ -1,19 +1,19 @@
 # 003. Currículo em PDF, PT e EN
 
 **Status:** rascunho (textos provisórios até o responsável aprovar)
-**Pedido (literal, do responsável):** "Currículo: PDF novo, geral, em PT e EN, gerado a partir dos textos aprovados. O `~/Downloads/Curriculo_Eduardo_Gomes_Softplan_Futures.pdf` foi feito para uma vaga e serve só de fonte."
+**Pedido (literal, do responsável):** "Currículo: PDF novo, geral, em PT e EN, gerado a partir dos textos aprovados. O currículo existente, guardado fora do repositório, foi feito para uma vaga e serve só de fonte."
 **Decisões ligadas:** spec 001 (portfólio, que põe o botão "Currículo" apontando para os PDFs desta spec); spec 002 (workflow `publicar.yml`, que gera os PDFs no build).
 
 ## Problema
 
-O único currículo existente foi escrito para uma vaga (Softplan) e traz telefone, cidade e disponibilidade de mudança. O site público precisa de um currículo geral, em português e inglês, com o mesmo conteúdo nas duas línguas, que um recrutador baixe e um sistema de triagem (ATS) consiga ler como texto. O repositório é público: o conteúdo só pode trazer nome, "Brasil", e-mail, LinkedIn, GitHub e o endereço do site.
+O único currículo existente foi escrito para uma vaga específica e traz telefone, cidade e disponibilidade de mudança. O site público precisa de um currículo geral, em português e inglês, com o mesmo conteúdo nas duas línguas, que um recrutador baixe e um sistema de triagem (ATS) consiga ler como texto. O repositório é público: o conteúdo só pode trazer nome, "Brasil", e-mail, LinkedIn, GitHub e o endereço do site.
 
 Quem usa: o visitante baixa o PDF; o responsável edita um arquivo só e os dois PDFs saem dele; o front end (spec 001) linka os arquivos.
 
 ## Fatos confirmados
 
 - F1. Nome: Eduardo Bergoli Gomes. E-mail `eduardobgomes100@gmail.com`, LinkedIn `linkedin.com/in/eduardo-gomes-pb`, GitHub `github.com/gomesbeduardo`, site `gomesbeduardo.github.io`, localização "Brasil" (responsável).
-- F2. Textos aprovados em 09/11/2026: "Sobre" PT/EN do LinkedIn, experiência (Asten AVMB, CentralEng, YourMentor, JET) e destaques (leadgate, LMS), em `ia_softplan/docs/privado/perfil/revisao-slop.md` e `textos-v2.md`; README do perfil PT/EN. O currículo reaproveita esses trechos, tirando a cidade.
+- F2. Textos aprovados em 09/11/2026: "Sobre" PT/EN do LinkedIn, experiência (Asten AVMB, CentralEng, YourMentor, JET) e destaques (leadgate, LMS), em arquivos privados de perfil, fora do repositório; README do perfil PT/EN. O currículo reaproveita esses trechos, tirando a cidade.
 - F3. Fatos do responsável: Desenvolvedor Full Stack e Analista de TI na CentralEng (LMS em produção com 20 colaboradores; lidera o sistema de gestão de PMOC); estágio de desenvolvimento no time de Inovação da Asten AVMB; Sistemas de Informação na AMF; 1º lugar no 1º Ideathon de SI da AMF (out/2025, equipe Mentor.Me); campeão do Coderace 2026 (AgroPlanner); cofundador do YourMentor desde jun/2026; JET no passado; processo: spec antes do código, TDD, PR revisado com CI, avaliação reservada em recursos com IA.
 - F4. Projetos em destaque: leadgate (`gomesbeduardo/leadgate`, triagem de leads com IA, cerca de 570 testes, avaliação com conjunto reservado) e InfoHub InovAMF (`gomesbeduardo/infohub-inovamf`; descrição pública do repositório: jornada do empreendedor do InfoHub ao InovAMF, Next.js, TypeScript, Prisma e PostgreSQL, projeto da disciplina de Arquitetura de Sistemas, em dupla).
 - F5. Do PDF antigo (só fatos): Asten AVMB desde out/2026, painel de chamados em produção usado nas reuniões da direção, com React, TypeScript, Vite, Tailwind, Vercel Functions, Postgres com Prisma, Vitest e Playwright; CentralEng como auxiliar administrativo de out/2025 a abr/2026 e como desenvolvedor desde mai/2026; AgroPlanner em jun/2026, em equipe, com 15 entrevistas antes do código e 10 horas de maratona; Bacharelado em SI na AMF de fev/2024 a dez/2028 (previsto); inglês avançado.

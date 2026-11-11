@@ -20,7 +20,7 @@ Portfólio pessoal de Eduardo Bergoli Gomes, desenvolvedor full stack. Mostra qu
 
 ## Positioning
 
-Processo e resultado juntos. Ele trabalha com spec antes do código, TDD, PR revisado com CI e avaliação com conjunto reservado em recursos com IA, e isso aparece em sistemas rodando: LMS em produção com 20 colaboradores na CentralEng, leadgate com 570 testes, 1º lugar no Ideathon de SI da AMF, campeão do Coderace 2026.
+Processo e resultado juntos. Ele trabalha com spec antes do código, TDD, PR revisado com CI e avaliação com conjunto reservado em recursos com IA, e isso aparece em sistemas rodando: LMS em validação com colaboradores na CentralEng, leadgate com 570 testes, 1º lugar no Ideathon de SI da AMF, campeão do Coderace 2026.
 
 ## Operating Context
 
@@ -41,14 +41,14 @@ O visitante lê em desktop no horário de trabalho ou no celular entre uma coisa
 - Voz: fatos, números e o que roda onde. Sem frase de efeito, slogan, contraste retórico nem travessão.
 - Paleta P1 Ocre, escolhida em 11/11/2026 na prancha `prototipo/lab/paletas.html`: preto terroso com destaque açafrão no escuro, areia com destaque ocre no claro, um destaque só. Tokens e contraste em `docs/design/paletas-pesquisa.md`. Substitui o grafite dos cinzas do GitHub.
 - Referência de estrutura e de acabamento: `danmachado3105.github.io`. Em 09/11 o responsável escolheu seguir essa linha de portfólio (nome grande, foto, seções empilhadas, movimento de rolagem), mais bem trabalhada, em vez de uma metáfora visual própria. Não copiar dela fontes (Bricolage Grotesque, DM Sans, DM Mono) nem paleta (`#100d0b`, `#ff6b3d`). Em 10/11 ele pediu os efeitos dela sem exagerar nas cores: fundo que muda entre seções, grão, brilho atrás do nome, cards de vidro, texto que acende na rolagem, foto com selo, carrossel de projetos.
-- Foto: a do LinkedIn, ao lado do nome, numa moldura com selo circular girando (10/11).
+- Foto: a do avatar do GitHub (460 px), no topo, à direita do nome, em moldura 4:5 com cantos `var(--r-md)`, borda `var(--line-strong)` e bloco de destaque deslocado atrás (spec 004, 11/11).
 - Citação possível no rodapé, a decidir: "In the face of ambiguity, refuse the temptation to guess." (Tim Peters, The Zen of Python).
 
 ## Evidence on Hand
 
 - leadgate: repo público `gomesbeduardo/leadgate`, triagem de leads com IA, 570 testes (conferir no merge), prévia social em imagem.
 - InfoHub InovAMF: repo público `gomesbeduardo/infohub-inovamf`, prints de landing, login e 3 painéis.
-- Experiência: CentralEng (Full Stack e Analista de TI, LMS com 20 colaboradores, sistema de PMOC), estágio na Asten AVMB (time de Inovação), Sistemas de Informação na AMF, YourMentor (co-founder desde jun/2026), JET (passado).
+- Experiência: CentralEng (Full Stack e Analista de TI, LMS em validação com colaboradores, sistema de PMOC), estágio na Asten AVMB (time de Inovação), Sistemas de Informação na AMF, YourMentor (co-founder desde jun/2026), JET (passado).
 - Não há depoimentos, clientes nem métricas de negócio. Não inventar.
 
 ## Product Principles

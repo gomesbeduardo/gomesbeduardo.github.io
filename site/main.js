@@ -206,7 +206,7 @@
     if (mm) mm.add('(prefers-reduced-motion: no-preference)', function () {
       var lenis;
       if (S.lenis.on && window.Lenis) {
-        lenis = new Lenis({ duration: S.lenis.duration }); lenisRef = lenis;
+        lenis = new Lenis({ duration: S.lenis.duration }); lenisRef = lenis; window.__lenis = lenis;
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
         gsap.ticker.lagSmoothing(0);
@@ -272,6 +272,17 @@
         });
       }
 
+      if (fine && S.tilt.on) {
+        // Foto do topo: o conjunto (foto e bloco de destaque) inclina até 2°, como os cards de projeto.
+        $$('.photo-btn').forEach(function (btn) {
+          btn.addEventListener('mousemove', function (e) {
+            var r = btn.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+            gsap.to(btn, { rotationY: px * 4, rotationX: -py * 4, transformPerspective: 1200, duration: 0.4, ease: 'expo.out', overwrite: 'auto' });
+          });
+          btn.addEventListener('mouseleave', function () { gsap.to(btn, { rotationX: 0, rotationY: 0, duration: 0.5, ease: 'expo.out', overwrite: 'auto' }); });
+        });
+      }
+
       if (S.count.on) {
         var nums = $$('.num');
         var play = function (el) {
@@ -327,7 +338,7 @@
       var fromClip = getComputedStyle(bg).clipPath, fromBg = getComputedStyle(bg).opacity, fromEdge = getComputedStyle(edge).opacity;
       anims.forEach(function (a) { a.cancel(); }); anims = [];
       state = next; var pill = next === 'pill';
-      top.classList.toggle('pill', pill); top.classList.toggle('bar', !pill);
+      top.classList.toggle('pill', pill); top.classList.toggle('faixa', !pill);
       var g = geo(), toClip = pill ? g.pill : 'inset(0px 0px 0px 0px round 0px)';
       bg.style.clipPath = toClip;
       edge.style.left = g.l + 'px'; edge.style.width = g.w + 'px';
@@ -345,11 +356,11 @@
     }
     // Histerese: vira pílula depois de 120 px; volta à barra abaixo de 80 px, ou já abaixo de 120 px quando a rolagem inverte para cima.
     var lastY = scrollY, dir = 0;
-    function want() { var y = scrollY; dir = y > lastY ? 1 : y < lastY ? -1 : dir; lastY = y; return state === 'pill' ? (y < 80 || (dir < 0 && y < 120) ? 'bar' : 'pill') : (y > 120 ? 'pill' : 'bar'); }
+    function want() { var y = scrollY; dir = y > lastY ? 1 : y < lastY ? -1 : dir; lastY = y; return state === 'pill' ? (y < 80 || (dir < 0 && y < 120) ? 'faixa' : 'pill') : (y > 120 ? 'pill' : 'faixa'); }
     // Sem morph antes do fim da transição de chegada (P3): restauração de rolagem e pageshow trocam o estado na hora.
     var canAnim = false; (window.pageShown || Promise.resolve()).then(function () { canAnim = true; });
     function update() { apply(want(), canAnim && !reduceQ.matches); }
-    apply(scrollY > 120 ? 'pill' : 'bar', false);
+    apply(scrollY > 120 ? 'pill' : 'faixa', false);
     addEventListener('scroll', update, { passive: true });
     addEventListener('pageshow', function () { apply(want(), false); });
     var refit = function () { var s = state; state = null; apply(s, false); };
