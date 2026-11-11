@@ -92,7 +92,7 @@ for (const h of HOMES) {
     assert.ok(comRpa.length >= 1, 'sem menção a RPA');
     for (const t of comRpa) assert.doesNotMatch(t, /Asten|operadora|guias|sa[úu]de|health|cliente|client\b/i, t);
     // a linha da tabela de Stack que cita RPA também não pode citá-los
-    const linha = html.match(/<li><span class="n">[^]*?RPA[^]*?<\/li>/)?.[0] ?? '';
+    const linha = (html.match(/<li><span class="n">[\s\S]*?<\/li>/g) ?? []).find((li) => /\bRPA\b/.test(li)) ?? '';
     assert.ok(linha, 'sem linha de Stack com RPA');
     assert.doesNotMatch(textoDe(linha), /Asten|operadora|guias|sa[úu]de|health/i);
   });
