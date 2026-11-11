@@ -27,7 +27,7 @@
       "atual": "atual",
       "geradoEm": "Currículo gerado a partir de gomesbeduardo.github.io"
     },
-    "resumo": "Desenvolvedor full stack na CentralEng, empresa de engenharia de climatização, em meio período e sob demanda. Lá fiz sozinho um LMS de treinamento técnico, hoje em validação com colaboradores, e levantei e modelei o sistema de gestão de PMOC. Desde out/2026 faço estágio de desenvolvimento no time de Inovação da Asten AVMB. Estudo Sistemas de Informação na AMF.",
+    "resumo": "Estágio de desenvolvimento no time de Inovação da Asten AVMB desde out/2026. Também sou desenvolvedor full stack na CentralEng, empresa de engenharia de climatização, em meio período e sob demanda: fiz sozinho um LMS de treinamento técnico, hoje em validação com colaboradores, e levantei e modelei o sistema de gestão de PMOC. Estudo Sistemas de Informação na AMF.",
     "comoTrabalho": "Escrevo uma spec curta com critérios de aceite antes do código e o teste antes da implementação (TDD). Cada mudança entra por PR, com revisão e CI rodando testes, checagem de tipos e build. Em recurso com IA, separo um conjunto de avaliação que fica fora do ajuste do prompt e rodo uma vez, no fim.",
     "experiencia": [
       {
@@ -70,7 +70,7 @@
         "inicio": "fev/2026",
         "fim": "out/2026",
         "itens": [
-          "Dei aulas de Python, HTML, CSS, Arduino e uso responsável de IA para mais de 100 alunos de 4 escolas públicas. Depois do primeiro semestre, o projeto ganhou 2 escolas a mais, por indicação da coordenação.",
+          "Dei aulas de Python, HTML, CSS, Arduino e uso responsável de IA para mais de 100 alunos de 4 escolas públicas. Depois do primeiro semestre, assumi mais 2 escolas, por indicação da coordenação do projeto.",
           "Dei um workshop de 80 minutos sobre IA para professores da AMF."
         ]
       },
@@ -80,8 +80,7 @@
         "inicio": "out/2025",
         "fim": "abr/2026",
         "itens": [
-          "Organizei documentação de projetos, notas fiscais e controles financeiros e automatizei rotinas do setor.",
-          "Fui promovido de auxiliar administrativo a desenvolvedor em 7 meses, depois de automatizar rotinas do setor."
+          "Organizei documentação de projetos, notas fiscais e controles financeiros. Automatizei rotinas do setor e fui promovido a desenvolvedor em 7 meses."
         ]
       }
     ],
@@ -113,8 +112,8 @@
     ],
     "premios": [
       {
-        "titulo": "2º lugar no Ideathon de Sistemas de Informação da AMF",
-        "detalhe": "Edição de 2026.",
+        "titulo": "2º lugar no Ideathon de Sistemas de Informação da AMF 2026",
+        "detalhe": "",
         "quando": "2026"
       },
       {
@@ -178,6 +177,10 @@
     ],
     "stack": [
       {
+        "grupo": "IA aplicada",
+        "itens": "Claude Code, Codex; desenvolvimento orientado a specs com agentes, revisão por agentes e aprovação humana antes do merge"
+      },
+      {
         "grupo": "Linguagens",
         "itens": "TypeScript, JavaScript, Python, SQL"
       },
@@ -191,7 +194,7 @@
       },
       {
         "grupo": "Qualidade e operação",
-        "itens": "Vitest, Playwright, GitHub Actions, GitLab, Docker, Portainer, Linux, Git, Codex"
+        "itens": "Vitest, Playwright, GitHub Actions, GitLab, Docker, Portainer, Linux, Git"
       },
       {
         "grupo": "Automação e integrações",
@@ -227,7 +230,7 @@
       "atual": "present",
       "geradoEm": "Résumé generated from gomesbeduardo.github.io"
     },
-    "resumo": "Full-stack developer at CentralEng, an HVAC engineering company, part time and on demand. There I built a technical training LMS on my own, now in validation with employees, and gathered requirements for and modeled the PMOC maintenance management system. Since Oct/2026 I have been a development intern on the Innovation team at Asten AVMB. I study Information Systems at AMF.",
+    "resumo": "Development intern on the Innovation team at Asten AVMB since Oct/2026. I am also a full-stack developer at CentralEng, an HVAC engineering company, part time and on demand: I built a technical training LMS on my own, now in validation with employees, and gathered requirements for and modeled the PMOC maintenance management system. I study Information Systems at AMF.",
     "comoTrabalho": "I write a short spec with acceptance criteria before the code, and the test before the implementation (TDD). Each change goes through a PR, with review and CI running tests, type checks and build. For AI features, I keep an evaluation set out of prompt tuning and run it once, at the end.",
     "experiencia": [
       {
@@ -270,7 +273,7 @@
         "inicio": "Feb/2026",
         "fim": "Oct/2026",
         "itens": [
-          "I taught Python, HTML, CSS, Arduino and responsible use of AI to more than 100 students from 4 public schools. After the first semester the project grew by 2 more schools, on the coordination's recommendation.",
+          "I taught Python, HTML, CSS, Arduino and responsible use of AI to more than 100 students from 4 public schools. After the first semester I took on 2 more schools, on the project coordination's recommendation.",
           "I gave an 80-minute workshop on AI for AMF teachers."
         ]
       },
@@ -280,8 +283,7 @@
         "inicio": "Oct/2025",
         "fim": "Apr/2026",
         "itens": [
-          "I organized project documentation, invoices and financial controls, and automated the department's routines.",
-          "I was promoted from administrative assistant to developer in 7 months, after automating the department's routines."
+          "I organized project documentation, invoices and financial controls. I automated the department's routines and was promoted to developer in 7 months."
         ]
       }
     ],
@@ -313,8 +315,8 @@
     ],
     "premios": [
       {
-        "titulo": "2nd place, Information Systems Ideathon at AMF",
-        "detalhe": "2026 edition.",
+        "titulo": "2nd place, Information Systems Ideathon at AMF 2026",
+        "detalhe": "",
         "quando": "2026"
       },
       {
@@ -378,6 +380,10 @@
     ],
     "stack": [
       {
+        "grupo": "Applied AI",
+        "itens": "Claude Code, Codex; spec-driven development with agents, agent review and human approval before merge"
+      },
+      {
         "grupo": "Languages",
         "itens": "TypeScript, JavaScript, Python, SQL"
       },
@@ -391,7 +397,7 @@
       },
       {
         "grupo": "Quality and operations",
-        "itens": "Vitest, Playwright, GitHub Actions, GitLab, Docker, Portainer, Linux, Git, Codex"
+        "itens": "Vitest, Playwright, GitHub Actions, GitLab, Docker, Portainer, Linux, Git"
       },
       {
         "grupo": "Automation and integrations",

@@ -139,6 +139,7 @@ test('curriculo.json: sem a empresa da vaga, sem Florianopolis, sem Asten junto 
   assert.match(textoCompleto(dados.pt), /Ideathon[^"]*/);
   assert.ok(dados.pt.premios.some((p) => /2º lugar/.test(p.titulo) && p.quando === '2026'));
   assert.ok(dados.pt.projetos.some((p) => p.nome === 'ToPark'));
+  assert.ok(dados.pt.stack.some((g) => g.grupo === 'IA aplicada') && dados.en.stack.some((g) => g.grupo === 'Applied AI'));
   assert.equal(dados.pt.titulo, 'Desenvolvedor full stack, IA aplicada e automação');
   assert.equal(dados.en.titulo, 'Full-stack developer, applied AI and automation');
 });

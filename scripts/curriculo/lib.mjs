@@ -149,7 +149,7 @@ export function renderizarHtml(dados, idioma, { foto = FOTO_PADRAO } = {}) {
   const premios = d.premios.map((p) => `
       <div class="item">
         <div class="linha"><span class="cargo">${esc(p.titulo)}</span><span class="quando">${esc(p.quando)}</span></div>
-        <p>${esc(p.detalhe)}</p>
+        ${p.detalhe ? `<p>${esc(p.detalhe)}</p>` : ''}
       </div>`).join('');
 
   const formacao = d.formacao.map((f) => `
