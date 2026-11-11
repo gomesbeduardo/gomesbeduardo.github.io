@@ -106,9 +106,3 @@ test('A7: grafia CodeRace', () => {
     assert.match(t, /CodeRace/, f);
   }
 });
-
-test('A8: botão da foto com touch-action: manipulation', () => {
-  const css = ler('site/style.css');
-  const regras = [...css.matchAll(/\.photo-btn\s*\{([^}]*)\}/g)].map((m) => m[1]);
-  assert.ok(regras.some((r) => /touch-action\s*:\s*manipulation/.test(r)));
-});

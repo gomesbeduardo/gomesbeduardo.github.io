@@ -106,3 +106,8 @@ for (const [lang, arq] of [['PT', 'site/index.html'], ['EN', 'site/en/index.html
     assert.match(ler(arq), /<div class="photo" data-flip><div class="photo-card"><button[^>]*id="sp-foto"/);
   });
 }
+
+test('A9 (spec 005): botão da foto com touch-action: manipulation', () => {
+  const regras = [...estilo.matchAll(/\.photo-btn\s*\{([^}]*)\}/g)].map((m) => m[1]);
+  assert.ok(regras.some((r) => /touch-action\s*:\s*manipulation/.test(r)));
+});
