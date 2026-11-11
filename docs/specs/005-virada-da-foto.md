@@ -1,6 +1,6 @@
 # Spec 005: virada da foto do topo
 
-Estado: aprovada pelo responsável em 11/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026; comportamento no celular e borda da foto alterados e reaprovados no mesmo dia (D3, C1a, C6 e A5).
 
 ## Pedido literal
 
@@ -26,13 +26,14 @@ Cinco cliques seguidos na foto do topo viram o card e mostram a curiosidade c10 
 
 - D1. A foto vira como uma carta de duas faces, no mesmo tamanho do início ao fim, com o bloco ocre atrás o tempo todo.
 - D2. O verso traz uma ficha com fatos que já estão no site.
-- D3. No celular, o verso cresce na largura da coluna e volta aos 160 px ao desvirar.
+- D3. No celular, o card vira no mesmo tamanho da foto (160×200 px) e nada abaixo dele se mexe. O verso mostra a frase da c10, a contagem e o botão; a ficha aparece só no computador. Substitui a decisão anterior (o verso crescia até 360 px), que o responsável achou grande demais ao ver no celular.
 
 ## Comportamento
 
 ### Computador (largura acima de 860 px)
 
 - C1. A frente é a foto atual. O verso é uma face do mesmo tamanho da moldura (a largura das colunas 9 a 12 e a proporção 4:5), com fundo `--raised`, borda `--line-strong` e canto `--r-md`.
+- C1a. A borda de 1 px (`--line-strong`) aparece em volta da foto e do verso o tempo todo: antes do giro, em cada quadro do giro, com o card virado e depois de desvirar. Nenhum quadro mostra a foto sem a borda nem a borda chegando atrasada (pedido do responsável, 11/11/2026).
 - C2. O giro é no eixo vertical, de 0° a 180°, em cerca de 500 ms, com a curva `--ease` do site. Desvirar faz o caminho de volta. As duas faces não aparecem espelhadas em nenhum momento.
 - C3. O bloco ocre fica parado no lugar, atrás do card, durante e depois do giro.
 - C4. Nada no topo muda de lugar: a caixa da `.photo` e a posição do nome ficam iguais, com tolerância de 1 px, antes, durante e depois do giro.
@@ -40,7 +41,7 @@ Cinco cliques seguidos na foto do topo viram o card e mostram a curiosidade c10 
 
 ### Celular (até 860 px)
 
-- C6. Virado, o card ocupa a largura da coluna até 360 px e a altura que o texto pedir. A troca de tamanho acontece no meio do giro, quando o card está de lado. O conteúdo abaixo pode descer; ao desvirar, o card volta aos 160 px.
+- C6. O card gira no tamanho da foto (160×200 px), como no computador, sem troca de tamanho. O verso mostra a frase da c10, a contagem e o botão "virar de volta", sem o rótulo e sem a ficha, e o texto cabe sem corte nem rolagem de 320 px a 860 px. O botão mantém o alvo de toque de 44 px.
 - C7. Nada passa da largura da tela em 390 px, virado ou não.
 
 ### Movimento reduzido
@@ -74,7 +75,8 @@ Os rótulos da ficha ("No YourMentor", "Antes", "Base"; EN "At YourMentor", "Bef
 - A2. Dado o card virado em 1280 px, então o bloco ocre está visível na mesma posição de antes do giro, e o verso mostra o rótulo, o destaque, os três campos da ficha, a contagem e o botão (print nos temas claro e escuro).
 - A3. Dado o card virado, quando se aperta Esc, então o card desvira e o foco volta ao botão da foto; a face de costas não recebe foco pelo Tab em nenhum dos dois estados (Playwright).
 - A4. Dado `prefers-reduced-motion: reduce`, quando se vira o card, então nenhum `transform` de rotação é aplicado e a troca dura até 150 ms (Playwright).
-- A5. Dado o site em 390 px, quando se vira o card, então ele tem no máximo 360 px de largura, nada passa da largura da tela, e ao desvirar volta a 160 px (Playwright e print).
+- A1a. Dado o site em 1280 px e em 390 px, quando se vira e se desvira o card, então a borda aparece em todos os prints tirados a cada 40 ms, com o card de frente, de lado e de costas (Playwright).
+- A5. Dado o site em 320, 360, 390 e 414 px, quando se vira o card, então a caixa da `.photo` e o topo do `h1` medem o mesmo antes, durante e depois (tolerância de 1 px), o verso não tem rolagem nem texto cortado (`scrollHeight` igual a `clientHeight`), a ficha não aparece e nada passa da largura da tela (Playwright e print).
 - A6. Dado `site/surpresas.js`, então os textos da ficha existem em PT e EN, iguais à tabela acima, e o verso não cita CS50 nem Coderace (teste em `scripts/site/conteudo.test.mjs`).
 - A7. Dado o card virado com o mouse sobre ele, quando o mouse se move, então o card não inclina (Playwright).
 - A8. Os cartões da Trajetória e o `.sp-mais` continuam virando como hoje (Playwright: virar um cartão da Trajetória e conferir o verso).
