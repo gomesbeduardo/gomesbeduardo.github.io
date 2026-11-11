@@ -1,7 +1,7 @@
 # Spec 001a: etapa 1, Astro e Tailwind com paridade do site atual
 
 Estado: rascunho, aguardando aprovação do responsável.
-Parte 2 de 4 da spec 001. Ordem: `001-astro.md` (índice, decisões, regras transversais), `001a-paridade.md` (esta), `001b-seo-geo.md`, `001c-desempenho.md`. As decisões P1 a P9 e a pendência P3b estão no índice.
+Parte 2 de 4 da spec 001. Ordem: `001-astro.md` (índice, decisões, regras transversais), `001a-paridade.md` (esta), `001b-seo-geo.md`, `001c-desempenho.md`. As decisões P1 a P9 e P3b estão no índice.
 
 ## Objetivo da etapa
 

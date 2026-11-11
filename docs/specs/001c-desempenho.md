@@ -1,7 +1,7 @@
 # Spec 001c: etapa 3, tempo de resposta e teste de desempenho no CI
 
 Estado: rascunho, aguardando aprovação do responsável.
-Parte 4 de 4 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md`, `001c-desempenho.md` (esta). Decisões P1 a P9 e pendência P3b no índice.
+Parte 4 de 4 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md`, `001c-desempenho.md` (esta). Decisões P1 a P9 e P3b no índice.
 
 ## Objetivo da etapa
 

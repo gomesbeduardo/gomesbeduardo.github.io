@@ -33,7 +33,7 @@ Quem usa: o visitante (recrutador, tech lead) e os buscadores e assistentes de I
 | Etapa | Branch | Entrega | Critérios |
 |---|---|---|---|
 | 1 | `feat/astro-paridade` | scaffold do Astro, Tailwind com os tokens, páginas e componentes, JS e vendor sem mudança, leitura de `github.json` e `processo.json`, PDFs no build, testes contra `dist/`, troca de deploy | 001a C1 a C11 |
-| 2 | `feat/astro-seo` | `robots.txt`, sitemap, `llms.txt`, `head` por página, JSON-LD, texto sem JS, fatos de `curriculo.json` | 001b C1 a C8 |
+| 2 | `feat/astro-seo` | `robots.txt`, sitemap, `llms.txt`, `head` por página, JSON-LD, texto sem JS, fatos de `curriculo.json` | 001b C1 a C9 |
 | 3 | `feat/astro-desempenho` | módulos por componente, GSAP e Lenis sob demanda, fontes locais, imagens otimizadas, teste de desempenho no CI, saída de `site/` e `pages.yml` | 001c C1 a C10 |
 
 Pré-condição da etapa 1: a fila atual entrar na `staging` (spec 006, correção do menu #14, spec 007, spec 008). A referência de paridade é o `site/` da `staging` nesse momento (001a F1).
@@ -46,10 +46,10 @@ Pré-condição da etapa 1: a fila atual entrar na `staging` (spec 006, correç�
 - R4. Tailwind: tokens em `@theme` apontando para as variáveis atuais, sem Preflight nas etapas 1 e 2 e com Preflight na etapa 3 (P1, 001c R9), sem valor literal onde há token, conversão para utilitário permitida por componente desde que a paridade passe (001a R3).
 - R5. Dependências, lista fechada, aprovada em 11/11 (P9). Versões: a última estável no dia do scaffold, fixadas no `package-lock.json`; Node 24 (já nos workflows).
   - Etapa 1, produção: `astro`, `tailwindcss`, `@tailwindcss/vite`. Desenvolvimento: `playwright` (e2e e paridade; o Chromium dele entra no CI por `npx playwright install --with-deps chromium`), `pixelmatch`, `pngjs`.
-  - Etapa 2: `@astrojs/sitemap` e a ferramenta de imagem OG (P3b, pendente).
+  - Etapa 2: `@astrojs/sitemap`. As imagens OG usam o `playwright` da etapa 1 (P3b); o `publicar.yml` passa a instalar o Chromium dele no job de build.
   - Etapa 3, produção: `gsap`, `lenis` (substituem `public/vendor/`), `sharp` (otimizador de imagem do Astro), os pacotes de fonte da P8. Desenvolvimento: `lighthouse`.
   - Fora: React, Preact, `shadcn`, `@astrojs/tailwind` (substituído pelo plugin Vite no Tailwind v4), qualquer action de terceiro nova nos workflows.
-- R6. Scripts do `package.json`: `dev` (`astro dev`), `build` (`astro build`), `test` (`astro build && node --test 'scripts/**/*.test.mjs'`), `e2e` (001a R8), `desempenho` (001c R5). Os scripts de `scripts/curriculo/` e `scripts/github/` não mudam.
+- R6. Scripts do `package.json`: `dev` (`astro dev`), `build` (`astro build`; a partir da etapa 2, `astro build && node scripts/site/og.mjs`), `test` (`astro build && node --test 'scripts/**/*.test.mjs'`), `e2e` (001a R8), `desempenho` (001c R5). Os scripts de `scripts/curriculo/` e `scripts/github/` não mudam.
 - R7. Texto do site e dos commits em português, sem travessão, sem frase de efeito (PRODUCT.md). Strings de interface novas (aviso de dados de exemplo, descrições, `llms.txt`) seguem a mesma voz.
 
 ## Dados lidos no build
@@ -74,17 +74,15 @@ Respostas do responsável em 11/11/2026, já aplicadas nas partes:
 
 - P1. Preflight do Tailwind: fora nas etapas 1 e 2; entra na etapa 3, com as regras afetadas reescritas até a paridade voltar a 0 pixels (001c R9).
 - P2. Números do GitHub na base de paridade: antes de capturar a base, um commit pequeno em `site/` alinha os números e o `#cal-dados` com `src/data/github.json`, e a base e o build usam o mesmo JSON (001a R5). Em 11/11 os números já coincidiam (2897 contribuições, 12 repositórios); o calendário não foi conferido.
-- P3. Imagens Open Graph: geradas no build, não versionadas (001b R2). A ferramenta segue aberta (abaixo).
+- P3. Imagens Open Graph: geradas no build, não versionadas (001b R2).
 - P4. Fontes das 11 marcas da Stack: continuam no Google Fonts com `text=` e `media="print"`; só as três fontes do site viram locais (001c R3).
 - P5. Variação do runner: mediana de 5 execuções do Lighthouse e de 5 interações, falha acima da meta sem nova tentativa; se o job falhar duas vezes em duas semanas com o `dist/` sem mudança, a meta de CI ganha 10% (INP 220 ms, quadro 22 ms) e a meta de produto fica a mesma (001c R5).
 - P6. `backdrop-filter` e `scrub` na Trajetória: medir primeiro; se as metas fecharem, nada muda; se não, o responsável escolhe, com nova base de paridade aprovada (001c R2, R6).
 - P7. `schedule` semanal no `publicar.yml`: ligado já na etapa 1. O responsável cria o secret `GH_TOKEN_LEITURA` antes do merge da etapa 1; o run agendado roda com `--estrito` e faz o commit semanal da 002 R8 (001a R10).
 - P8. Fontes locais: pacotes `@fontsource-variable/funnel-display`, `@fontsource-variable/funnel-sans` e `@fontsource/reddit-mono` (ou os equivalentes que existirem no dia; o worker confere antes de instalar), só o subset `latin`, com `preload` escrito à mão (001c R3).
-- P9. Dependências de R5 e Node 24: aprovadas como estão, sem React nem `shadcn`. A ferramenta de imagem OG (P3) entra na lista quando for escolhida; qualquer pacote novo volta ao responsável.
+- P9. Dependências de R5 e Node 24: aprovadas como estão, sem React nem `shadcn`. Qualquer pacote novo volta ao responsável.
 
-Ainda aberta:
-
-- P3b. Ferramenta que gera as 8 imagens Open Graph no build (001b R2). Pesquisa em andamento; as opções são o Chrome do runner (como os PDFs), Playwright, `satori` com `@resvg/resvg-js`, `astro-og-canvas` e `sharp` com SVG. Exemplo: `home-pt.png` com "Eduardo Bergoli Gomes" e "Desenvolvedor full stack · Santa Maria, RS" em fundo `#15120e`. Alternativa: gerar no build com `satori` ou `astro-og-canvas` (mais uma dependência e fontes carregadas no build).
+- P3b. Ferramenta das imagens OG: Playwright, já na lista de R5, com o mesmo Chromium da paridade. Escolhido em 11/11 entre o Chrome do runner, Playwright, `satori` com `@resvg/resvg-js`, `astro-og-canvas`, `@vercel/og`, `sharp` com SVG e `astro-opengraph-images`, porque reaproveita o Tailwind e as fontes do site, espera `document.fonts.ready` antes da captura e não traz dependência nova (001b R2).
 
 ## Suposições de baixo impacto
 

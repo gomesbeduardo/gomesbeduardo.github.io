@@ -1,7 +1,7 @@
 # Spec 001b: etapa 2, SEO e GEO
 
 Estado: rascunho, aguardando aprovação do responsável.
-Parte 3 de 4 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md` (esta), `001c-desempenho.md`. Decisões P1 a P9 e pendência P3b no índice.
+Parte 3 de 4 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md` (esta), `001c-desempenho.md`. Decisões P1 a P9 e P3b no índice.
 
 ## Objetivo da etapa
 
@@ -40,7 +40,7 @@ Por página e por língua, gerado por `src/components/Seo.astro`, com props `tit
 - `<link rel="alternate" hreflang="pt-BR" href=...>`, `hreflang="en"` e `hreflang="x-default"` (aponta para a PT), nas duas línguas, sempre os três.
 - `<html lang="pt-BR">` na PT e `lang="en"` na EN.
 - Open Graph: `og:type` (`profile` na home, `article` nos projetos), `og:title`, `og:description`, `og:url` (= canonical), `og:locale` (`pt_BR` / `en_US`), `og:locale:alternate`, `og:site_name` "Eduardo Bergoli Gomes", `og:image` com URL absoluta, `og:image:width` 1200, `og:image:height` 630, `og:image:alt`. Twitter: `twitter:card summary_large_image`, `twitter:title`, `twitter:description`, `twitter:image`.
-- Imagens OG: uma por página e língua, 1200×630 px, PNG, geradas no build em `dist/og/<pagina>-<lang>.png` e não versionadas (P3) (`home-pt.png`, `home-en.png`, `leadgate-pt.png` … 8 arquivos; a 404 usa a da home). Conteúdo: nome, uma linha (home: cargo e cidade; projeto: nome do projeto e a frase do card), na paleta P1 Ocre escura e nas fontes do site. A ferramenta que gera é a P3b, ainda aberta.
+- Imagens OG: uma por página e língua, 1200×630 px, PNG, geradas no build em `dist/og/<pagina>-<lang>.png` e não versionadas (P3) (`home-pt.png`, `home-en.png`, `leadgate-pt.png` … 8 arquivos; a 404 usa a da home). Conteúdo: nome, uma linha (home: cargo e cidade; projeto: nome do projeto e a frase do card), na paleta P1 Ocre escura e nas fontes do site. Geração (P3b): o Astro gera uma página de modelo por imagem em `dist/og/<pagina>-<lang>.html`, com o Tailwind, as fontes e a paleta do site; depois do `astro build`, `scripts/site/og.mjs` serve `dist/`, abre cada modelo no Chromium do Playwright em viewport 1200×630 com `deviceScaleFactor: 1`, espera `document.fonts.ready`, grava o PNG ao lado e apaga o HTML do modelo. O script falha com código 1 se faltar uma das 8 imagens ou se alguma não tiver 1200×630. Os modelos ficam fora do sitemap. O `publicar.yml` instala o Chromium do Playwright antes do build.
 - 404: `<meta name="robots" content="noindex">`; sem OG nem JSON-LD; mantém canonical.
 
 ### R3. Títulos e descrições
@@ -89,7 +89,8 @@ Um `<script type="application/ld+json">` por página, no `head`, gerado no build
 ## Critérios de aceite
 
 - C1. Dado `dist/`, então existem `robots.txt` com o conteúdo exato de R1, `sitemap-index.xml` e `sitemap-0.xml` com as 8 URLs de página (sem 404), cada uma com `xhtml:link` para `pt-BR`, `en` e `x-default`, e `llms.txt` com as seções de R1 (teste `scripts/site/seo.test.mjs`).
-- C2. Dado cada um dos 9 HTML de `dist/`, então `<title>` e `description` existem, batem com R3 e não se repetem na mesma língua; `canonical`, os três `hreflang`, `html lang`, as tags OG e Twitter de R2 existem com URL absoluta; a imagem OG referenciada existe em `dist/og/` com 1200×630 (teste `seo.test.mjs`, lendo o cabeçalho PNG).
+- C2. Dado cada um dos 9 HTML de `dist/`, então `<title>` e `description` existem, batem com R3 e não se repetem na mesma língua; `canonical`, os três `hreflang`, `html lang`, as tags OG e Twitter de R2 existem com URL absoluta; a imagem OG referenciada existe em `dist/og/` com 1200×630, e `dist/og/` não tem `.html` de modelo nem entra no sitemap (teste `seo.test.mjs`, lendo o cabeçalho PNG).
+- C9. Dado um modelo de imagem OG removido (fixture), quando `node scripts/site/og.mjs` roda, então sai com código 1 e nomeia a imagem que falta (caso rejeitado).
 - C3. Dado o JSON-LD de cada página, então é JSON válido, tem os tipos e campos de R6, `sameAs` tem exatamente o GitHub e o LinkedIn de `curriculo.json`, nenhum campo vazio, e o `@id` do `Person` é o mesmo em todas as páginas (teste `seo.test.mjs`). Validação externa: o responsável cola a home no Rich Results Test do Google e no validator.schema.org e registra "sem erro" no PR (manual).
 - C4. Dado o site servido com `javaScriptEnabled: false` no Playwright, a 390 px e 1280 px, então cada `h2` e cada parágrafo das seções está visível (`opacity` computada 1, dentro da viewport depois de rolar até ele), os contadores mostram o valor final igual ao do `github.json`, o calendário tem 365 ou 371 dias em HTML, e o e-mail aparece como texto (teste `scripts/site/sem-js.e2e.mjs`).
 - C5. Dado `src/data/curriculo.json`, então cada experiência (`empresa`, `cargo`, `periodo`), formação e prêmio da chave `pt` aparece em `dist/index.html`, e os de `en` em `dist/en/index.html`; nenhum nome de empresa, cargo ou período no HTML está ausente do JSON (teste `seo.test.mjs`, comparando por string).
@@ -112,6 +113,7 @@ Um `<script type="application/ld+json">` por página, no `head`, gerado no build
 | T9 | C7 | `public/main.js`, `dist/index.html` | `grep -c "cal-dados"` | 0 nos dois | unidade |
 | T10 | C8 | `site/` e `dist/` | `npm run e2e` | paridade 0 px nas 36 comparações; e2e todos verdes | e2e |
 | T11 | C3, C6 | site publicado | Rich Results Test, schema.org validator, tabela do LinkedIn | sem erro; sem divergência | manual, no PR |
+| T12 | C9 | `dist/` sem `og/leadgate-en.html` | `node scripts/site/og.mjs` | código 1, mensagem cita `leadgate-en.png` | unidade, `og.test.mjs` |
 
 ## Fora do escopo da etapa 2
 
