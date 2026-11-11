@@ -1,7 +1,7 @@
 # Spec 001: migração do portfólio para Astro e Tailwind v4
 
 Estado: aprovada pelo responsável em 11/11/2026.
-Parte 1 de 4. Ordem de leitura: `001-astro.md` (esta: pedido, decisões, etapas, regras transversais, dependências, perguntas abertas), `001a-paridade.md` (etapa 1), `001b-seo-geo.md` (etapa 2), `001c-desempenho.md` (etapa 3). Cada parte tem os próprios critérios (C) e testes (T); as pendências (P) estão só aqui e as partes as citam pelo número.
+Parte 1 de 5. Ordem de leitura: `001-astro.md` (esta: pedido, decisões, etapas, regras transversais, dependências, perguntas abertas), `001a-paridade.md` (etapa 1), `001b-seo-geo.md` (etapa 2), `001c-desempenho.md` (etapa 3), `001d-troca-de-lingua.md` (troca de língua, última fatia da etapa 1). Cada parte tem os próprios critérios (C) e testes (T); as pendências (P) estão só aqui e as partes as citam pelo número.
 
 ## Pedido literal
 
@@ -27,12 +27,13 @@ Quem usa: o visitante (recrutador, tech lead) e os buscadores e assistentes de I
 - D8. Fundo com nuances, grão e brilho fica fora da 001; vira spec de UI própria depois da etapa 3.
 - D9. Troca de deploy: o PR da etapa 1 desliga o `pages.yml` e liga o `publicar.yml`; `site/` fica no repositório até o fim da etapa 3 como referência; reversão é reverter o merge na `main` (001a R10). CI e deploy são área sensível: só a sessão principal edita workflows, com o ok do responsável.
 - D10. Branches de feature saem da `staging`, PR para `staging`, depois `staging` para `main`.
+- D11. A troca de língua abre a outra página no mesmo ponto de leitura, sem repetir a abertura, como última fatia da etapa 1 (001d, decisão de 11/11/2026).
 
 ## Etapas
 
 | Etapa | Branch | Entrega | Critérios |
 |---|---|---|---|
-| 1 | `feat/astro-paridade` | scaffold do Astro, Tailwind com os tokens, páginas e componentes, JS e vendor sem mudança, leitura de `github.json` e `processo.json`, PDFs no build, testes contra `dist/`, troca de deploy | 001a C1 a C11 |
+| 1 | `feat/astro-paridade` | scaffold do Astro, Tailwind com os tokens, páginas e componentes, JS e vendor sem mudança, leitura de `github.json` e `processo.json`, PDFs no build, testes contra `dist/`, troca de deploy; por último, a troca de língua no mesmo ponto | 001a C1 a C11 e 001d C1 a C8 |
 | 2 | `feat/astro-seo` | `robots.txt`, sitemap, `llms.txt`, `head` por página, JSON-LD, texto sem JS, fatos de `curriculo.json` | 001b C1 a C9 |
 | 3 | `feat/astro-desempenho` | módulos por componente, GSAP e Lenis sob demanda, fontes locais, imagens otimizadas, teste de desempenho no CI, saída de `site/` e `pages.yml` | 001c C1 a C10 |
 
