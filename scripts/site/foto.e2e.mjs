@@ -108,6 +108,22 @@ try {
     ok('A5: ao desvirar volta a 160 px', Math.abs(depois.width - 160) <= 1 && Math.abs(antes.width - 160) <= 1, `antes ${antes.width} depois ${depois.width}`);
     await ctx.close();
   }
+  // ---- Verso sem estouro logo acima do ponto de quebra de 860 px (spec 007, c10 nova) ----
+  for (const [lang, rota] of [['PT', ''], ['EN', 'en/']]) for (const w of [861, 880, 899, 1280]) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: 800 } });
+    const page = await ctx.newPage();
+    await page.goto(url + rota, { waitUntil: 'load' });
+    await page.waitForSelector('#sp-foto');
+    await espera(2500);
+    await page.evaluate(() => { const f = document.querySelector('#sp-foto'); for (let i = 0; i < 5; i++) f.click(); });
+    await espera(900);
+    const m = await page.evaluate(() => {
+      const v = document.querySelector('.photo .sp-verso'), p = document.querySelector('.photo').getBoundingClientRect(), b = v.querySelector('.sp-volta').getBoundingClientRect();
+      return { vs: v.scrollHeight, vc: v.clientHeight, bb: Math.round(b.bottom), pb: Math.round(p.bottom) };
+    });
+    ok(`verso ${lang} a ${w} px: sem rolagem e botão "virar de volta" dentro da foto`, m.vs <= m.vc && m.bb <= m.pb, JSON.stringify(m));
+    await ctx.close();
+  }
 } finally {
   await browser.close();
   srv.close();
