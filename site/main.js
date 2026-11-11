@@ -144,6 +144,7 @@
     function onEnd(e) { if (e.target === menu && e.propertyName === 'opacity') finish(); }
     function set(open, refocus) {
       shown = open; btn.setAttribute('aria-expanded', String(open));
+      menu.inert = !open;   // fechando: sem toque, foco nem leitor de tela, mesmo antes do hidden
       clearTimeout(timer); menu.removeEventListener('transitionend', onEnd);
       if (open) {
         menu.hidden = false; void menu.offsetWidth;   // reflow: a transição parte do estado fechado
@@ -151,7 +152,8 @@
         var f = $('a', menu); if (f) f.focus();
       } else {
         menu.classList.remove('is-open');
-        menu.addEventListener('transitionend', onEnd); timer = setTimeout(finish, 320);   // hidden só depois de fechar
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) finish();   // sem animação: esconde na hora
+        else { menu.addEventListener('transitionend', onEnd); timer = setTimeout(finish, 320); }   // hidden só depois de fechar
         if (refocus) btn.focus();
       }
     }

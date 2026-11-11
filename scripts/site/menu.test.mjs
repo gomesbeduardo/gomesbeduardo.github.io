@@ -38,12 +38,18 @@ test('itens entram escalonados', () => {
   assert.match(menuJs, /--i/);
 });
 
-test('prefers-reduced-motion: só opacidade, sem transform, até 150ms', () => {
+test('movimento reduzido: sem transform e sem transição morta; o JS esconde na hora', () => {
   const i = css.indexOf('@media (prefers-reduced-motion:reduce){.menu');
   assert.ok(i >= 0, 'regra de movimento reduzido para o menu');
   const bloco = css.slice(i, css.indexOf('\n', i));
   assert.match(bloco, /\.menu[^{]*\{[^}]*transform:none/);
-  assert.match(bloco, /transition:opacity \.1s/);
+  // a regra global zera toda transição com !important; declarar uma aqui seria código morto
+  assert.doesNotMatch(bloco, /transition:opacity/);
+  assert.match(menuJs, /matchMedia\('\(prefers-reduced-motion: reduce\)'\)/);
+});
+
+test('menu fechando fica inerte (sem toque, foco nem leitor de tela) e volta a responder ao abrir', () => {
+  assert.match(menuJs, /menu\.inert\s*=\s*!open/);
 });
 
 test('hidden só é aplicado depois da animação de fechar', () => {

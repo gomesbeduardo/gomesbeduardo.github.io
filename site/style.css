@@ -105,7 +105,7 @@ section{padding:var(--section) 0 0}
 .menu a:active{background:color-mix(in srgb,var(--fg) 12%,transparent)}
 @media (max-width:899.98px){.top.has-menu{justify-content:flex-end}.top.has-menu nav,.top.has-menu .sep{display:none}.menu-btn{display:inline-flex}}
 @media (min-width:900px){.menu{display:none!important}}
-@media (prefers-reduced-motion:reduce){.menu,.menu.is-open{transform:none;transition:opacity .1s linear}.menu a,.menu.is-open a{opacity:1;transform:none;transition:background-color .2s;transition-delay:0s}}
+@media (prefers-reduced-motion:reduce){.menu,.menu.is-open{transform:none}.menu a,.menu.is-open a{opacity:1;transform:none;transition:background-color .2s;transition-delay:0s}}
 
 /* botões */
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;text-decoration:none;font:inherit;font-size:1rem;font-weight:600;line-height:1.2;letter-spacing:.005em;border:1px solid var(--line-strong);background:transparent;color:var(--fg);cursor:pointer;transition:background-color .15s ease-out,border-color .15s ease-out,color .15s ease-out}
