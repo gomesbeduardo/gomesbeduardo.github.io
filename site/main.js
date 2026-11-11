@@ -327,7 +327,7 @@
       var fromClip = getComputedStyle(bg).clipPath, fromBg = getComputedStyle(bg).opacity, fromEdge = getComputedStyle(edge).opacity;
       anims.forEach(function (a) { a.cancel(); }); anims = [];
       state = next; var pill = next === 'pill';
-      top.classList.toggle('pill', pill); top.classList.toggle('bar', !pill);
+      top.classList.toggle('pill', pill); top.classList.toggle('faixa', !pill);
       var g = geo(), toClip = pill ? g.pill : 'inset(0px 0px 0px 0px round 0px)';
       bg.style.clipPath = toClip;
       edge.style.left = g.l + 'px'; edge.style.width = g.w + 'px';
@@ -345,11 +345,11 @@
     }
     // Histerese: vira pílula depois de 120 px; volta à barra abaixo de 80 px, ou já abaixo de 120 px quando a rolagem inverte para cima.
     var lastY = scrollY, dir = 0;
-    function want() { var y = scrollY; dir = y > lastY ? 1 : y < lastY ? -1 : dir; lastY = y; return state === 'pill' ? (y < 80 || (dir < 0 && y < 120) ? 'bar' : 'pill') : (y > 120 ? 'pill' : 'bar'); }
+    function want() { var y = scrollY; dir = y > lastY ? 1 : y < lastY ? -1 : dir; lastY = y; return state === 'pill' ? (y < 80 || (dir < 0 && y < 120) ? 'faixa' : 'pill') : (y > 120 ? 'pill' : 'faixa'); }
     // Sem morph antes do fim da transição de chegada (P3): restauração de rolagem e pageshow trocam o estado na hora.
     var canAnim = false; (window.pageShown || Promise.resolve()).then(function () { canAnim = true; });
     function update() { apply(want(), canAnim && !reduceQ.matches); }
-    apply(scrollY > 120 ? 'pill' : 'bar', false);
+    apply(scrollY > 120 ? 'pill' : 'faixa', false);
     addEventListener('scroll', update, { passive: true });
     addEventListener('pageshow', function () { apply(want(), false); });
     var refit = function () { var s = state; state = null; apply(s, false); };

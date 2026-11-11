@@ -73,7 +73,7 @@ section{padding:var(--section) 0 0}
 .top-bg{inset:0;opacity:0;clip-path:inset(0px round 0px)}
 .top-edge{top:14px;height:46px;border-radius:999px;opacity:0}
 .top.pill .top-bg,.top.pill .top-edge{opacity:1}
-.top.bar .sep{opacity:0}
+.top.faixa .sep{opacity:0}
 .top nav{display:flex;align-items:center;gap:2px;position:relative}
 /* indicador da seção ativa: pílula atrás do link, desliza com a mesma duração e curva da rolagem */
 .nav-ind{position:absolute;left:0;top:0;height:36px;width:0;border-radius:999px;background:color-mix(in srgb,var(--fg) 9%,transparent);box-shadow:inset 0 0 0 1px var(--line-strong);opacity:0;pointer-events:none;transition:opacity .2s}
