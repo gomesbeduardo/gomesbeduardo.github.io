@@ -308,7 +308,7 @@ section{padding:var(--section) 0 0}
 
 /* contato */
 .mail-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px 20px;margin:0 0 36px}
-.mail{font-family:var(--f-display);font-size:clamp(1.35rem,4.4vw,3rem);font-weight:760;letter-spacing:-.02em;text-decoration:none;overflow-wrap:anywhere}
+.mail{font-family:var(--f-display);font-size:clamp(1.35rem,4.4vw,3rem);font-weight:760;letter-spacing:-.02em;text-decoration:none;overflow-wrap:break-word}
 .mail:hover{text-decoration:underline;text-decoration-thickness:2px;text-decoration-color:var(--accent)}
 .links{list-style:none;margin:0;padding:0;border-top:1px solid var(--line);max-width:48ch}
 .links li{padding:14px 0;border-bottom:1px solid var(--line)}
@@ -335,6 +335,8 @@ footer small{display:block;margin-top:20px;color:var(--muted)}
 .proj-head > *{grid-column:1/8}
 .proj-head .lede{margin:0;max-width:none}
 .proj section p{max-width:calc((100% - 11*var(--col-gap))/12*7 + 6*var(--col-gap))}
+@media (max-width:860px){.proj section p{max-width:none}}
+.link-codigo{display:inline-flex;align-items:center;min-height:44px}
 .proj-head .figs{grid-column:8/13;grid-row:1/3;margin:0;flex-wrap:wrap;gap:var(--s5) var(--s6)}
 .proj-head .figs b{white-space:nowrap}
 @media (max-width:860px){.proj-head > *,.proj-head .figs{grid-column:1/-1;grid-row:auto}}
@@ -353,12 +355,12 @@ footer small{display:block;margin-top:20px;color:var(--muted)}
 @media (pointer:coarse),(max-width:560px){
   .top{padding-top:15px;padding-bottom:15px}
   .top nav a,.lang a,.top .back,.menu-btn{height:44px}
-  .lang a{padding:0 12px}
+  .lang a{padding:0 12px;min-width:44px;justify-content:center}
   .icon-btn{width:44px;height:44px}
   .more-btn,.sp-volta{min-height:44px}
   .links a{min-height:44px}
   .mail{display:inline-block;padding-block:5px;margin-block:-5px}
-  button.sp-word{padding-block:10px;margin-block:-10px}
+  button.sp-word{padding-block:10px;margin-block:-10px;min-width:44px}
   .sp-x{width:44px;height:44px}
   .back{min-height:44px}
 }
