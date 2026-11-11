@@ -9,7 +9,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import { IDIOMAS, verificarEstrutura, verificarPrivacidade, verificarEstilo, locaisPermitidos, textoCompleto, renderizarHtml, contarPaginas, acharChrome } from './lib.mjs';
+import { IDIOMAS, verificarEstrutura, verificarPrivacidade, verificarEstilo, textoCompleto, renderizarHtml, contarPaginas, acharChrome } from './lib.mjs';
 
 const raiz = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -37,8 +37,7 @@ const errosEstrutura = verificarEstrutura(dados);
 if (errosEstrutura.length > 0) falhar(`estrutura pt/en diferente: ${errosEstrutura.join('; ')}`);
 
 const texto = textoCompleto(dados);
-const permitidos = locaisPermitidos(dados);
-const privado = verificarPrivacidade(texto, { locaisPermitidos: permitidos });
+const privado = verificarPrivacidade(texto);
 if (privado.length > 0) falhar(`dado pessoal no curriculo.json: ${listar(privado)}`);
 const estilo = verificarEstilo(texto);
 if (estilo.length > 0) falhar(`estilo proibido no curriculo.json: ${listar(estilo)}`);
@@ -69,7 +68,7 @@ try {
     if (temComando('pdftotext')) {
       const extraido = spawnSync('pdftotext', ['-layout', pdfPath, '-'], { encoding: 'utf8' }).stdout;
       if (!extraido.includes(dados.comum.nome)) falhar(`${dados[idioma].arquivo}: texto nao extraivel (nome ausente)`);
-      const p = verificarPrivacidade(extraido, { locaisPermitidos: permitidos });
+      const p = verificarPrivacidade(extraido);
       if (p.length > 0) falhar(`${dados[idioma].arquivo}: dado pessoal no texto extraido: ${listar(p)}`);
     } else {
       console.warn('::warning::pdftotext ausente; conferencia do texto extraido pulada');

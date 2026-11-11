@@ -48,13 +48,21 @@ function padraoLocal(arquivo) {
   return [['cidade', new RegExp(`(?<![\\p{L}])(?:${alt})(?![\\p{L}])`, 'giu')]];
 }
 
-// R2 (alterada pela spec 004): o valor exato de comum.local (por idioma) e o unico local permitido.
-export const locaisPermitidos = (dados) => [dados?.comum?.local, dados?.comum?.localEn].filter(Boolean);
+// R2 (alterada pela spec 004): estes dois valores fixos sao os unicos locais permitidos.
+export const LOCAIS_PERMITIDOS = ['Santa Maria, RS', 'Santa Maria, Brazil'];
 
-export function verificarPrivacidade(texto, { arquivoLocal = LISTA_LOCAL, locaisPermitidos: permitidos = [] } = {}) {
-  let t = String(texto);
-  for (const local of [...permitidos].sort((a, b) => b.length - a.length)) t = t.split(local).join(' ');
-  return procurar(t, [...PADROES_PRIVACIDADE, ...padraoLocal(arquivoLocal)]);
+const ESCAPAR = (c) => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const PADRAO_LOCAIS = new RegExp(`(?<![\\p{L}\\d])(?:${[...LOCAIS_PERMITIDOS].sort((a, b) => b.length - a.length).map(ESCAPAR).join('|')})(?![\\p{L}\\d])`, 'gu');
+
+const LOCAIS_SEM_FRONTEIRA = new RegExp([...LOCAIS_PERMITIDOS].sort((a, b) => b.length - a.length).map(ESCAPAR).join('|'), 'gu');
+
+export function verificarPrivacidade(texto, { arquivoLocal = LISTA_LOCAL } = {}) {
+  const t = String(texto);
+  const achados = procurar(t.replace(PADRAO_LOCAIS, ' '), [...PADROES_PRIVACIDADE, ...padraoLocal(arquivoLocal)]);
+  // telefone escondido dentro do local (ex.: "(55) 9Santa Maria, RS1234-5678") some ao apagar o local: confere tambem assim
+  const escondido = procurar(t.replace(LOCAIS_SEM_FRONTEIRA, ''), PADROES_PRIVACIDADE.filter(([tipo]) => tipo === 'telefone'));
+  for (const o of escondido) if (!achados.some((x) => x.tipo === o.tipo && x.trecho === o.trecho)) achados.push(o);
+  return achados;
 }
 export const verificarEstilo = (texto) => procurar(texto, PADROES_ESTILO);
 
@@ -72,6 +80,8 @@ export function verificarEstrutura(dados) {
   for (const campo of ['nome', 'local', 'localEn', 'email', 'linkedin', 'github', 'site']) {
     if (typeof dados?.comum?.[campo] !== 'string' || dados.comum[campo] === '') erros.push(`comum.${campo} ausente`);
   }
+  if (dados?.comum?.local !== LOCAIS_PERMITIDOS[0]) erros.push(`comum.local deve ser exatamente "${LOCAIS_PERMITIDOS[0]}"`);
+  if (dados?.comum?.localEn !== LOCAIS_PERMITIDOS[1]) erros.push(`comum.localEn deve ser exatamente "${LOCAIS_PERMITIDOS[1]}"`);
   const forma = (v) => (Array.isArray(v) ? 'lista' : v === null ? 'nulo' : typeof v);
   const comparar = (a, b, caminho) => {
     const chaves = new Set([...Object.keys(a ?? {}), ...Object.keys(b ?? {})]);
