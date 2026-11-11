@@ -117,7 +117,7 @@
 
 /* 3. carta virada */
 [data-flip],.traj-card{transform-style:flat}
-.virado > :not(.sp-verso){display:none!important}
+.virado:not(.photo) > :not(.sp-verso){display:none!important}
 .sp-verso .sp-cont{margin-top:10px}
 .sp-verso .sp-txt{margin:0;font-size:1.05rem;color:var(--fg)}
 .sp-volta{margin-top:14px;font:inherit;font-size:.92rem;font-weight:600;color:var(--accent);background:none;border:0;padding:6px 0;cursor:pointer;
@@ -127,9 +127,41 @@
 /* foto: o disco é um botão; virado, vira cartão ao lado do nome */
 .photo-btn{all:unset;box-sizing:border-box;display:grid;place-items:center;width:100%;height:100%;border-radius:50%;cursor:pointer}
 .photo-btn:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
-.photo.virado{width:min(320px,calc(100vw - 32px));aspect-ratio:auto;border-radius:14px;border:0;background:var(--raised);color:var(--fg);box-shadow:var(--shadow);
-  display:block;padding:16px 18px;font:inherit;font-size:.95rem;letter-spacing:normal;line-height:1.5}
-.photo.virado .sp-txt{font-size:.95rem}
+/* foto do topo: carta de duas faces. O .photo-card gira (perspectiva na própria transformação, então a caixa não muda de tamanho);
+   o bloco ocre mora no .photo e fica parado. */
+.photo-card{transform-style:preserve-3d;transform:perspective(1200px) rotateY(0deg);transition:transform .5s var(--ease)}
+.photo.virado .photo-card{transform:perspective(1200px) rotateY(180deg)}
+.photo .photo-btn{box-sizing:border-box;border:1px solid var(--line-strong);border-radius:var(--r-md);overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.photo .photo-btn img{border:0;border-radius:0}
+.photo .sp-verso{position:absolute;inset:0;box-sizing:border-box;display:flex;flex-direction:column;gap:var(--s2);padding:var(--s4);
+  background:var(--raised);border:1px solid var(--line-strong);border-radius:var(--r-md);color:var(--fg);container-type:inline-size;
+  transform:rotateY(180deg);-webkit-backface-visibility:hidden;backface-visibility:hidden;font-size:.875rem;line-height:1.4}
+.photo .sp-verso .sec-label{margin:0}
+.photo .sp-verso .sp-txt{margin:0;font-family:var(--f-display);font-weight:700;letter-spacing:-.01em;line-height:1.12;font-size:clamp(1rem,5.6cqi,1.4rem);text-wrap:balance}
+.sp-ficha{display:grid;gap:var(--s2);margin:0}
+.sp-ficha div{display:grid;gap:2px}
+.sp-ficha dt{font-family:var(--f-mono);font-weight:500;font-size:var(--t-label);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);line-height:1.3}
+.sp-ficha dd{margin:0;font-size:clamp(.8125rem,4cqi,.875rem);line-height:1.35;color:var(--fg)}
+.photo .sp-verso .sp-rodape{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:var(--s3);flex-wrap:wrap}
+.photo .sp-verso .sp-cont,.photo .sp-verso .sp-volta{margin:0}
+.photo .sp-verso .sp-volta{padding:2px 0}
+@media (min-width:861px) and (max-width:1100px){
+  /* computador estreito: a moldura é pequena (cerca de 240x300), então o verso fica mais compacto */
+  .photo .sp-verso{padding:var(--s3);gap:var(--s1)}
+  .photo .sp-verso .sp-txt{font-size:1rem;line-height:1.1}
+  .sp-ficha{gap:var(--s1)}
+  .sp-ficha div{gap:0}
+  .sp-ficha dt{line-height:1.2}
+  .sp-ficha dd{line-height:1.25}
+}
+@media (max-width:860px){
+  /* celular: o card vira no tamanho da foto (160x200); o verso mostra só a frase, a contagem e o botão */
+  .photo .sp-verso{padding:var(--s2);gap:var(--s1)}
+  .photo .sp-verso .sec-label,.photo .sp-verso .sp-ficha{display:none}
+  .photo .sp-verso .sp-txt{font-size:clamp(.95rem,10cqi,1.1rem)}
+  .photo .sp-verso .sp-rodape{flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:0}
+  .photo .sp-verso .sp-cont{font-size:var(--t-label);line-height:1.3}
+}
 
 .sp-mais.virado{background:var(--raised);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px;max-width:360px}
 @media (prefers-reduced-motion:reduce){
@@ -140,4 +172,12 @@
   .sp-bl{background:var(--raised)}
   .sp-acc{grid-template-rows:1fr}
   .sp-verso{animation:sp-fade .25s ease both}
+  /* foto: sem giro nem inclinação; as faces trocam por esmaecer de 150 ms */
+  .photo-card{transform:none!important;transition:none}
+  .photo .sp-verso{transform:none;animation:none;opacity:0;pointer-events:none;transition:opacity .15s linear}
+  .photo-card{box-sizing:border-box;border:1px solid var(--line-strong);border-radius:var(--r-md)}
+  .photo .photo-btn,.photo .sp-verso{border:0}
+  .photo .photo-btn{transition:opacity .15s linear}
+  .photo.virado .sp-verso{opacity:1;pointer-events:auto}
+  .photo.virado .photo-btn{opacity:0;pointer-events:none}
 }

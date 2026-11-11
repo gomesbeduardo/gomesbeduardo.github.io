@@ -26,6 +26,16 @@
     c10: 'I have been a co-founder of YourMentor since June 2026.'
   };
   var TXT = EN ? TXT_EN : TXT_PT;
+  // Ficha do verso da foto (spec 005): fatos que já estão na Trajetória do site, encurtados.
+  var FICHA = EN ? [
+    ['At YourMentor', 'Back end in Python, FastAPI and PostgreSQL; architecture, data model and monetization.'],
+    ['Before', 'ToPark, Apr 2024 to Oct 2025: a startup for booking parking spaces, in the first cohort of the InovAMF incubator.'],
+    ['Based in', 'Santa Maria, Brazil']
+  ] : [
+    ['No YourMentor', 'Back-end em Python, FastAPI e PostgreSQL; arquitetura, modelo de dados e monetização.'],
+    ['Antes', 'ToPark, de abr/2024 a out/2025: startup de reserva de vagas de estacionamento, na primeira turma da incubadora InovAMF.'],
+    ['Base', 'Santa Maria, RS']
+  ];
   var T = EN ? { curio: 'Curiosity', testes: 'Test results', volta: 'flip back', fechar: 'Close', cat: '$ cat curiosity.txt', ilus: '# illustrative output', spec: '# Spec 001: portfolio', of: ' of ', found: ' found', all: '. You found them all.', yes: 'yes', no: 'no', ret: ' found', term: 'Terminal' }
              : { curio: 'Curiosidade', testes: 'Resultado dos testes', volta: 'virar de volta', fechar: 'Fechar', cat: '$ cat curiosidade.txt', ilus: '# saída ilustrativa', spec: '# Spec 001: portfólio', of: ' de ', found: ' achados', all: '. Você achou tudo.', yes: 'sim', no: 'não', ret: ' achados', term: 'Terminal' };
   var IDS = Object.keys(TXT), TOTAL = IDS.length;
@@ -261,7 +271,62 @@
       { duration: 200, easing: de === 0 ? 'cubic-bezier(.5,0,1,.5)' : 'cubic-bezier(0,.5,.5,1)' });
     a.onfinish = fim;
   }
+  // Foto do topo: carta de duas faces. O .photo-card gira inteiro (a caixa não muda de tamanho); o verso fica dentro dele.
+  var GIRO = 500;
+  function inertar(e, v) {
+    if (!e) return;
+    if (v) { e.setAttribute('inert', ''); e.setAttribute('aria-hidden', 'true'); } else { e.removeAttribute('inert'); e.removeAttribute('aria-hidden'); }
+  }
+  function limparFoto(host) {
+    (host._t || []).forEach(clearTimeout); host._t = [];
+    var v = $('.sp-verso', host); if (v) v.remove();
+    host.classList.remove('girando');
+  }
+  function virarFoto(host, texto, cont, origem) {
+    var card = $('.photo-card', host), btn = $('.photo-btn', host);
+    limparFoto(host);
+    host._origem = origem;
+    cur = { el: host, origem: origem, fora: false, fechar: function (dev) { desvirarFoto(host, dev); } };
+    if (window.gsap) { window.gsap.killTweensOf(host); window.gsap.set(host, { rotationX: 0, rotationY: 0 }); }
+    var v = el('div', 'sp-verso');
+    v.setAttribute('role', 'group'); v.setAttribute('aria-label', T.curio); v.setAttribute('aria-live', 'polite');
+    v.appendChild(el('p', 'sec-label', T.curio));
+    var p = el('p', 'sp-txt'); p.textContent = texto; p.id = 'sp-v-' + Math.random().toString(36).slice(2, 8);
+    v.appendChild(p);
+    var dl = el('dl', 'sp-ficha');
+    FICHA.forEach(function (f) {
+      var g = el('div'), dt = el('dt'), dd = el('dd'); dt.textContent = f[0]; dd.textContent = f[1];
+      g.appendChild(dt); g.appendChild(dd); dl.appendChild(g);
+    });
+    v.appendChild(dl);
+    var rod = el('div', 'sp-rodape');
+    var n = el('p', 'sp-cont'); n.textContent = cont;
+    var b = el('button', 'sp-volta', T.volta); b.type = 'button'; b.setAttribute('aria-describedby', p.id);
+    b.addEventListener('click', function () { fecharAtual(true); });
+    rod.appendChild(n); rod.appendChild(b); v.appendChild(rod);
+    card.appendChild(v);
+    void host.offsetHeight;
+    var r = reduce(), dur = r ? 150 : GIRO;
+    host.classList.add('girando', 'virado');
+    inertar(btn, true);
+    b.focus({ preventScroll: true });
+    host._t.push(setTimeout(function () { host.classList.remove('girando'); }, dur));
+    return host;
+  }
+  function desvirarFoto(host, devolver) {
+    if (!host.classList.contains('virado')) return;
+    if (cur && cur.el === host) cur = null;
+    var btn = $('.photo-btn', host), v = $('.sp-verso', host), dur = reduce() ? 150 : GIRO;
+    (host._t || []).forEach(clearTimeout); host._t = [];
+    inertar(v, true);
+    inertar(btn, false);
+    host.classList.add('girando');
+    host.classList.remove('virado');
+    if (devolver) devolverFoco(host._origem);
+    host._t.push(setTimeout(function () { limparFoto(host); }, dur));
+  }
   function desvirar(host, devolver) {
+    if (host.classList.contains('photo')) { desvirarFoto(host, devolver); return; }
     if (!host.classList.contains('virado')) return;
     if (cur && cur.el === host) cur = null;
     animar(host, 0, 90, function () {
@@ -275,6 +340,7 @@
     var host = origem && origem.closest('[data-flip], .traj-card, .sp-mais');
     if (!host) return MODOS.banner(id, texto, cont, origem);
     if (host.classList.contains('virado')) { desvirar(host, true); return host; }
+    if (host.classList.contains('photo')) return virarFoto(host, texto, cont, origem);
     host._origem = origem;
     cur = { el: host, origem: origem, fora: false, fechar: function (dev) { desvirar(host, dev); } };
     animar(host, 0, 90, function () {
