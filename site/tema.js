@@ -16,6 +16,15 @@
     root.dataset.theme = next; root.dataset.mode = next; label(b);
     try { localStorage.setItem('tema', next); } catch (e) {}
   }
+  // Sem tema salvo, data-mode acompanha o sistema (troca ao vivo e volta do bfcache); com tema salvo, não mexe.
+  var mq = matchMedia('(prefers-color-scheme: dark)');
+  function sync() {
+    if (root.dataset.theme) return;
+    root.dataset.mode = mq.matches ? 'dark' : 'light';
+    label(document.getElementById('theme-toggle'));
+  }
+  if (mq.addEventListener) mq.addEventListener('change', sync); else if (mq.addListener) mq.addListener(sync);
+  addEventListener('pageshow', function (e) { if (e.persisted) sync(); });
   document.addEventListener('click', function (e) {
     var b = e.target.closest && e.target.closest('#theme-toggle');
     if (!b) return;
