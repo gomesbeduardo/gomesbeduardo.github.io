@@ -1,7 +1,7 @@
 <a href="https://gomesbeduardo.github.io/">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/readme/inicio-escuro.png">
-    <img alt="Página inicial do portfólio de Eduardo Gomes, com o nome em letras grandes e os botões Ver projetos e Baixar currículo" src="docs/readme/inicio-claro.png">
+    <img alt="Página inicial do portfólio de Eduardo Gomes, com o nome em letras grandes, a foto em moldura e os botões Ver projetos e Baixar currículo" src="docs/readme/inicio-claro.png">
   </picture>
 </a>
 
@@ -9,12 +9,12 @@
 
 [![Publicar v1](https://github.com/gomesbeduardo/gomesbeduardo.github.io/actions/workflows/pages.yml/badge.svg)](https://github.com/gomesbeduardo/gomesbeduardo.github.io/actions/workflows/pages.yml)
 
-Sou desenvolvedor full stack na CentralEng, estagiário no time de Inovação da Asten AVMB e estudante de Sistemas de Informação na AMF. Este repositório guarda o código do meu portfólio, que roda em **[gomesbeduardo.github.io](https://gomesbeduardo.github.io/)**, em português, e em **[/en/](https://gomesbeduardo.github.io/en/)**, em inglês.
+Sou desenvolvedor full stack, com foco em IA aplicada e automação. Faço estágio no time de Inovação da Asten AVMB, atendo a CentralEng sob demanda e estudo Sistemas de Informação na AMF, em Santa Maria, RS. Este repositório guarda o código do meu portfólio, que roda em **[gomesbeduardo.github.io](https://gomesbeduardo.github.io/)**, em português, e em **[/en/](https://gomesbeduardo.github.io/en/)**, em inglês.
 
 No site você encontra:
 
-- os projetos [leadgate](https://github.com/gomesbeduardo/leadgate) (assistente de IA que qualifica leads, com 570 testes) e [InfoHub InovAMF](https://github.com/gomesbeduardo/infohub-inovamf), além do LMS que 20 colaboradores usam na CentralEng;
-- a trajetória, de um `hello, world` em C no CS50 em 2018 ao 1º lugar no Ideathon de SI da AMF e ao título do Coderace 2026;
+- os projetos [leadgate](https://github.com/gomesbeduardo/leadgate) (assistente de IA que qualifica leads, com 570 testes) e [InfoHub InovAMF](https://github.com/gomesbeduardo/infohub-inovamf), além do LMS de treinamento técnico da CentralEng, em validação com os colaboradores;
+- a trajetória, de um `hello, world` em C no CS50 em 2018 ao ToPark, startup da primeira turma da incubadora InovAMF, ao 1º lugar no Ideathon de SI da AMF em 2025, ao 2º lugar em 2026 e ao título do Coderace 2026;
 - os números do meu GitHub dos últimos 12 meses, com o calendário de contribuições;
 - o currículo em PDF, nas duas línguas.
 
@@ -22,7 +22,7 @@ Abra o DevTools na página inicial: tem 10 curiosidades escondidas pelas seçõe
 
 ## Como eu montei
 
-Escrevo cada mudança numa spec curta, com critérios de aceite, antes do código. As specs ficam em [`docs/specs/`](docs/specs/). O mesmo processo aparece na seção Sobre do site.
+Escrevo cada mudança numa spec curta, com critérios de aceite, antes do código. As specs ficam em [`docs/specs/`](docs/specs/). O Claude Code escreveu a maior parte do código sob esse fluxo, com teste antes da implementação, um agente por função e a minha aprovação antes de cada merge. O botão "Feito com o Claude Code", no rodapé do site, explica o método.
 
 | Peça | O que faz | Onde |
 |---|---|---|
