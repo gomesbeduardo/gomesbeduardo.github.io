@@ -97,9 +97,27 @@ test('C10: a face de costas fica inert (e a da frente quando virado)', () => {
   assert.match(js, /setAttribute\('aria-hidden'/);
 });
 
-test('C6: celular troca de tamanho no meio do giro, com largura até 360px', () => {
-  assert.match(css, /@media \(max-width:860px\)\{[\s\S]*?\.photo\.grande[\s\S]*?min\(360px,100%\)/);
-  assert.match(js, /grande/);
+test('C6: no celular não há troca de tamanho (sem .grande) e o verso esconde rótulo e ficha', () => {
+  assert.doesNotMatch(css, /grande/);
+  assert.doesNotMatch(js, /grande/);
+  const m = bloco(css, '@media (max-width:860px){');
+  assert.match(m, /\.sp-verso \.sec-label[^{]*\{[^}]*display:\s*none/);
+  assert.match(m, /\.sp-ficha[^{]*\{[^}]*display:\s*none/);
+});
+
+test('legibilidade: .sp-ficha dd nunca abaixo de .8125rem', () => {
+  const m = css.match(/\.sp-ficha dd\{[^}]*font-size:([^;}]+)/);
+  assert.ok(m, 'regra de .sp-ficha dd sem font-size');
+  const mins = [...m[1].matchAll(/([\d.]+)rem/g)].map((x) => parseFloat(x[1]));
+  assert.ok(mins.length > 0 && Math.min(...mins) >= 0.8125, `font-size: ${m[1]}`);
+});
+
+test('C1a: a borda de 1px é da própria face (botão e verso), não só da img', () => {
+  assert.match(css, /\.photo \.photo-btn\{[^}]*border:\s*1px solid var\(--line-strong\)/);
+  assert.match(css, /\.photo \.sp-verso\{[^}]*border:\s*1px solid var\(--line-strong\)/);
+  assert.doesNotMatch(estilo, /\.photo \.photo-btn img\{[^}]*border:\s*1px/);
+  const r = bloco(css, '@media (prefers-reduced-motion:reduce){');
+  assert.match(r, /\.photo-card\{[^}]*border:\s*1px solid var\(--line-strong\)/); // no fade, a borda fica no card
 });
 
 test('F4: traj-card e .sp-mais seguem o caminho genérico', () => {

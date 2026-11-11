@@ -277,11 +277,10 @@
     if (!e) return;
     if (v) { e.setAttribute('inert', ''); e.setAttribute('aria-hidden', 'true'); } else { e.removeAttribute('inert'); e.removeAttribute('aria-hidden'); }
   }
-  function celular() { return matchMedia('(max-width: 860px)').matches; }
   function limparFoto(host) {
     (host._t || []).forEach(clearTimeout); host._t = [];
     var v = $('.sp-verso', host); if (v) v.remove();
-    host.classList.remove('girando', 'grande');
+    host.classList.remove('girando');
   }
   function virarFoto(host, texto, cont, origem) {
     var card = $('.photo-card', host), btn = $('.photo-btn', host);
@@ -311,9 +310,6 @@
     host.classList.add('girando', 'virado');
     inertar(btn, true);
     b.focus({ preventScroll: true });
-    if (celular()) {
-      if (r) host.classList.add('grande'); else host._t.push(setTimeout(function () { host.classList.add('grande'); }, GIRO / 2));
-    }
     host._t.push(setTimeout(function () { host.classList.remove('girando'); }, dur));
     return host;
   }
@@ -327,9 +323,6 @@
     host.classList.add('girando');
     host.classList.remove('virado');
     if (devolver) devolverFoco(host._origem);
-    if (celular()) {
-      if (reduce()) host.classList.remove('grande'); else host._t.push(setTimeout(function () { host.classList.remove('grande'); }, GIRO / 2));
-    }
     host._t.push(setTimeout(function () { limparFoto(host); }, dur));
   }
   function desvirar(host, devolver) {
