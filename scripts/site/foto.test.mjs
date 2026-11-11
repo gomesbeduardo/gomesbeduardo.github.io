@@ -23,9 +23,9 @@ const bloco = (src, inicio) => {
 };
 
 
-test('verso: rótulos da ficha em mono e c10 inalterada', () => {
-  assert.match(js, /Sou cofundador do YourMentor desde junho de 2026\./);
-  assert.match(js, /I have been a co-founder of YourMentor since June 2026\./);
+test('verso: rótulos da ficha em mono e c10 da spec 007', () => {
+  assert.match(js, /Sou cofundador do YourMentor desde outubro de 2025, quando ele ainda se chamava Mentor\.Me\./);
+  assert.match(js, /I have been a co-founder of YourMentor since October 2025, back when it was called Mentor\.Me\./);
   assert.match(css, /\.sp-ficha dt\{[^}]*var\(--f-mono\)/);
 });
 
@@ -106,3 +106,8 @@ for (const [lang, arq] of [['PT', 'site/index.html'], ['EN', 'site/en/index.html
     assert.match(ler(arq), /<div class="photo" data-flip><div class="photo-card"><button[^>]*id="sp-foto"/);
   });
 }
+
+test('A9 (spec 005): botão da foto com touch-action: manipulation', () => {
+  const regras = [...estilo.matchAll(/\.photo-btn\s*\{([^}]*)\}/g)].map((m) => m[1]);
+  assert.ok(regras.some((r) => /touch-action\s*:\s*manipulation/.test(r)));
+});

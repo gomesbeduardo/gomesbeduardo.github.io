@@ -53,6 +53,7 @@ Cinco cliques seguidos na foto do topo viram o card e mostram a curiosidade c10 
 - C9. Continua como hoje: cinco cliques viram; o foco vai para "virar de volta"; Esc e "virar de volta" desviram e devolvem o foco ao botão da foto; o verso é um grupo com `aria-live="polite"`.
 - C10. A face que está de costas fica fora do leitor de tela e do Tab (`inert` ou `aria-hidden` com `tabindex` removido).
 - C11. O contraste do texto do verso passa em AA nos dois temas.
+- C12. O botão da foto tem `touch-action: manipulation`: no toque, os cinco toques rápidos viram cliques e o toque duplo não dá zoom quando começa na foto. O zoom de pinça continua funcionando. (Acrescentado com o ok do responsável em 11/11/2026, junto da spec 007.)
 
 ## Conteúdo do verso
 
@@ -80,6 +81,7 @@ Os rótulos da ficha ("No YourMentor", "Antes", "Base"; EN "At YourMentor", "Bef
 - A6. Dado `site/surpresas.js`, então os textos da ficha existem em PT e EN, iguais à tabela acima, e o verso não cita CS50 nem Coderace (teste em `scripts/site/conteudo.test.mjs`).
 - A7. Dado o card virado com o mouse sobre ele, quando o mouse se move, então o card não inclina (Playwright).
 - A8. Os cartões da Trajetória e o `.sp-mais` continuam virando como hoje (Playwright: virar um cartão da Trajetória e conferir o verso).
+- A9. Dado `site/style.css`, então a regra de `.photo .photo-btn` tem `touch-action: manipulation` (teste estático em `scripts/site/foto.test.mjs`).
 
 ## Fora do escopo
 

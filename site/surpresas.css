@@ -147,12 +147,12 @@
 .photo .sp-verso .sp-volta{padding:2px 0}
 @media (min-width:861px) and (max-width:1100px){
   /* computador estreito: a moldura é pequena (cerca de 240x300), então o verso fica mais compacto */
-  .photo .sp-verso{padding:var(--s3);gap:var(--s1)}
-  .photo .sp-verso .sp-txt{font-size:1rem;line-height:1.1}
+  .photo .sp-verso{padding:var(--s2) var(--s3);gap:var(--s1)}
+  .photo .sp-verso .sp-txt{font-size:var(--t-small);line-height:1.1}
   .sp-ficha{gap:var(--s1)}
   .sp-ficha div{gap:0}
-  .sp-ficha dt{line-height:1.2}
-  .sp-ficha dd{line-height:1.25}
+  .sp-ficha dt{line-height:1.1}
+  .sp-ficha dd{line-height:1.2}
 }
 @media (max-width:860px){
   /* celular: o card vira no tamanho da foto (160x200); o verso mostra só a frase, a contagem e o botão */

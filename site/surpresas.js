@@ -5,25 +5,25 @@
     c1: 'Meu primeiro contato com programação foi o CS50 de Harvard, online, em 2018. O primeiro exercício é um hello, world em C.',
     c2: 'Na pandemia eu mexia em mods de jogos, principalmente Minecraft.',
     c3: 'O leadgate tem cerca de 570 testes. A IA dele é avaliada com um conjunto de casos guardado à parte, que não entra no desenvolvimento.',
-    c4: 'Fui campeão do Coderace 2026 com o AgroPlanner.',
+    c4: 'Fui campeão do CodeRace 2026 com o AgroPlanner.',
     c5: '1º lugar no 1º Ideathon de SI da AMF, em outubro de 2025, com a equipe Mentor.Me.',
     c6: 'A frase do rodapé é do Zen of Python e também está no README do meu perfil no GitHub.',
     c7: 'PMOC é o plano de manutenção de ar-condicionado que a Lei 13.589/2018 exige em prédios de uso coletivo. Lidero o sistema que gere isso na CentralEng.',
     c8: 'Fui professor bolsista no JET e dei aulas de tecnologia para 100 alunos de 4 escolas públicas.',
     c9: 'Este site começou por uma spec, como meus outros projetos. A spec 001 descreve esta página.',
-    c10: 'Sou cofundador do YourMentor desde junho de 2026.'
+    c10: 'Sou cofundador do YourMentor desde outubro de 2025, quando ele ainda se chamava Mentor.Me.'
   };
   var TXT_EN = {
     c1: 'My first contact with programming was Harvard\'s CS50, online, in 2018. The first exercise is a hello, world in C.',
     c2: 'During the pandemic I tinkered with game mods, mostly Minecraft.',
     c3: 'leadgate has about 570 tests. Its AI is evaluated on a held-out set of cases that is not used during development.',
-    c4: 'I won Coderace 2026 with AgroPlanner.',
+    c4: 'I won CodeRace 2026 with AgroPlanner.',
     c5: '1st place at the 1st AMF Information Systems Ideathon, in October 2025, with team Mentor.Me.',
     c6: 'The footer quote is from the Zen of Python and is also in the README of my GitHub profile.',
     c7: 'PMOC is the air-conditioning maintenance plan that Brazilian Law 13.589/2018 requires in buildings for collective use. I lead the system that manages it at CentralEng.',
     c8: 'I was a scholarship teacher at JET and taught technology to 100 students from 4 public schools.',
     c9: 'This site started from a spec, like my other projects. Spec 001 describes this page.',
-    c10: 'I have been a co-founder of YourMentor since June 2026.'
+    c10: 'I have been a co-founder of YourMentor since October 2025, back when it was called Mentor.Me.'
   };
   var TXT = EN ? TXT_EN : TXT_PT;
   // Ficha do verso da foto (spec 005): fatos que já estão na Trajetória do site, encurtados.
