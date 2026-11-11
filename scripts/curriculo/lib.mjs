@@ -48,8 +48,22 @@ function padraoLocal(arquivo) {
   return [['cidade', new RegExp(`(?<![\\p{L}])(?:${alt})(?![\\p{L}])`, 'giu')]];
 }
 
-export const verificarPrivacidade = (texto, { arquivoLocal = LISTA_LOCAL } = {}) =>
-  procurar(texto, [...PADROES_PRIVACIDADE, ...padraoLocal(arquivoLocal)]);
+// R2 (alterada pela spec 004): estes dois valores fixos sao os unicos locais permitidos.
+export const LOCAIS_PERMITIDOS = ['Santa Maria, RS', 'Santa Maria, Brazil'];
+
+const ESCAPAR = (c) => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const PADRAO_LOCAIS = new RegExp(`(?<![\\p{L}\\d])(?:${[...LOCAIS_PERMITIDOS].sort((a, b) => b.length - a.length).map(ESCAPAR).join('|')})(?![\\p{L}\\d])`, 'gu');
+
+const LOCAIS_SEM_FRONTEIRA = new RegExp([...LOCAIS_PERMITIDOS].sort((a, b) => b.length - a.length).map(ESCAPAR).join('|'), 'gu');
+
+export function verificarPrivacidade(texto, { arquivoLocal = LISTA_LOCAL } = {}) {
+  const t = String(texto);
+  const achados = procurar(t.replace(PADRAO_LOCAIS, ' '), [...PADROES_PRIVACIDADE, ...padraoLocal(arquivoLocal)]);
+  // telefone escondido dentro do local (ex.: "(55) 9Santa Maria, RS1234-5678") some ao apagar o local: confere tambem assim
+  const escondido = procurar(t.replace(LOCAIS_SEM_FRONTEIRA, ''), PADROES_PRIVACIDADE.filter(([tipo]) => tipo === 'telefone'));
+  for (const o of escondido) if (!achados.some((x) => x.tipo === o.tipo && x.trecho === o.trecho)) achados.push(o);
+  return achados;
+}
 export const verificarEstilo = (texto) => procurar(texto, PADROES_ESTILO);
 
 // Todas as strings do JSON, em uma só, para as verificações.
@@ -63,9 +77,11 @@ export function textoCompleto(valor) {
 // R1: pt e en com as mesmas chaves e o mesmo número de itens em cada lista.
 export function verificarEstrutura(dados) {
   const erros = [];
-  for (const campo of ['nome', 'local', 'email', 'linkedin', 'github', 'site']) {
+  for (const campo of ['nome', 'local', 'localEn', 'email', 'linkedin', 'github', 'site']) {
     if (typeof dados?.comum?.[campo] !== 'string' || dados.comum[campo] === '') erros.push(`comum.${campo} ausente`);
   }
+  if (dados?.comum?.local !== LOCAIS_PERMITIDOS[0]) erros.push(`comum.local deve ser exatamente "${LOCAIS_PERMITIDOS[0]}"`);
+  if (dados?.comum?.localEn !== LOCAIS_PERMITIDOS[1]) erros.push(`comum.localEn deve ser exatamente "${LOCAIS_PERMITIDOS[1]}"`);
   const forma = (v) => (Array.isArray(v) ? 'lista' : v === null ? 'nulo' : typeof v);
   const comparar = (a, b, caminho) => {
     const chaves = new Set([...Object.keys(a ?? {}), ...Object.keys(b ?? {})]);
@@ -88,12 +104,15 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 const semProtocolo = (url) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 
 const CSS = `
-@page { size: A4; margin: 14mm; }
+@page { size: A4; margin: 11mm 13mm; }
 * { box-sizing: border-box; }
 html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-body { margin: 0; font-family: "Liberation Sans", Arial, Helvetica, sans-serif; font-size: 10.2pt; line-height: 1.35; color: #111; }
+body { margin: 0; font-family: "Liberation Sans", Arial, Helvetica, sans-serif; font-size: 9.6pt; line-height: 1.28; color: #111; }
 a { color: inherit; text-decoration: none; }
 header { border-bottom: 1.5px solid #111; padding-bottom: 5pt; margin-bottom: 9pt; }
+header { display: flex; align-items: center; gap: 12pt; }
+header .foto { width: 28mm; height: 28mm; border-radius: 50%; object-fit: cover; flex: none; order: 2; }
+header .texto { flex: 1; }
 h1 { font-size: 19pt; margin: 0 0 1pt; letter-spacing: 0.2pt; }
 .titulo { font-size: 11.5pt; margin: 0 0 3pt; color: #333; }
 .contato { margin: 0; font-size: 9.4pt; color: #333; }
@@ -112,12 +131,16 @@ li { margin: 0 0 1pt; }
 footer { margin-top: 10pt; font-size: 8.4pt; color: #666; }
 `;
 
-// Monta o HTML de um idioma. Texto real, uma coluna, sem imagem nem tabela (R6).
-export function renderizarHtml(dados, idioma) {
+// Monta o HTML de um idioma. Texto real, uma coluna, sem tabela; a foto e so decoracao do cabecalho (spec 004, R4 alterada).
+const FOTO_PADRAO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..', 'site', 'img', 'eduardo-gomes.jpg');
+
+export function renderizarHtml(dados, idioma, { foto = FOTO_PADRAO } = {}) {
   if (!IDIOMAS.includes(idioma)) throw new Error(`idioma desconhecido: ${idioma}`);
   const c = dados.comum;
   const d = dados[idioma];
   const r = d.rotulos;
+  const fotoUri = `data:image/jpeg;base64,${readFileSync(foto).toString('base64')}`;
+  const local = idioma === 'en' && c.localEn ? c.localEn : c.local;
   const periodo = (inicio, fim) => `${esc(inicio)} – ${fim === null ? esc(r.atual) : esc(fim)}`;
   const link = (url) => `<a href="${esc(url)}">${esc(semProtocolo(url))}</a>`;
 
@@ -129,20 +152,27 @@ export function renderizarHtml(dados, idioma) {
 
   const projetos = d.projetos.map((p) => `
       <div class="item">
-        <div class="linha"><span><span class="cargo">${esc(p.nome)}</span> <span class="meta">${link(p.link)}</span></span></div>
+        <div class="linha"><span><span class="cargo">${esc(p.nome)}</span>${p.link ? ` <span class="meta">${link(p.link)}</span>` : ''}</span></div>
         <p>${esc(p.descricao)} <span class="meta">${esc(p.stack)}.</span></p>
       </div>`).join('');
 
   const premios = d.premios.map((p) => `
       <div class="item">
         <div class="linha"><span class="cargo">${esc(p.titulo)}</span><span class="quando">${esc(p.quando)}</span></div>
-        <p>${esc(p.detalhe)}</p>
+        ${p.detalhe ? `<p>${esc(p.detalhe)}</p>` : ''}
       </div>`).join('');
 
   const formacao = d.formacao.map((f) => `
       <div class="item">
         <div class="linha"><span><span class="cargo">${esc(f.curso)}</span>, <span class="org">${esc(f.instituicao)}</span></span><span class="quando">${esc(f.inicio)} – ${esc(f.fim)}</span></div>
       </div>`).join('');
+
+  const voluntariado = d.voluntariado.map((v) => `
+      <div class="item">
+        <div class="linha"><span><span class="cargo">${esc(v.titulo)}.</span> ${esc(v.detalhe)}</span><span class="quando">${esc(v.quando)}</span></div>
+      </div>`).join('');
+
+  const certificacoes = `<p>${d.certificacoes.map((x) => `${esc(x.nome)}${x.detalhe ? ` (${esc(x.detalhe)})` : ''}`).join(' · ')}</p>`;
 
   const stack = d.stack.map((s) => `<p><span class="cargo">${esc(s.grupo)}:</span> ${esc(s.itens)}</p>`).join('');
   const idiomas = d.idiomas.map((i) => `${esc(i.idioma)} (${esc(i.nivel)})`).join(' · ');
@@ -157,9 +187,12 @@ export function renderizarHtml(dados, idioma) {
 </head>
 <body>
 <header>
+  <img class="foto" src="${fotoUri}" alt="Eduardo Gomes">
+  <div class="texto">
   <h1>${esc(c.nome)}</h1>
   <p class="titulo">${esc(d.titulo)}</p>
-  <p class="contato"><span>${esc(c.local)}</span><span><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></span><span>${link(c.linkedin)}</span><span>${link(c.github)}</span><span>${link(c.site)}</span></p>
+  <p class="contato"><span>${esc(local)}</span><span><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></span><span>${link(c.linkedin)}</span><span>${link(c.github)}</span><span>${link(c.site)}</span></p>
+  </div>
 </header>
 <main>
   <section><h2>${esc(r.resumo)}</h2><p>${esc(d.resumo)}</p></section>
@@ -167,7 +200,9 @@ export function renderizarHtml(dados, idioma) {
   <section><h2>${esc(r.experiencia)}</h2>${experiencia}</section>
   <section><h2>${esc(r.projetos)}</h2>${projetos}</section>
   <section><h2>${esc(r.premios)}</h2>${premios}</section>
+  <section><h2>${esc(r.voluntariado)}</h2>${voluntariado}</section>
   <section><h2>${esc(r.formacao)}</h2>${formacao}</section>
+  <section><h2>${esc(r.certificacoes)}</h2>${certificacoes}</section>
   <section class="stack"><h2>${esc(r.stack)}</h2>${stack}</section>
   <section><h2>${esc(r.idiomas)}</h2><p>${idiomas}</p></section>
 </main>
