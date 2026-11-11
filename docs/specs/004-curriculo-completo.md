@@ -1,6 +1,6 @@
 # Spec 004: currículo completo no site, no PDF e no README
 
-Estado: aprovada em 11/11/2026 e reaberta no mesmo dia para incluir a moldura da foto e o rodapé sobre o uso de IA; aguardando nova aprovação. Data: 11/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026, com a moldura da foto e o rodapé.
 
 ## Pedido literal
 
