@@ -275,7 +275,9 @@
       if (fine && S.tilt.on) {
         // Foto do topo: o conjunto (foto e bloco de destaque) inclina até 2°, como os cards de projeto.
         $$('.photo-btn').forEach(function (btn) {
+          var cartaPhoto = btn.closest('.photo');
           btn.addEventListener('mousemove', function (e) {
+            if (cartaPhoto && (cartaPhoto.classList.contains('virado') || cartaPhoto.classList.contains('girando'))) return; // virado ou girando: sem inclinação
             var r = btn.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
             gsap.to(btn, { rotationY: px * 4, rotationX: -py * 4, transformPerspective: 1200, duration: 0.4, ease: 'expo.out', overwrite: 'auto' });
           });

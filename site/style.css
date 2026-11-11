@@ -129,11 +129,12 @@ section{padding:var(--section) 0 0}
 @media (prefers-reduced-motion:reduce){.hero h1.pre .fill .ch{opacity:1}.hero h1.run .fill .ch{animation:none}}
 /* foto redonda ao lado do nome: nas últimas colunas, alinhada à linha de base do "Gomes" */
 .photo{grid-column:9/13;grid-row:1;align-self:start;justify-self:end;width:100%;margin:0;position:relative}
-.photo .photo-btn{position:relative;display:block;width:100%;height:auto;aspect-ratio:4/5;border-radius:var(--r-md);transform-style:preserve-3d}
-.photo .photo-btn::before{content:"";position:absolute;inset:0;border-radius:var(--r-md);background:var(--accent);transform:translate(12px,12px)}
+/* bloco ocre: fica no .photo, parado atrás do card (não gira nem some quando a foto vira) */
+.photo::before{content:"";position:absolute;inset:0;border-radius:var(--r-md);background:var(--accent);transform:translate(12px,12px)}
+.photo .photo-card{position:relative;width:100%;aspect-ratio:4/5}
+.photo .photo-btn{position:relative;display:block;width:100%;height:100%;border-radius:var(--r-md);transform-style:preserve-3d}
 .photo .photo-btn img{position:relative;display:block;width:100%;height:100%;object-fit:cover;object-position:50% 28%;border-radius:var(--r-md);border:1px solid var(--line-strong);background:var(--raised)}
-.photo.virado .photo-btn{display:none}
-@media (max-width:860px){.name-row{align-items:start}.hero h1{grid-column:1/-1;grid-row:2}.photo{grid-column:1/-1;grid-row:1;justify-self:start;margin:0 0 8px;width:160px}.photo .photo-btn::before{transform:translate(8px,8px)}}
+@media (max-width:860px){.name-row{align-items:start}.hero h1{grid-column:1/-1;grid-row:2}.photo{grid-column:1/-1;grid-row:1;justify-self:start;margin:0 0 8px;width:160px}.photo::before{transform:translate(8px,8px)}}
 @media (max-width:560px){.hero h1{font-size:20vw}}
 .title-line{position:relative;display:grid;font-size:clamp(1.15rem,2.2vw,1.45rem);color:var(--fg);max-width:34em;margin:clamp(24px,4vw,40px) 0 var(--s6)}
 .title-line .ghost{visibility:hidden;grid-area:1/1}
