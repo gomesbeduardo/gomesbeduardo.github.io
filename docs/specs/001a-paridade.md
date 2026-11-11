@@ -1,7 +1,7 @@
 # Spec 001a: etapa 1, Astro e Tailwind com paridade do site atual
 
 Estado: aprovada pelo responsável em 11/11/2026.
-Parte 2 de 4 da spec 001. Ordem: `001-astro.md` (índice, decisões, regras transversais), `001a-paridade.md` (esta), `001b-seo-geo.md`, `001c-desempenho.md`. As decisões P1 a P9 e P3b estão no índice.
+Parte 2 de 5 da spec 001. Ordem: `001-astro.md` (índice, decisões, regras transversais), `001a-paridade.md` (esta), `001b-seo-geo.md`, `001c-desempenho.md`. As decisões P1 a P9 e P3b estão no índice.
 
 ## Objetivo da etapa
 
@@ -54,7 +54,7 @@ Nenhum redirecionamento é criado. Link interno nas páginas continua apontando 
 
 ### R4. JavaScript sem mudança de comportamento
 
-- Os cinco JS e os três `vendor/` são copiados para `public/` sem alteração e carregados pelo layout com `<script is:inline>` nas mesmas posições, atributos e ordem de F4 (`blocking="render"` em `inicio.js`, `defer` nos outros, `preload` do ScrollTrigger). O Astro não empacota nem adia esses scripts.
+- Os cinco JS e os três `vendor/` são copiados para `public/` sem alteração (a única exceção é a última fatia da etapa, a troca de língua de 001d R6) e carregados pelo layout com `<script is:inline>` nas mesmas posições, atributos e ordem de F4 (`blocking="render"` em `inicio.js`, `defer` nos outros, `preload` do ScrollTrigger). O Astro não empacota nem adia esses scripts.
 - `index.html` tem um `<script type="application/json" id="cal-dados">` com o calendário que `main.js` desenha. No Astro esse JSON é gerado no build a partir de `src/data/github.json` (R5), com a mesma forma que `main.js` lê hoje.
 - Os ids, classes e atributos `data-*` que os JS e os testes usam (`#theme-toggle`, `#copy-email`, `#claude-btn`, `#sobre-site`, `.photo[data-flip]`, `#sp-foto`, `.photo-card`, `.top`, `.traj-card`, `.sp-mais`, `.links`, os da fila de F1) ficam iguais no HTML gerado.
 - Mover os JS para `src/` como ilhas, empacotar, e carregar GSAP e Lenis sob demanda é etapa 3 (001c), não etapa 1.
