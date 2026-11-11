@@ -165,7 +165,8 @@
     }
     function mostrarOk() {
       clearTimeout(timer);
-      el.classList.remove('falha', 'tr'); titulo.textContent = TXT.ok;
+      el.classList.remove('falha', 'tr'); titulo.textContent = ''; // limpa e repõe no quadro seguinte: o leitor de tela anuncia de novo
+      requestAnimationFrame(function () { titulo.textContent = TXT.ok; });
       void el.offsetWidth; el.classList.add('on', 'tr'); // reinicia o traço do ícone a cada clique
       timer = setTimeout(function () { esconder(false); }, 2500);
     }
