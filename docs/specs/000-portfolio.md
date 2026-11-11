@@ -107,6 +107,4 @@ Valem para o site da `staging` em 11/11/2026 e continuam valendo depois da migra
 
 ## Perguntas abertas
 
-- P1. Redirecionamento pela língua do navegador e escolha de língua salva, decididos em 09/11 e não implementados no v1. Recomendação: decidir numa spec própria se ainda valem.
-
-As outras perguntas abertas do grilling de 09/11 foram fechadas no caminho: paleta (P1 Ocre, 11/11), tipografia (Funnel Display, Funnel Sans e Reddit Mono, `docs/design/stack-fontes.md`), textos do topo (no site), o que o protótipo aprovou (`docs/design/feedback-prototipo.md`), citação do Zen of Python (no rodapé) e o cron semanal vivo (spec 002, P1).
+Nenhuma. O redirecionamento pela língua do navegador e a escolha de língua salva, decididos em 09/11 e não implementados no v1, ficaram fora por ora (responsável, 11/11/2026); se voltarem, viram spec própria. As outras perguntas abertas do grilling de 09/11 foram fechadas no caminho: paleta (P1 Ocre, 11/11), tipografia (Funnel Display, Funnel Sans e Reddit Mono, `docs/design/stack-fontes.md`), textos do topo (no site), o que o protótipo aprovou (`docs/design/feedback-prototipo.md`), citação do Zen of Python (no rodapé) e o cron semanal vivo (spec 002, P1).
