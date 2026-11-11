@@ -1,6 +1,6 @@
 # Spec 005: virada da foto do topo
 
-Estado: rascunho, aguardando aprovação do responsável.
+Estado: aprovada pelo responsável em 11/11/2026.
 
 ## Pedido literal
 
