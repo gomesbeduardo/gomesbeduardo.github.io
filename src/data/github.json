@@ -2,7 +2,7 @@
   "versao": 1,
   "amostra": false,
   "usuario": "gomesbeduardo",
-  "coletadoEm": "2026-11-11T14:18:32.435Z",
+  "coletadoEm": "2026-11-11T14:30:07.867Z",
   "janela": {
     "de": "2025-11-12",
     "ate": "2026-11-11"
@@ -18,35 +18,38 @@
   "reposPublicos": 12,
   "linguagens": [
     {
-      "nome": "Python",
-      "bytes": 21621725,
-      "percentual": 89.3,
-      "cor": "#3572A5"
-    },
-    {
       "nome": "TypeScript",
       "bytes": 1889191,
-      "percentual": 7.8,
+      "percentual": 89.5,
       "cor": "#3178c6"
     },
     {
-      "nome": "Cython",
-      "bytes": 419415,
-      "percentual": 1.7,
-      "cor": "#fedf5b"
-    },
-    {
       "nome": "CSS",
-      "bytes": 96920,
-      "percentual": 0.4,
+      "bytes": 89697,
+      "percentual": 4.2,
       "cor": "#663399"
     },
     {
       "nome": "JavaScript",
-      "bytes": 87182,
-      "percentual": 0.4,
+      "bytes": 76340,
+      "percentual": 3.6,
       "cor": "#f1e05a"
+    },
+    {
+      "nome": "HTML",
+      "bytes": 22976,
+      "percentual": 1.1,
+      "cor": "#e34c26"
+    },
+    {
+      "nome": "Python",
+      "bytes": 19075,
+      "percentual": 0.9,
+      "cor": "#3572A5"
     }
+  ],
+  "linguagensIgnoram": [
+    "centralEng_AI_Chatbot"
   ],
   "calendario": {
     "totalDias": 365,
