@@ -199,9 +199,17 @@ try {
     const ini = await estilo(page, '.aviso-caixa', ['transform']);
     ok('CSS-aviso-entrada: caixa fechada começa deslocada 16 px e a 96% (matrix(.96, 0, 0, .96, 0, 16))', ini.transform === 'matrix(0.96, 0, 0, 0.96, 0, 16)', ini.transform);
     await btn.click();
-    await espera(80);
-    const tr = await page.evaluate(() => getComputedStyle(document.querySelector('.aviso-ok path')).strokeDashoffset);
-    ok('CSS-aviso-entrada: o traço do ✓ começa com stroke-dashoffset diferente de 0', parseFloat(tr) > 0, tr);
+    // sem depender de tempo: pausa a animação do traço no instante 0 (dentro do atraso) e lê o valor inicial; os keyframes têm de terminar em 0
+    // (a classe .tr entra quando a cópia termina, então espera pela animação em vez de um tempo fixo)
+    const tr = await page.waitForFunction(() => {
+      const path = document.querySelector('.aviso-ok path');
+      const an = path.getAnimations().find((x) => x.animationName === 'aviso-traco');
+      if (!an) return false;
+      const quadros = an.effect.getKeyframes().map((k) => k.strokeDashoffset);
+      an.pause(); an.currentTime = 0;
+      return { anim: true, quadros, inicio: getComputedStyle(path).strokeDashoffset };
+    }, null, { timeout: 3000 }).then((h) => h.jsonValue()).catch(() => ({ anim: false }));
+    ok('CSS-aviso-entrada: o traço do ✓ anima stroke-dashoffset até 0, partindo de valor diferente de 0', tr.anim && parseFloat(tr.quadros[tr.quadros.length - 1]) === 0 && parseFloat(tr.inicio) > 0, JSON.stringify(tr));
     await espera(400);
     const av = await estilo(page, '.aviso', ['position']);
     ok('CSS-aviso: .aviso fixo e dentro da tela (base ≤ altura)', av.position === 'fixed' && av.b <= av.vh, JSON.stringify(av));
