@@ -14,9 +14,9 @@ const PROJETOS = ['lms', 'infohub', 'leadgate'].flatMap((p) => [
 ]);
 const T = {
   pt: { mail: 'E-mail', aria: 'Copiar e-mail', nav: 'Navegação', contato: 'Contato', topo: 'Voltar ao topo', sobre: 'Sobre este site', cod: 'Código do site', lugar: 'Santa Maria, RS',
-    frase: 'Escrito em HTML, CSS e JavaScript, sem framework, com GSAP e Lenis. Fontes Funnel Display, Funnel Sans e Reddit Mono. Publicado no GitHub Pages.' },
+    frase: 'Feito com Astro e Tailwind CSS, com GSAP e Lenis nas animações. Fontes Funnel Display, Funnel Sans e Reddit Mono. Publicado no GitHub Pages pelo GitHub Actions.' },
   en: { mail: 'Email', aria: 'Copy email', nav: 'Navigation', contato: 'Contact', topo: 'Back to top', sobre: 'About this site', cod: 'Site source', lugar: 'Santa Maria, Brazil',
-    frase: 'Written in HTML, CSS and JavaScript, no framework, with GSAP and Lenis. Funnel Display, Funnel Sans and Reddit Mono fonts. Published on GitHub Pages.' },
+    frase: 'Built with Astro and Tailwind CSS, with GSAP and Lenis for the animations. Funnel Display, Funnel Sans and Reddit Mono fonts. Published on GitHub Pages through GitHub Actions.' },
 };
 const REPO = 'https://github.com/gomesbeduardo/gomesbeduardo.github.io';
 const secao = (h, id) => { const i = h.indexOf(`<section id="${id}"`); return h.slice(i, h.indexOf('</section>', i)); };

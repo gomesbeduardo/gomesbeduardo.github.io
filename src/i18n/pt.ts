@@ -248,7 +248,7 @@ export const pt: Dicionario = {
       navAria: "Navegação do rodapé",
       navTitulo: "Navegação",
       sobreTitulo: "Sobre este site",
-      sobreTexto: "Escrito em HTML, CSS e JavaScript, sem framework, com GSAP e Lenis. Fontes Funnel Display, Funnel Sans e Reddit Mono. Publicado no GitHub Pages.",
+      sobreTexto: "Feito com Astro e Tailwind CSS, com GSAP e Lenis nas animações. Fontes Funnel Display, Funnel Sans e Reddit Mono. Publicado no GitHub Pages pelo GitHub Actions.",
       codigo: "Código do site",
       autor: "Eduardo Bergoli Gomes · Santa Maria, RS",
       topo: "Voltar ao topo ↑",
