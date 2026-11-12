@@ -15,8 +15,8 @@ const c = t.contato;
   <p class="foot-claude"><button class="btn claude-btn" id="claude-btn" type="button" aria-haspopup="dialog" aria-controls="sobre-site"><span class="pulse" aria-hidden="true"></span><span>{s.claudeBtn}</span><Fragment set:html={icone('open')} /></button></p>
   <p class="foot-spec" set:html={s.spec}></p>
   </div>
-  <nav class="foot-col foot-nav" aria-label={s.navAria}><h2 class="foot-t">{s.navTitulo}</h2><ul>{t.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul></nav>
-  <div class="foot-col foot-contato"><h2 class="foot-t">{c.titulo}</h2><ul><li><button type="button" data-copiar-email aria-label={c.emailAria}>{c.email}</button></li><li><a href={LINKS.linkedin} rel="noopener">LinkedIn</a></li><li><a href={LINKS.github} rel="noopener">GitHub</a></li><li><a href={`${t.base}curriculo/${c.curriculoArquivo}`} download>{c.curriculo}</a></li></ul></div>
+  <nav class="foot-col foot-nav" aria-label={s.navAria}><h2 class="foot-t" data-ancora="rodape-nav-titulo">{s.navTitulo}</h2><ul>{t.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul></nav>
+  <div class="foot-col foot-contato"><h2 class="foot-t" data-ancora="rodape-contato-titulo">{c.titulo}</h2><ul><li><button type="button" data-copiar-email aria-label={c.emailAria}>{c.email}</button></li><li><a href={LINKS.linkedin} rel="noopener">LinkedIn</a></li><li><a href={LINKS.github} rel="noopener">GitHub</a></li><li><a href={`${t.base}curriculo/${c.curriculoArquivo}`} download>{c.curriculo}</a></li></ul></div>
   </div>
   <p class="foot-sobre"><span class="foot-t">{s.sobreTitulo}</span> {s.sobreTexto} <a href={LINKS.repositorio} rel="noopener">{s.codigo}</a></p>
   <div class="foot-fim"><p>© <span data-ano>2026</span> {s.autor}</p><span class="foot-lang">{t.idiomas.map((l, i) => <>{i > 0 && <span aria-hidden="true">·</span>}<a href={l.href} aria-current={l.current ? "true" : undefined} lang={l.lang} hreflang={l.lang} aria-label={l.aria}>{l.code}</a></>)}</span><a href="#" data-topo>{s.topo}</a></div>

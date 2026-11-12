@@ -9,7 +9,7 @@ const s = t.modal;
 <dialog class="modal" id="sobre-site" aria-labelledby="sobre-site-t" data-lenis-prevent>
 <div class="modal-in">
 <button class="icon-btn modal-x" type="button" data-fechar aria-label={s.fechar}><Fragment set:html={icone('close')} /></button>
-<h2 id="sobre-site-t" tabindex="-1">{s.titulo}</h2>
+<h2 id="sobre-site-t" tabindex="-1" data-ancora="sobre-site-titulo">{s.titulo}</h2>
 <p set:html={s.intro}></p>
 {s.secoes.map((x) => <Fragment><h3>{x.titulo}</h3>
 <p set:html={x.texto}></p></Fragment>)}

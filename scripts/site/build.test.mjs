@@ -19,7 +19,8 @@ export function normalizarHtml(html) {
       const t = m[2].replace(/\s+/g, ' ').trim();
       if (t) itens.push(t);
     } else {
-      const tag = m[1].replace(/\s+/g, ' ').replace(/\s*\/$/, '').trim();
+      // data-ancora é novo em relação a site/ e não muda estilo nem layout (spec 001d R1).
+      const tag = m[1].replace(/\sdata-ancora="[^"]*"/g, '').replace(/\s+/g, ' ').replace(/\s*\/$/, '').trim();
       itens.push(`<${tag.startsWith('!') ? tag.toLowerCase() : tag}>`);
     }
   }

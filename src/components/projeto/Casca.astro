@@ -26,13 +26,13 @@ const lua = `<svg class="icon i-moon"><use href="#i-moon"/></svg>`;
 </header>
 <main class="wrap" id="conteudo">
   <Capa id={id} meta={meta} texto={p} base={t.base} />
-  <div class="proj-head">
+  <div class="proj-head" data-ancora={`${id}-capa`}>
   <h1>{p.titulo}</h1>
   <p class="lede" set:html={p.lede}></p>
   <div class="figs">{p.figuras.map((f) => <div><b set:html={f.valor}></b><span>{f.rotulo}</span></div>)}</div>
   </div>
 
-  {meta.secoes.map((e, i) => <Secao meta={meta} estrutura={e} texto={p.secoes[i]} base={t.base} />)}
+  {meta.secoes.map((e, i) => <Secao id={id} meta={meta} estrutura={e} texto={p.secoes[i]} base={t.base} />)}
 </main>
 <footer><div class="wrap"><a class="back" href="index.html#projetos"><Fragment set:html={voltar} />{t.voltarProjetos}</a>
   <div class="foot-fim"><p>© <span data-ano>2026</span> {t.rodape}</p><Idiomas lang={lang} id={id} classe="foot-lang" /><a href="#" data-topo>{t.topo}</a></div>

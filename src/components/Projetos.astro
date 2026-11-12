@@ -19,10 +19,10 @@ const grupos = [
 ---
 <section id="projetos"><div class="wrap">
   <p class="sec-label reveal" aria-hidden="true">{s.label}</p>
-  <h2 class="reveal">{s.titulo}</h2>
+  <h2 class="reveal" data-ancora="projetos-titulo">{s.titulo}</h2>
   <div class="projects">
   {grupos.map(({ Env, props, ids }) => <Env {...props}>
-  {ids.map((i) => <a class={metas[i].classe} href={`projeto-${metas[i].id}.html`} data-card={metas[i].id}>
+  {ids.map((i) => <a class={metas[i].classe} href={`projeto-${metas[i].id}.html`} data-card={metas[i].id} data-ancora={`proj-${metas[i].id}`}>
     <div class={metas[i].capa ? 'shot cover-lms' : 'shot'} style={metas[i].ar} role={metas[i].capa ? 'img' : undefined} aria-label={metas[i].capa ? s.cards[i].capaAria : undefined}>{metas[i].capa ? <div class="cv" aria-hidden="true"><b>{s.cards[i].titulo}</b><span class="sub">{s.cards[i].capaSub}</span><span class="ico"><Fragment set:html={metas[i].capa.map(logoCapa).join('')} /></span></div> : <img class={metas[i].recorte} src={t.base + metas[i].img} alt={s.cards[i].alt} width={metas[i].largura} height={metas[i].altura}>}</div>
     <div class="body">
       <h3>{s.cards[i].titulo} <Fragment set:html={icone('arrow')} /></h3>

@@ -6,9 +6,9 @@ interface Props { lang: Lang }
 const { home: t } = dicionario(Astro.props.lang);
 const s = t.contato;
 ---
-<section id="contato"><div class="wrap">
+<section id="contato" data-ancora="contato"><div class="wrap">
   <p class="sec-label reveal" aria-hidden="true">{s.label}</p>
-  <h2 class="reveal">{s.titulo}</h2>
+  <h2 class="reveal" data-ancora="contato-titulo">{s.titulo}</h2>
   <p class="mono">{s.local}</p>
   <ul class="links">
     <li class="stag"><button type="button" data-copiar-email aria-label={s.emailAria}><span class="lbl">{s.email}</span> <Fragment set:html={icone('copy')} /></button></li>
