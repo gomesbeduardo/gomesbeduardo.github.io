@@ -36,12 +36,12 @@ const langs = github.linguagens.map((l, i) => ({ nome: l.nome, p: l.percentual, 
 const dias = github.calendario.semanas.flatMap((w) => w.dias);
 const json = JSON.stringify({ pad: dias[0].diaSemana, d: dias.map((d) => [d.data, d.nivel, d.contagem]) });
 ---
-<section id="numeros" data-ancora="numeros"><div class="wrap">
+<section id="numeros"><div class="wrap">
   <p class="sec-label reveal" aria-hidden="true" set:html={s.label}></p>
   <h2 class="reveal" data-ancora="numeros-titulo" set:html={s.titulo}></h2>
   {github.amostra === true && <p class="sec-label" set:html={s.aviso}></p>}
   <p class="sample"><span>{s.coleta.replace('{data}', coleta)}</span><span>{s.janela.replace('{de}', de).replace('{ate}', ate)}</span></p>
-  <div class="counters">
+  <div class="counters" data-ancora="numeros">
     <div class="counter stag"><span class="num" data-v={github.contribuicoes.total}><span class="sr-only">{total}</span><span aria-hidden="true">{total}</span></span><span class="lbl">{s.contribuicoes.replace('{restritas}', restritas)}</span></div>
     <div class="counter stag"><span class="num" data-v={github.reposPublicos}><span class="sr-only">{num(github.reposPublicos)}</span><span aria-hidden="true">{num(github.reposPublicos)}</span></span><span class="lbl">{s.repos}</span></div>
   </div>

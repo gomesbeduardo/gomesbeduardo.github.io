@@ -6,7 +6,7 @@ interface Props { id: string; meta: Meta; estrutura: Secao; texto: SecaoProjeto;
 const { id, meta, estrutura: e, texto: t, base } = Astro.props;
 const img = 'img' in meta.capa ? meta.capa : undefined;
 ---
-<section data-ancora={`${id}-${e.ancora}`}><h2 class="reveal">{t.titulo}</h2>
+<section><h2 class="reveal" data-ancora={`${id}-${e.ancora}`}>{t.titulo}</h2>
     {e.tipo === 'texto' && t.paragrafos?.map((p, i) => <p data-ancora={`${id}-${e.ancora}-${i + 1}`} set:html={p}></p>)}
     {e.tipo === 'texto' && e.href && <p data-ancora={`${id}-${e.ancora}-codigo`}><a class="link-codigo" href={e.href} rel="noopener">{t.codigo}</a></p>}
     {e.tipo === 'stack' && <div class="tags">{meta.tags.map((g) => <span>{g}</span>)}</div>}

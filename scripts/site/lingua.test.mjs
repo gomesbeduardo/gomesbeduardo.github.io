@@ -63,8 +63,40 @@ for (const arq of TODAS.filter((a) => a.includes('projeto-'))) {
     const secoes = [...main.matchAll(/<section\b[^>]*>[\s\S]*?<\/section>/g)].map((m) => m[0]);
     assert.ok(secoes.length > 0);
     for (const s of secoes) {
-      assert.match(s.match(/<section\b[^>]*>/)[0], /data-ancora="/, 'section com data-ancora');
+      assert.match(s.match(/<h2\b[^>]*>/)[0], /data-ancora="/, 'h2 da section com data-ancora');
       for (const tag of s.match(/<p\b[^>]*>/g) || []) assert.match(tag, /data-ancora="/, `p sem data-ancora: ${tag}`);
     }
+  });
+}
+
+// Lista os pares (ancestral, descendente) em que um data-ancora contém outro, com um tokenizador de pilha de tags.
+const VAZIOS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr', 'use', 'path', 'circle', 'rect', 'line', 'polyline', 'polygon', 'ellipse', 'stop']);
+function aninhados(html) {
+  const limpo = html
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '<$1></$1>');
+  const pilha = [];
+  const achados = [];
+  for (const m of limpo.matchAll(/<(\/?)([a-zA-Z][^\s>/]*)((?:"[^"]*"|'[^']*'|[^>"'])*)>/g)) {
+    const [, fecha, nomeBruto, resto] = m;
+    const nome = nomeBruto.toLowerCase();
+    if (fecha) {
+      const i = pilha.map((e) => e.nome).lastIndexOf(nome);
+      if (i >= 0) pilha.length = i;
+      continue;
+    }
+    const id = resto.match(/\sdata-ancora="([^"]*)"/)?.[1];
+    if (id !== undefined) {
+      const pai = [...pilha].reverse().find((e) => e.id !== undefined);
+      if (pai) achados.push(`${pai.id} contém ${id}`);
+    }
+    if (!VAZIOS.has(nome) && !/\/\s*$/.test(resto)) pilha.push({ nome, id });
+  }
+  return achados;
+}
+
+for (const arq of TODAS) {
+  test(`T8-d: ${arq} não tem data-ancora dentro de data-ancora`, () => {
+    assert.deepEqual(aninhados(lerHtml(arq)), []);
   });
 }
