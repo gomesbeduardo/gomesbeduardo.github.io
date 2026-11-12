@@ -1,0 +1,11 @@
+---
+import { icone, logoCapa } from '../icones';
+import type { Meta } from './dados';
+import type { PaginaProjeto } from '../../i18n/tipos';
+interface Props { id: string; meta: Meta; texto: PaginaProjeto; base: string }
+const { id, meta, texto: t, base } = Astro.props;
+const c = meta.capa;
+---
+{'logos' in c
+  ? <div class="shot cover-lms in-page" data-cover={id} role="img" aria-label={t.capaAria}><div class="cv" aria-hidden="true"><b>{t.titulo}</b><span class="sub">{t.capaSub}</span><span class="ico">{c.logos.map((l) => <Fragment set:html={logoCapa(l)} />)}</span></div></div>
+  : <div class="shot" data-cover={id} style={c.ar}><img class={c.recorte} src={`${base}${c.img}`} alt={t.capaAlt} width={c.largura} height={c.altura}></div>}

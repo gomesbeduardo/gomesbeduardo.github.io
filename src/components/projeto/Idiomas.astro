@@ -1,0 +1,9 @@
+---
+import type { Lang } from '../../i18n/tipos';
+interface Props { lang: Lang; id: string; classe: string }
+const { lang, id, classe } = Astro.props;
+const pt = lang === 'pt';
+const hrefPt = `${pt ? '' : '../'}projeto-${id}.html`;
+const hrefEn = `${pt ? 'en/' : ''}projeto-${id}.html`;
+---
+<span class={classe}><a href={hrefPt} aria-current={pt ? 'true' : undefined} lang="pt-BR" hreflang="pt-BR" aria-label={pt ? undefined : 'Português'}>PT</a><span aria-hidden="true">·</span><a href={hrefEn} aria-current={pt ? undefined : 'true'} lang="en" hreflang="en" aria-label={pt ? 'English' : undefined}>EN</a></span>

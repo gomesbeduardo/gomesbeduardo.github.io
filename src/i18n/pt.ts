@@ -287,4 +287,118 @@ export const pt: Dicionario = {
       link: "Ver as specs e os PRs no GitHub",
     },
   },
+  projetos: {
+    "base": "",
+    "pular": "Ir para o conteúdo",
+    "voltar": "Voltar",
+    "voltarProjetos": "Voltar aos projetos",
+    "tema": "Alternar tema",
+    "rodape": "Eduardo Bergoli Gomes · Santa Maria, RS",
+    "topo": "Voltar ao topo ↑",
+    "paginas": {
+      "leadgate": {
+        "titulo": "leadgate",
+        "lede": "Assistente de IA que faz a triagem de leads no chat de uma empresa de climatização e entrega a vendas um JSON validado. Protótipo em fase de teste, com a CentralEng como piloto fictício.",
+        "capaAlt": "Captura do chat do leadgate",
+        "figuras": [
+          {
+            "valor": "570",
+            "rotulo": "testes"
+          },
+          {
+            "valor": "6 de 6",
+            "rotulo": "no conjunto reservado"
+          },
+          {
+            "valor": "9 de 9",
+            "rotulo": "na regressão"
+          }
+        ],
+        "secoes": [
+          {
+            "titulo": "Problema",
+            "paragrafos": [
+              "Uma empresa de ar-condicionado recebe pedidos pelo site sem triagem. No mesmo lugar chegam o escritório que precisa de manutenção, o apartamento que a empresa não atende, o pedido de outra cidade e o spam. O time de vendas gasta tempo separando o que vale uma ligação.",
+              "Um formulário com campos fixos não confirma uma cidade escrita errada nem percebe uma emergência. As regras de negócio, porém, são fechadas: quais serviços, quais segmentos, quais cidades."
+            ]
+          },
+          {
+            "titulo": "O que fiz",
+            "paragrafos": [
+              "Um chat que coleta o mínimo (serviço, segmento, cidade e, depois, nome e telefone) e decide se o lead é qualificado. O modelo propõe e o código decide: a saída é um JSON conferido por regras determinísticas, com a próxima ação (perguntar, encaminhar para vendas, encerrar ou encaminhar para uma pessoa).",
+              "Travas em camadas impedem o agente de prometer preço ou prazo e de negar que é uma IA. Empresa, cidades e textos ficam em configuração, fora do código. A validação roda num serviço Node chamado pelo n8n por HTTP."
+            ]
+          },
+          {
+            "titulo": "Resultados",
+            "paragrafos": [
+              "No conjunto reservado, 6 casos rodados uma única vez, os campos de serviço, cidade, urgência, qualificação e próxima ação acertaram 6 de 6; segmento acertou 5 de 6. No conjunto de regressão, 9 casos de falhas passadas, todos os campos acertaram 9 de 9. A regeneração é rara: média de 1,13 tentativa por turno no reservado."
+            ],
+            "codigo": "Código e avaliação no GitHub"
+          }
+        ]
+      },
+      "infohub": {
+        "titulo": "InfoHub InovAMF",
+        "lede": "Acompanhamento da jornada do empreendedor no InfoHub da AMF até o centro de inovação InovAMF.",
+        "capaAlt": "Captura da página inicial do InfoHub InovAMF",
+        "figuras": [
+          {
+            "valor": "6",
+            "rotulo": "etapas da jornada"
+          },
+          {
+            "valor": "3",
+            "rotulo": "painéis por perfil"
+          }
+        ],
+        "secoes": [
+          {
+            "titulo": "Contexto",
+            "paragrafos": [
+              "A jornada do empreendedor do InfoHub, da AMF, até o InovAMF. Projeto da disciplina de Arquitetura de Sistemas, feito em dupla."
+            ]
+          },
+          {
+            "titulo": "O que fiz",
+            "paragrafos": [
+              "Planejei e executei toda a parte de desenvolvimento; a arquitetura foi pensada em conjunto com a dupla."
+            ],
+            "codigo": "Código no GitHub"
+          },
+          {
+            "titulo": "Stack"
+          },
+          {
+            "titulo": "Galeria",
+            "legenda": "Página inicial do InfoHub InovAMF"
+          }
+        ]
+      },
+      "lms": {
+        "titulo": "LMS de treinamento técnico",
+        "lede": "Plataforma de cursos com progresso por colaborador e avaliações. A versão privada está em validação com colaboradores da CentralEng.",
+        "capaAria": "Capa do LMS: cursos e progresso por colaborador. Next.js, TypeScript, Prisma, PostgreSQL, Docker",
+        "capaSub": "Cursos e progresso por colaborador",
+        "figuras": [
+          {
+            "valor": "em validação",
+            "rotulo": "com colaboradores"
+          }
+        ],
+        "secoes": [
+          {
+            "titulo": "Contexto",
+            "paragrafos": [
+              "Plataforma de cursos com progresso por colaborador e avaliações. A versão privada está em validação com colaboradores da CentralEng."
+            ],
+            "codigo": "Código no GitHub"
+          },
+          {
+            "titulo": "Stack"
+          }
+        ]
+      }
+    }
+  },
 };

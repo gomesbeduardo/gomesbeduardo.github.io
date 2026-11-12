@@ -287,4 +287,118 @@ export const en: Dicionario = {
       link: "See the specs and PRs on GitHub",
     },
   },
+  projetos: {
+    "base": "../",
+    "pular": "Skip to content",
+    "voltar": "Back",
+    "voltarProjetos": "Back to projects",
+    "tema": "Toggle theme",
+    "rodape": "Eduardo Bergoli Gomes · Santa Maria, Brazil",
+    "topo": "Back to top ↑",
+    "paginas": {
+      "leadgate": {
+        "titulo": "leadgate",
+        "lede": "AI assistant that triages leads in the chat of an HVAC company and hands sales a validated JSON. Prototype in testing, with CentralEng as a fictional pilot.",
+        "capaAlt": "Screenshot of the leadgate chat",
+        "figuras": [
+          {
+            "valor": "570",
+            "rotulo": "tests"
+          },
+          {
+            "valor": "6 of 6",
+            "rotulo": "on the held-out set"
+          },
+          {
+            "valor": "9 of 9",
+            "rotulo": "on regression"
+          }
+        ],
+        "secoes": [
+          {
+            "titulo": "Problem",
+            "paragrafos": [
+              "An air-conditioning company receives requests through its website with no triage. The office that needs maintenance, the apartment the company does not serve, the request from another city and the spam all arrive in the same place. The sales team spends time sorting out what is worth a call.",
+              "A form with fixed fields does not catch a misspelled city or notice an emergency. The business rules, however, are closed: which services, which segments, which cities."
+            ]
+          },
+          {
+            "titulo": "What I did",
+            "paragrafos": [
+              "A chat that collects the minimum (service, segment, city and, later, name and phone) and decides whether the lead is qualified. The model proposes and the code decides: the output is a JSON checked by deterministic rules, with the next action (ask, send to sales, close or hand over to a person).",
+              "Layered guards stop the agent from promising a price or a deadline and from denying that it is an AI. Company, cities and texts live in configuration, outside the code. The validation runs in a Node service called by n8n over HTTP."
+            ]
+          },
+          {
+            "titulo": "Results",
+            "paragrafos": [
+              "On the held-out set, 6 cases run only once, the service, city, urgency, qualification and next-action fields were right 6 of 6; segment was right 5 of 6. On the regression set, 9 cases of past failures, every field was right 9 of 9. Regeneration is rare: an average of 1.13 attempts per turn on the held-out set."
+            ],
+            "codigo": "Code and evaluation on GitHub"
+          }
+        ]
+      },
+      "infohub": {
+        "titulo": "InfoHub InovAMF",
+        "lede": "Tracking the entrepreneur's journey from AMF's InfoHub to the InovAMF innovation center.",
+        "capaAlt": "Screenshot of the InfoHub InovAMF home page",
+        "figuras": [
+          {
+            "valor": "6",
+            "rotulo": "journey stages"
+          },
+          {
+            "valor": "3",
+            "rotulo": "dashboards by role"
+          }
+        ],
+        "secoes": [
+          {
+            "titulo": "Context",
+            "paragrafos": [
+              "The entrepreneur's journey from InfoHub (AMF) to InovAMF. Systems Architecture course project, built as a pair."
+            ]
+          },
+          {
+            "titulo": "What I did",
+            "paragrafos": [
+              "I planned and carried out all of the development; the architecture was designed together with my pair."
+            ],
+            "codigo": "Code on GitHub"
+          },
+          {
+            "titulo": "Stack"
+          },
+          {
+            "titulo": "Gallery",
+            "legenda": "InfoHub InovAMF home page"
+          }
+        ]
+      },
+      "lms": {
+        "titulo": "Technical training LMS",
+        "lede": "Course platform with progress per employee and assessments. The private version is in validation with employees at CentralEng.",
+        "capaAria": "LMS cover: courses and progress per employee. Next.js, TypeScript, Prisma, PostgreSQL, Docker",
+        "capaSub": "Courses and progress per employee",
+        "figuras": [
+          {
+            "valor": "in validation",
+            "rotulo": "with employees"
+          }
+        ],
+        "secoes": [
+          {
+            "titulo": "Context",
+            "paragrafos": [
+              "Course platform with progress per employee and assessments. The private version is in validation with employees at CentralEng."
+            ],
+            "codigo": "Code on GitHub"
+          },
+          {
+            "titulo": "Stack"
+          }
+        ]
+      }
+    }
+  },
 };

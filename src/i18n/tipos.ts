@@ -121,4 +121,36 @@ export interface Home {
 
 export interface Dicionario {
   home: Home;
+  projetos: Projetos;
+}
+
+export type IdProjeto = 'leadgate' | 'infohub' | 'lms';
+
+// Texto de cada seção da página de projeto; a estrutura (tipo, link, ordem) fica em components/projeto/dados.ts.
+export interface SecaoProjeto {
+  titulo: string;
+  paragrafos?: string[];
+  codigo?: string;
+  legenda?: string;
+}
+
+export interface PaginaProjeto {
+  titulo: string;
+  lede: string;
+  capaAlt?: string;
+  capaAria?: string;
+  capaSub?: string;
+  figuras: { valor: string; rotulo: string }[];
+  secoes: SecaoProjeto[];
+}
+
+export interface Projetos {
+  base: string;
+  pular: string;
+  voltar: string;
+  voltarProjetos: string;
+  tema: string;
+  rodape: string;
+  topo: string;
+  paginas: Record<IdProjeto, PaginaProjeto>;
 }

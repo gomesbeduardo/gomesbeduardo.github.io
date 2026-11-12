@@ -1,0 +1,16 @@
+---
+import type { Secao } from './dados';
+import type { SecaoProjeto } from '../../i18n/tipos';
+import type { Meta } from './dados';
+interface Props { meta: Meta; estrutura: Secao; texto: SecaoProjeto; base: string }
+const { meta, estrutura: e, texto: t, base } = Astro.props;
+const img = 'img' in meta.capa ? meta.capa : undefined;
+---
+<section><h2 class="reveal">{t.titulo}</h2>
+    {e.tipo === 'texto' && t.paragrafos?.map((p) => <p set:html={p}></p>)}
+    {e.tipo === 'texto' && e.href && <p><a class="link-codigo" href={e.href} rel="noopener">{t.codigo}</a></p>}
+    {e.tipo === 'stack' && <div class="tags">{meta.tags.map((g) => <span>{g}</span>)}</div>}
+    {e.tipo === 'galeria' && img && <div class="gallery">
+      <figure class="stag"><div class="tile" style={img.ar}><img class={img.recorte} src={`${base}${img.img}`} alt="" width={img.largura} height={img.altura}></div><figcaption set:html={t.legenda}></figcaption></figure>
+    </div>}
+  </section>
