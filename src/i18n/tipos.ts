@@ -32,6 +32,16 @@ export interface ItemExperiencia {
   texto?: string;
 }
 
+export interface CardProjeto {
+  alt?: string;
+  capaAria?: string;
+  capaSub?: string;
+  titulo: string;
+  paragrafos: string[];
+  figuras: { valor: string; rotulo: string }[];
+  tags: string[];
+}
+
 // Textos com entidade ou tag inline ficam como HTML e saem com set:html.
 export interface Home {
   base: string;
@@ -59,6 +69,44 @@ export interface Home {
   };
   trajetoria: SecaoTitulo & { itens: ItemTrajetoria[]; curiosidade: string };
   experiencia: SecaoTitulo & { itens: ItemExperiencia[] };
+  stack: {
+    label: string;
+    titulo: string;
+    linhasAria: string;
+    linhas: { aria: string; chips: string[]; extras: string[] }[];
+    cabecalho: string[];
+    tabelaAria: string;
+    tabela: { tech: string; onde: string; como: string; tag: string }[];
+  };
+  projetos: SecaoTitulo & { cards: CardProjeto[] };
+  contato: SecaoTitulo & {
+    local: string;
+    emailAria: string;
+    email: string;
+    curriculo: string;
+    curriculoArquivo: string;
+  };
+  rodape: {
+    citacao: string;
+    autorCitacao: string;
+    claudeBtn: string;
+    spec: string;
+    navAria: string;
+    navTitulo: string;
+    sobreTitulo: string;
+    sobreTexto: string;
+    codigo: string;
+    autor: string;
+    topo: string;
+  };
+  modal: {
+    fechar: string;
+    titulo: string;
+    intro: string;
+    secoes: { titulo: string; texto: string }[];
+    perfil: { titulo: string; texto: string; itens: string[] };
+    link: string;
+  };
 }
 
 export interface Dicionario {

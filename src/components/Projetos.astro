@@ -1,0 +1,36 @@
+---
+import { dicionario } from '../i18n';
+import type { Lang } from '../i18n/tipos';
+import { icone, logoCapa } from './icones';
+interface Props { lang: Lang }
+const { home: t } = dicionario(Astro.props.lang);
+const s = t.projetos;
+// Estrutura de cada card, igual nos dois idiomas; o texto vem de s.cards na mesma ordem.
+const metas = [
+  { id: 'leadgate', classe: 'project featured', img: 'img/leadgate.png', largura: 1280, altura: 640 },
+  { id: 'infohub', classe: 'project', img: 'img/infohub.jpg', largura: 1568, altura: 734, recorte: 'crop-sb', ar: '--ar:1568/734' },
+  { id: 'lms', classe: 'project', ar: '--ar:1568/734', capa: ['nextdotjs', 'typescript', 'prisma', 'postgresql', 'docker'] },
+];
+// O primeiro card fica solto; os outros dois dividem a linha dentro de .project-pair.
+const grupos = [
+  { Env: Fragment, props: {}, ids: [0] },
+  { Env: 'div', props: { class: 'project-pair' }, ids: [1, 2] },
+];
+---
+<section id="projetos"><div class="wrap">
+  <p class="sec-label reveal" aria-hidden="true">{s.label}</p>
+  <h2 class="reveal">{s.titulo}</h2>
+  <div class="projects">
+  {grupos.map(({ Env, props, ids }) => <Env {...props}>
+  {ids.map((i) => <a class={metas[i].classe} href={`projeto-${metas[i].id}.html`} data-card={metas[i].id}>
+    <div class={metas[i].capa ? 'shot cover-lms' : 'shot'} style={metas[i].ar} role={metas[i].capa ? 'img' : undefined} aria-label={metas[i].capa ? s.cards[i].capaAria : undefined}>{metas[i].capa ? <div class="cv" aria-hidden="true"><b>{s.cards[i].titulo}</b><span class="sub">{s.cards[i].capaSub}</span><span class="ico"><Fragment set:html={metas[i].capa.map(logoCapa).join('')} /></span></div> : <img class={metas[i].recorte} src={t.base + metas[i].img} alt={s.cards[i].alt} width={metas[i].largura} height={metas[i].altura}>}</div>
+    <div class="body">
+      <h3>{s.cards[i].titulo} <Fragment set:html={icone('arrow')} /></h3>
+      {s.cards[i].paragrafos.map((p) => <p set:html={p}></p>)}
+      <div class="figs">{s.cards[i].figuras.map((f) => <div><b set:html={f.valor}></b><span>{f.rotulo}</span></div>)}</div>
+      <div class="tags">{s.cards[i].tags.map((g) => <span>{g}</span>)}</div>
+    </div>
+  </a>)}
+  </Env>)}
+  </div>
+</div></section>
