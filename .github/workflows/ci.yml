@@ -1,5 +1,6 @@
-# CI de pull request (spec 002 e 003): testes dos scripts e geração dos PDFs, sem deploy.
+# CI de pull request (specs 002, 003 e 001a R10): testes, PDFs, build do Astro e testes no navegador, sem deploy.
 # Os PDFs ficam como artefato do run para o responsável baixar e conferir antes do merge.
+# Se a comparação de capturas (paridade) falhar, as imagens de diferença sobem como artefato.
 name: CI
 
 on:
@@ -10,21 +11,35 @@ permissions:
 
 jobs:
   testes:
-    name: Testes e PDFs
+    name: Testes, PDFs, build e e2e
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: '24'
-      - name: Testes dos scripts
-        run: node --test 'scripts/**/*.test.mjs'
+      - name: Instalar dependências
+        run: npm ci
       - name: Gerar os PDFs do currículo
         run: node scripts/curriculo/gerar.mjs
+      - name: Testes (build do Astro e testes estáticos)
+        run: npm test
       - name: Guardar os PDFs para conferência
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
           name: curriculo-pdf
           path: public/curriculo/*.pdf
           if-no-files-found: error
+          retention-days: 14
+      - name: Instalar o Chromium do Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Testes no navegador (paridade e e2e contra dist/)
+        run: npm run e2e
+      - name: Guardar as capturas da paridade
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: paridade-saida
+          path: scripts/site/paridade/saida/
+          if-no-files-found: ignore
           retention-days: 14

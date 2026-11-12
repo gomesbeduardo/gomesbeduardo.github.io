@@ -1,14 +1,17 @@
 # Publica o site no GitHub Pages (spec 002, seção "Workflow e secret"; spec 003, R5).
 #
-# Quando religado, dispara em push na main, toda segunda às 06:00 UTC (03:00 em Brasília) e à mão.
-# Jobs: testes -> coletar (números do GitHub; commit do JSON em schedule/dispatch) -> build -> deploy.
+# Dispara em push na main, toda segunda às 06:00 UTC (03:00 em Brasília) e à mão (spec 001a R10).
+# Jobs: testes -> coletar (números do GitHub; commit do JSON em schedule/dispatch na main) -> build -> deploy (só na main).
+# Rodado à mão em outra branch, vai até o build: não commita o JSON nem publica.
 # Secret necessário: GH_TOKEN_LEITURA (fine-grained PAT do usuário, só leitura). Nunca escreva o token aqui.
 # Versões das actions fixadas por SHA de commit; a tag vai no comentário.
 name: Publicar site
 
-# Desligado até a migração para o Astro (spec 001): a v1 estática publica pelo pages.yml.
-# Para religar, volte o push na main e o schedule.
 on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 6 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -30,8 +33,12 @@ jobs:
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Testes dos scripts (coletor e currículo)
-        run: node --test 'scripts/**/*.test.mjs'
+      - name: Instalar dependências
+        run: npm ci
+      - name: Gerar os PDFs do currículo (os testes do build conferem a cópia em dist/)
+        run: node scripts/curriculo/gerar.mjs
+      - name: Testes (build do Astro e testes estáticos)
+        run: npm test
 
   coletar:
     name: Coletar números do GitHub
@@ -53,8 +60,8 @@ jobs:
           else
             node scripts/github/coletar.mjs
           fi
-      - name: Commit do JSON quando mudou (só schedule e workflow_dispatch)
-        if: github.event_name != 'push'
+      - name: Commit do JSON quando mudou (só schedule e workflow_dispatch, na main)
+        if: github.event_name != 'push' && github.ref == 'refs/heads/main'
         run: |
           if git diff --quiet -- src/data/github.json; then
             echo "src/data/github.json sem mudança; nada a commitar"
@@ -90,7 +97,7 @@ jobs:
       - name: Gerar os PDFs do currículo (Chrome do runner)
         run: node scripts/curriculo/gerar.mjs
       - name: Instalar dependências
-        run: npm ci # depende do scaffold do Astro (package.json e package-lock.json)
+        run: npm ci
       - name: Build do Astro
         run: npm run build
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
@@ -101,6 +108,7 @@ jobs:
   deploy:
     name: Deploy no Pages
     needs: build
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       pages: write
