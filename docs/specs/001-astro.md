@@ -84,6 +84,7 @@ Respostas do responsável em 11/11/2026, já aplicadas nas partes:
 - P9. Dependências de R5 e Node 24: aprovadas como estão, sem React nem `shadcn`. Qualquer pacote novo volta ao responsável.
 
 - P3b. Ferramenta das imagens OG: Playwright, já na lista de R5, com o mesmo Chromium da paridade. Escolhido em 11/11 entre o Chrome do runner, Playwright, `satori` com `@resvg/resvg-js`, `astro-og-canvas`, `@vercel/og`, `sharp` com SVG e `astro-opengraph-images`, porque reaproveita o Tailwind e as fontes do site, espera `document.fonts.ready` antes da captura e não traz dependência nova (001b R2).
+- P10. Fundo das imagens OG (001b R2), pedido em 12/11: uma imagem gerada por IA, 1200×630, na paleta P1 Ocre escura, sem texto e com espaço livre à esquerda para o nome. Ferramenta: o Dream Lab do Canva (cota do plano gratuito renova em 30/11) ou o Higgsfield, com o responsável logado e confirmando o gasto de créditos. O responsável escolhe entre as opções geradas antes da etapa 2 começar. Aberta.
 
 ## Suposições de baixo impacto
 
