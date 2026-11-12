@@ -1,0 +1,14 @@
+---
+import { dicionario } from '../i18n';
+import type { Lang } from '../i18n/tipos';
+interface Props { lang: Lang }
+const { home: t } = dicionario(Astro.props.lang);
+---
+<header class="top has-menu">
+  <nav class="nav" aria-label={t.navLabel}><span class="nav-ind" aria-hidden="true"></span>{t.links.map((l) => <a href={l.href}>{l.label}</a>)}</nav>
+  <span class="sep" aria-hidden="true"></span>
+  <span class="lang">{t.idiomas.map((l, i) => <>{i > 0 && <span aria-hidden="true">·</span>}<a href={l.href} aria-current={l.current ? "true" : undefined} lang={l.lang} hreflang={l.lang} aria-label={l.aria}>{l.code}</a></>)}</span>
+  <button class="icon-btn theme" id="theme-toggle" type="button" aria-label={t.temaLabel}><Fragment set:html={`<svg class="icon i-sun"><use href="#i-sun"/></svg>`} /><Fragment set:html={`<svg class="icon i-moon"><use href="#i-moon"/></svg>`} /></button>
+  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">{t.menuLabel}</button>
+</header>
+<nav class="menu" id="menu" aria-label={t.menuLabel} hidden>{t.links.map((l) => <a href={l.href}>{l.label}</a>)}</nav>

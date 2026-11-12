@@ -1,0 +1,14 @@
+---
+import { dicionario } from '../i18n';
+import type { Lang } from '../i18n/tipos';
+interface Props { lang: Lang }
+const { home: t } = dicionario(Astro.props.lang);
+const s = t.experiencia;
+---
+<section id="experiencia"><div class="wrap">
+  <p class="sec-label reveal" aria-hidden="true" set:html={s.label}></p>
+  <h2 class="reveal" set:html={s.titulo}></h2>
+  <ol class="timeline">
+    {s.itens.map((i) => <li class="stag"><span class="when" set:html={i.quando}></span><span class="what"><Fragment set:html={i.titulo} /><small set:html={i.papel}></small></span>{i.texto && <p set:html={i.texto}></p>}</li>)}
+  </ol>
+</div></section>

@@ -1,5 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro';
+import Topo from '../../components/Topo.astro';
+import Hero from '../../components/Hero.astro';
+import Sobre from '../../components/Sobre.astro';
+import Trajetoria from '../../components/Trajetoria.astro';
+import Experiencia from '../../components/Experiencia.astro';
 ---
 <Base htmlAttrs={{ lang: "en" }} bodyAttrs={{  }}>
 <Fragment slot="head">
@@ -55,84 +60,15 @@ import Base from '../../layouts/Base.astro';
   <symbol id="si-figma" viewBox="0 0 24 24"><path d="M15.852 8.981h-4.588V0h4.588c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.491-4.49 4.491zM12.735 7.51h3.117c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-3.117V7.51zm0 1.471H8.148c-2.476 0-4.49-2.014-4.49-4.49S5.672 0 8.148 0h4.588v8.981zm-4.587-7.51c-1.665 0-3.019 1.355-3.019 3.019s1.354 3.02 3.019 3.02h3.117V1.471H8.148zm4.587 15.019H8.148c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h4.588v8.98zM8.148 8.981c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h3.117V8.981H8.148zM8.172 24c-2.489 0-4.515-2.014-4.515-4.49s2.014-4.49 4.49-4.49h4.588v4.441c0 2.503-2.047 4.539-4.563 4.539zm-.024-7.51a3.023 3.023 0 0 0-3.019 3.019c0 1.665 1.365 3.019 3.044 3.019 1.705 0 3.093-1.376 3.093-3.068v-2.97H8.148zm7.704 0h-.098c-2.476 0-4.49-2.014-4.49-4.49s2.014-4.49 4.49-4.49h.098c2.476 0 4.49 2.014 4.49 4.49s-2.014 4.49-4.49 4.49zm-.097-7.509c-1.665 0-3.019 1.355-3.019 3.019s1.355 3.019 3.019 3.019h.098c1.665 0 3.019-1.355 3.019-3.019s-1.355-3.019-3.019-3.019h-.098z"/></symbol>
   <symbol id="si-google" viewBox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></symbol>
 </svg>`} />
-<header class="top has-menu">
-  <nav class="nav" aria-label="Main"><span class="nav-ind" aria-hidden="true"></span><a href="#sobre">About</a><a href="#trajetoria">Journey</a><a href="#experiencia">Experience</a><a href="#projetos">Projects</a><a href="#numeros">Numbers</a><a href="#contato">Contact</a></nav>
-  <span class="sep" aria-hidden="true"></span>
-  <span class="lang"><a href="../" lang="pt-BR" hreflang="pt-BR" aria-label="Português">PT</a><span aria-hidden="true">·</span><a href="./" aria-current="true" lang="en" hreflang="en">EN</a></span>
-  <button class="icon-btn theme" id="theme-toggle" type="button" aria-label="Toggle theme"><Fragment set:html={`<svg class="icon i-sun"><use href="#i-sun"/></svg>`} /><Fragment set:html={`<svg class="icon i-moon"><use href="#i-moon"/></svg>`} /></button>
-  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
-</header>
-<nav class="menu" id="menu" aria-label="Menu" hidden><a href="#sobre">About</a><a href="#trajetoria">Journey</a><a href="#experiencia">Experience</a><a href="#projetos">Projects</a><a href="#numeros">Numbers</a><a href="#contato">Contact</a></nav>
+<Topo lang="en" />
 <main id="conteudo">
-<section class="hero" id="inicio"><div class="wrap">
-  <div class="name-row">
-    <h1 class="reveal name pre"><span>Eduardo</span><span class="l2"><span class="base" aria-hidden="true"><span class="ch">G</span><span class="ch">o</span><span class="ch">m</span><span class="ch">e</span><span class="ch">s</span></span><span class="fill" aria-hidden="true"><span class="ch" style="--i:0">G</span><span class="ch" style="--i:1">o</span><span class="ch" style="--i:2">m</span><span class="ch" style="--i:3">e</span><span class="ch" style="--i:4">s</span></span><span class="sr-only">Gomes</span></span></h1>
-    <div class="photo" data-flip><div class="photo-card"><button class="photo-btn" id="sp-foto" type="button" aria-label="Photo of Eduardo Gomes. Five clicks in a row open a curiosity"><img src="../img/eduardo-gomes.jpg" alt="Eduardo Gomes" width="460" height="460" decoding="async"></button></div></div>
-  </div>
-  <p class="title-line">
-    <span class="sr-only">Developer. Information Systems at AMF, Innovation at Asten AVMB, TypeScript, React and Node.js.</span>
-    <span class="ghost" aria-hidden="true">Developer. Information Systems at AMF.</span><span class="ghost" aria-hidden="true">Developer. Innovation at Asten AVMB.</span><span class="ghost" aria-hidden="true">Developer. TypeScript, React and Node.js.</span><span class="ghost" aria-hidden="true">Developer. Sytsems Information at AMF.</span><span class="ghost" aria-hidden="true">Developer. Systems Infromation at AMF.</span><span class="ghost" aria-hidden="true">Developer. Innovtaion at Asten AVMB.</span><span class="ghost" aria-hidden="true">Developer. Innovation at Astne AVMB.</span><span class="ghost" aria-hidden="true">Developer. TypeScirpt, React and Node.js.</span><span class="ghost" aria-hidden="true">Developer. TypeScript, Reavt and Node.js.</span>
-    <span class="anim" id="typing" aria-hidden="true">Developer. Information Systems at AMF.</span>
-  </p>
-  <div class="actions"><a class="btn primary" href="#projetos">View projects</a><a class="btn" href="../curriculo/curriculo-eduardo-gomes-en.pdf" download><Fragment set:html={`<svg class="icon"><use href="#i-down"/></svg>`} />Download résumé</a></div>
-  <p class="facts"><span>Internship at Asten AVMB</span><span>Information Systems at AMF</span><span>Santa Maria, Brazil</span></p>
-</div></section>
+<Hero lang="en" />
 
-<section id="sobre"><div class="wrap">
-  <p class="sec-label reveal" aria-hidden="true">01 / ABOUT</p>
-  <h2 class="reveal">About</h2>
-  <div class="about">
-    <div class="about-text reveal">
-      <p class="lit"><span class="w">I</span> <span class="w">started</span> <span class="w">programming</span> <span class="w">in</span> <span class="w">2018</span> <span class="w">with</span> <span class="w">CS50,</span> <span class="w">Harvard's</span> <span class="w">online</span> <span class="w">introduction</span> <span class="w">to</span> <span class="w">computer</span> <span class="w">science,</span> <span class="w">writing</span> <span class="w">a</span> <span class="w">hello,</span> <span class="w">world</span> <span class="w">in</span> <span class="w">C.</span> <span class="w">During</span> <span class="w">the</span> <span class="w">pandemic</span> <span class="w">I</span> <span class="w">started</span> <span class="w">opening</span> <span class="w">the</span> <span class="w">code</span> <span class="w">of</span> <span class="w">Minecraft</span> <span class="w">mods</span> <span class="w">to</span> <span class="w">change</span> <span class="w">it</span> <span class="w">and</span> <span class="w">see</span> <span class="w">the</span> <span class="w">result</span> <span class="w">in</span> <span class="w">the</span> <span class="w">game.</span> <span class="w">In</span> <span class="w">2024</span> <span class="w">I</span> <span class="w">started</span> <span class="w">Information</span> <span class="w">Systems</span> <span class="w">at</span> <span class="w">AMF,</span> <span class="w">with</span> <span class="w">graduation</span> <span class="w">expected</span> <span class="w">in</span> <span class="w">Dec</span> <span class="w">2028.</span></p>
-      <p>I develop at CentralEng, an HVAC engineering company, and I keep serving the company on demand. I built the technical training LMS on my own, and it is now in validation with employees. I lead the PMOC maintenance management system and I integrate the internal systems. Since October 2026 I have been an intern on the Innovation team at Asten AVMB, where the ticket dashboard I built is used in management meetings.</p>
-      <p>Outside code, I like motorsport in general, and Formula 1 is the one I follow most. I want to keep growing and see how far curiosity takes me.</p>
-    </div>
-    <ol class="steps" aria-label="How I work">
-      <li class="stag"><b>Spec</b><span>Short, with acceptance criteria, before the code.</span></li>
-      <li class="stag"><b>Test</b><span>TDD: the test fails first and passes after.</span></li>
-      <li class="stag"><b>Reviewed PR</b><span>Every change goes through a PR, with review.</span></li>
-      <li class="stag"><b>CI</b><span>Tests, types and build run on every PR. For AI features, evaluation on a held-out set, run once.</span></li>
-    </ol>
-  </div>
-</div></section>
+<Sobre lang="en" />
 
-<section id="trajetoria"><div class="wrap">
-  <p class="sec-label reveal" aria-hidden="true">02 / JOURNEY</p>
-  <h2 class="reveal">Journey</h2>
-  <div class="traj"><span class="traj-line" aria-hidden="true"><span class="traj-fill"></span></span>
-  <ol>
-    <li><span class="node" aria-hidden="true"></span><p class="when">2018</p><div class="traj-card reveal"><h3><span class="sp" data-c="c1" data-modo="terminal">CS50</span></h3><p class="role">Harvard's introduction to computer science, online</p><p>I started CS50, Harvard's introduction to computer science, online. The first exercise is a hello, world in C, and that is where I became interested in programming.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">2020</p><div class="traj-card reveal"><h3>Game mods</h3><p class="role">During the pandemic</p><p>During the pandemic I started tinkering with game mods, mostly <span class="sp-cola"><span class="sp" data-c="c2" data-modo="bloco">Minecraft</span>.</span> It was the first code by someone else that I opened to change it and see the result in the game.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">Feb 2024</p><div class="traj-card reveal"><h3>AMF</h3><p class="role">B.Sc. in Information Systems</p><p>I started Information Systems at AMF, with graduation expected in Dec 2028. At university I built InfoHub InovAMF for the Systems Architecture course.</p><p>From Apr 2024 to Oct 2025 I founded ToPark, a startup for booking parking spaces in advance, selected for the first cohort of the InovAMF incubator. I built the Python back end, the business model and the sign-up of partner parking lots.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">Mar 2025 to present</p><div class="traj-card reveal"><h3>SI Student Association</h3><p class="role">Volunteering, vice-president</p><p>Vice-president of the Information Systems Student Association. On the association since Mar 2025, first as secretary.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">2025</p><div class="traj-card reveal"><h3>CodeRace 2025</h3><p class="role">Volunteering, organizing committee</p><p>I was on the organizing committee of CodeRace 2025, for 28 hours.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">2025</p><div class="traj-card reveal"><h3>IS Academic Week</h3><p class="role">Volunteering, organizing committee</p><p>I was on the organizing committee of the Information Systems Academic Week, for 40 hours.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">Oct 2025 and 2026</p><div class="traj-card reveal"><h3>AMF Information Systems Ideathon</h3><p class="role">1st place in 2025, 2nd place in 2026</p><p>1st place at the 1st Information Systems Ideathon at AMF, with team Mentor.Me, in the first edition of the event.</p><p>In 2026, 2nd place at the AMF Information Systems Ideathon.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">Oct 2025 to present</p><div class="traj-card reveal"><h3>YourMentor</h3><p class="role">Co-founder</p><p>I co-founded Mentor.Me, winner of the 1st AMF IS Ideathon, which became YourMentor in Jun 2026, with a new name and a new focus. I built the back end in Python, FastAPI and PostgreSQL, with the architecture, the data model and the monetization.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">Feb 2026 to Oct 2026</p><div class="traj-card reveal"><h3>JET</h3><p class="role">Scholarship teacher</p><p>Scholarship teacher at JET, from February to October. I taught Python, HTML, CSS, Arduino and responsible use of AI to more than 100 students from 4 public schools. After the first semester, 2 more schools joined, on the coordinators' recommendation.</p><p>I also ran an 80-minute workshop on AI for AMF teachers.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">2026</p><div class="traj-card reveal"><h3>CodeRace 2026</h3><p class="role">Volunteering, financial assistant</p><p>Financial assistant on the CodeRace 2026 organizing team. I worked only on the finances, during the organization and the event, with no role in judging the teams.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">May 2026 to present</p><div class="traj-card reveal"><h3>CentralEng</h3><p class="role">Full-Stack Developer and IT Analyst</p><p>Full-stack developer and IT analyst at an HVAC engineering company, from May 2026 to present, on demand. I joined as an administrative assistant and, after automating routines of the department, was promoted to developer within 7 months. I built an LMS on my own, from architecture to tests, with a PRD of 20 requirements, ADRs and a 36-item backlog, now in validation with employees. I also gathered requirements for and modeled the management system for <span class="sp" data-c="c7" data-modo="gaveta">PMOC</span> and set up CI with lint and build on every push.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">Jun 2026</p><div class="traj-card reveal"><h3>CodeRace 2026</h3><p class="role">Champion with AgroPlanner</p><p>Champion of AMF's CodeRace 2026 with AgroPlanner.</p></div></li>
-    <li><span class="node" aria-hidden="true"></span><p class="when">Oct 2026 to present</p><div class="traj-card reveal"><h3>Asten AVMB</h3><p class="role">Development intern, Innovation team</p><p>Development internship on the Innovation team.</p></div></li>
-  </ol></div>
-  <p class="sp-mais"><button class="btn" id="sp-curio" type="button">Tell me a curiosity</button></p>
-</div></section>
+<Trajetoria lang="en" />
 
-<section id="experiencia"><div class="wrap">
-  <p class="sec-label reveal" aria-hidden="true">03 / EXPERIENCE</p>
-  <h2 class="reveal">Experience and education</h2>
-  <ol class="timeline">
-    <li class="stag"><span class="when">present</span><span class="what">CentralEng<small>Full-Stack Developer and IT Analyst</small></span><p>LMS built on my own, from architecture to tests, in validation with employees. Requirements and modeling for PMOC. CI with lint and build on every push. From May 2026 to present, on demand.</p></li>
-    <li class="stag"><span class="when">present</span><span class="what">Asten AVMB<small>Development intern, Innovation team</small></span><p>Dashboard with indicators by status, overdue SLA and tickets open for 60 days or more, shown on a TV. Development by specs with AI agents and human approval before the merge, and a PRD with more than 100 decisions.</p></li>
-    <li class="stag"><span class="when">in progress</span><span class="what">AMF<small>Information Systems</small></span></li>
-    <li class="stag"><span class="when">since Oct 2025</span><span class="what">YourMentor<small>Co-founder</small></span><p>I co-founded Mentor.Me, winner of the 1st AMF IS Ideathon, which became YourMentor in Jun 2026, with a new name and a new focus. Back end in Python, FastAPI and PostgreSQL; architecture, data model and monetization.</p></li>
-    <li class="stag"><span class="when">Oct 2025</span><span class="what">1st AMF IS <span class="sp" data-c="c5" data-modo="popover">Ideathon</span><small>1st place, team Mentor.Me</small></span></li>
-    <li class="stag"><span class="when">2026</span><span class="what">AMF IS Ideathon<small>2nd place</small></span></li>
-    <li class="stag"><span class="when">2026</span><span class="what"><span class="sp" data-c="c4" data-modo="banner">CodeRace</span> 2026<small>Champion</small></span></li>
-    <li class="stag"><span class="when">until Oct 2026</span><span class="what">Project <span class="sp" data-c="c8" data-modo="acordeao">JET</span><small>Scholarship teacher</small></span><p>Python, HTML, CSS, Arduino and responsible use of AI for more than 100 students from 4 public schools; an 80-minute workshop on AI for AMF teachers.</p></li>
-    <li class="stag"><span class="when">since Mar 2025</span><span class="what">Volunteering<small>SI Student Association and CodeRace</small></span><p>Vice-president of the IS Student Association; financial assistant on the CodeRace 2026 organizing team; organizing committee of CodeRace 2025 (28&nbsp;h) and of the IS Academic Week (40&nbsp;h).</p></li>
-  </ol>
-</div></section>
+<Experiencia lang="en" />
 
 <section id="stack"><div class="wrap">
   <p class="sec-label reveal" aria-hidden="true">04 / STACK</p>
