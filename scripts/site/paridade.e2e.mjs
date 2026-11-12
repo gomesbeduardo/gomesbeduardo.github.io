@@ -18,7 +18,9 @@ const CSS = '*, *::before, *::after { animation: none !important; transition: no
 const { chromium } = await carregarPlaywright();
 const A = await servir(resolve(raiz, argumento('a', 'site')));
 const B = await servir(resolve(raiz, argumento('b', 'dist')));
-const browser = await chromium.launch();
+// Rasterização igual a cada contexto (cada um abre um renderizador novo): sem GPU, sem LCD, sem hinting e com perfil de cor fixo.
+// Medido com 20 contextos da mesma página: sem as flags saem 2 a 4 imagens diferentes; com as quatro, uma só.
+const browser = await chromium.launch({ args: ['--disable-gpu', '--disable-lcd-text', '--font-render-hinting=none', '--force-color-profile=srgb'] });
 console.log(`Chromium ${browser.version()}`);
 
 // Espera o que se decide fora do tempo fixo: imagens decodificadas, fontes prontas, rolagem parada em um valor e dois quadros.
@@ -34,9 +36,22 @@ async function assentar(page) {
   });
 }
 
+// As fontes vêm do Google: a primeira resposta de cada URL fica guardada e serve todos os contextos, nas duas origens.
+const fontes = new Map();
+async function servirFonte(route) {
+  const url = route.request().url();
+  if (!fontes.has(url)) {
+    const r = await route.fetch();
+    if (!r.ok()) return route.abort();
+    fontes.set(url, { status: r.status(), headers: r.headers(), body: await r.body() });
+  }
+  return route.fulfill(fontes.get(url));
+}
+
 async function capturar(url, [w, h], [, tema]) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 1, reducedMotion: 'reduce', colorScheme: tema });
   try {
+    await ctx.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, servirFonte);
     await ctx.addInitScript((t) => { try { localStorage.setItem('tema', t); } catch {} }, tema);
     const page = await ctx.newPage();
     await page.goto(url, { waitUntil: 'load' });
