@@ -1,6 +1,6 @@
 # 003. Currículo em PDF, PT e EN
 
-**Status:** rascunho (textos provisórios até o responsável aprovar)
+**Status:** aprovada pelo responsável em 11/11/2026, depois de implementada nas specs 003 e 004 (registrada pela spec 008, P2)
 **Pedido (literal, do responsável):** "Currículo: PDF novo, geral, em PT e EN, gerado a partir dos textos aprovados. O currículo existente, guardado fora do repositório, foi feito para uma vaga e serve só de fonte."
 **Decisões ligadas:** spec 001 (portfólio, que põe o botão "Currículo" apontando para os PDFs desta spec); spec 002 (workflow `publicar.yml`, que gera os PDFs no build).
 
