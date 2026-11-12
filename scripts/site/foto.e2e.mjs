@@ -1,4 +1,4 @@
-// Aceite no navegador da virada da foto (spec 005): C5/C9 (clique real), A1, A3, A5, A7.
+// Aceite no navegador da virada da foto (spec 005): C5/C9 (clique real), A1, A3, A5, A7.  Verso sem estouro em PT/EN de 861 a 1280 px (inclui 1101).
 // Fora do glob do `node --test` (nome sem .test.mjs). Sem dependência no repo: usa o Playwright do cache do npx.
 // Rodar (fora do sandbox, o Chromium não abre dentro dele):
 //   NODE_PATH=$HOME/.npm/_npx/e41f203b7505f1fb/node_modules node scripts/site/foto.e2e.mjs
@@ -109,7 +109,7 @@ try {
     await ctx.close();
   }
   // ---- Verso sem estouro logo acima do ponto de quebra de 860 px (spec 007, c10 nova) ----
-  for (const [lang, rota] of [['PT', ''], ['EN', 'en/']]) for (const w of [861, 880, 899, 1280]) {
+  for (const [lang, rota] of [['PT', ''], ['EN', 'en/']]) for (const w of [861, 880, 899, 1101, 1280]) {
     const ctx = await browser.newContext({ viewport: { width: w, height: 800 } });
     const page = await ctx.newPage();
     await page.goto(url + rota, { waitUntil: 'load' });

@@ -1,4 +1,4 @@
-// Aceites A2, A4, A1a, A5 (320 a 414 px) e A8 da spec 005 no navegador. Complementa foto.e2e.mjs (arquivo separado de propósito).
+// Aceites A2, A4, A1a, A5 (320 a 414 px, PT e EN) e A8 da spec 005 no navegador. Complementa foto.e2e.mjs (arquivo separado de propósito).
 // Fora do glob do `node --test` (nome sem .test.mjs). Sem dependência no repo: usa o Playwright do cache do npx.
 // Rodar (fora do sandbox, o Chromium não abre dentro dele):
 //   NODE_PATH=$HOME/.npm/_npx/e41f203b7505f1fb/node_modules node scripts/site/foto-aceites.e2e.mjs
@@ -30,11 +30,11 @@ const ok = (nome, cond, info = '') => { if (!cond) falhas++; console.log(`${cond
 const espera = (ms) => new Promise((r) => setTimeout(r, ms));
 const tmp = process.env.TMPDIR || '/tmp';
 const browser = await chromium.launch();
-async function abrir(largura, altura, opts = {}, tema) {
+async function abrir(largura, altura, opts = {}, tema, rota = '') {
   const ctx = await browser.newContext({ viewport: { width: largura, height: altura }, ...opts });
   if (tema) await ctx.addInitScript((t) => { try { localStorage.setItem('tema', t); } catch {} }, tema);
   const page = await ctx.newPage();
-  await page.goto(url, { waitUntil: 'load' });
+  await page.goto(url + rota, { waitUntil: 'load' });
   await page.waitForSelector('#sp-foto');
   await espera(2500); // intro e animações do topo
   return { ctx, page };
@@ -166,8 +166,8 @@ try {
   }
 
   // ---- A5 em 320, 360, 390 e 414 px: caixa fixa, verso sem rolagem, sem ficha, sem estouro lateral ----
-  for (const w of [320, 360, 390, 414]) {
-    const { ctx, page } = await abrir(w, 800);
+  for (const [lang, rota] of [['PT', ''], ['EN', 'en/']]) for (const w of [320, 360, 390, 414]) {
+    const { ctx, page } = await abrir(w, 800, {}, undefined, rota);
     const antes = await caixa(page);
     const amostras = await page.evaluate(() => new Promise((fim) => {
       const out = [], m = () => { const r = document.querySelector('.photo').getBoundingClientRect(); out.push({ x: r.x, y: r.y, w: r.width, h: r.height, h1: document.querySelector('.hero h1').getBoundingClientRect().top }); };
@@ -176,14 +176,14 @@ try {
       setTimeout(() => { clearInterval(iv); fim(out); }, 1000);
     }));
     const depois = await caixa(page);
-    ok(`A5 ${w}px: .photo e topo do h1 iguais antes, durante (${amostras.length} amostras) e depois`, amostras.every((a) => igual(a, antes)) && igual(depois, antes), JSON.stringify(depois));
+    ok(`A5 ${lang} ${w}px: .photo e topo do h1 iguais antes, durante (${amostras.length} amostras) e depois`, amostras.every((a) => igual(a, antes)) && igual(depois, antes), JSON.stringify(depois));
     const v = await page.evaluate(() => {
       const verso = document.querySelector('.photo .sp-verso'), ficha = document.querySelector('.photo .sp-ficha');
       return { virado: document.querySelector('.photo').classList.contains('virado'), sh: verso.scrollHeight, ch: verso.clientHeight, sw: verso.scrollWidth, cw: verso.clientWidth, ficha: !!ficha && ficha.offsetParent !== null, estouro: document.documentElement.scrollWidth - innerWidth };
     });
-    ok(`A5 ${w}px: verso sem rolagem nem corte (scrollHeight = clientHeight)`, v.virado && v.sh === v.ch && v.sw <= v.cw, JSON.stringify(v));
-    ok(`A5 ${w}px: ficha oculta e nada passa da largura da tela`, !v.ficha && v.estouro <= 0, `estouro ${v.estouro}`);
-    await page.screenshot({ path: `${tmp}/a5-${w}.png` });
+    ok(`A5 ${lang} ${w}px: verso sem rolagem nem corte (scrollHeight = clientHeight)`, v.virado && v.sh === v.ch && v.sw <= v.cw, JSON.stringify(v));
+    ok(`A5 ${lang} ${w}px: ficha oculta e nada passa da largura da tela`, !v.ficha && v.estouro <= 0, `estouro ${v.estouro}`);
+    await page.screenshot({ path: `${tmp}/a5-${lang}-${w}.png` });
     await ctx.close();
   }
 
