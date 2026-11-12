@@ -260,29 +260,33 @@ export const en: Dicionario = {
       secoes: [
         {
           titulo: "Spec before code (SDD)",
-          texto: "In spec-driven development, the spec is the contract. Before any line of code, a short spec fixes the literal request, the problem, the acceptance criteria in Given/When/Then and what stays out. The implementing agent works against that contract, and the reviewer checks the delivery against it. If the spec changes along the way, I approve it again. For spec 004 of this site, I answered 18 questions, one decision at a time, before the first file changed.",
+          texto: "Every behavior change starts with a short spec: the literal request, the problem, the acceptance criteria in Given/When/Then and what stays out. The implementing agent works against that text, and the reviewer checks the delivery against it. If the spec changes along the way, I approve it again. For spec 004 of this site, I answered 18 questions, one decision at a time, before the first file changed.",
         },
         {
           titulo: "Test before implementation (TDD)",
-          texto: "In TDD, the test comes first and has to fail for the right reason. Only then does the code that makes it pass come in. With agents, this solves a specific problem: a model can write a test that passes without proving anything. Seeing the test fail before the fix shows that it measures the requested behavior. An example from this site: the header cut off the theme button at the top of the page because two CSS rules used the same class. The test that prevents this collision failed before the fix and passed after it.",
+          texto: "The test comes first and has to fail for the right reason. Only then does the code that makes it pass come in. With agents, the order matters because a model can write a test that passes without proving anything; seeing the failure before the fix shows that the test measures the requested behavior. An example from this site: the header cut off the theme button at the top of the page because two CSS rules used the same class. The test that prevents this collision failed before the fix and passed after it.",
         },
         {
-          titulo: "One agent, one role",
-          texto: "Each agent does one thing. A main session coordinates and decides. Smaller agents read the code, write code with TDD or look up external documentation. Whoever writes the code does not review their own work. The most capable and most expensive model comes in only for business rules, calculations, data or sensitive areas.",
+          titulo: "Team of agents and models",
+          texto: "Each agent does one thing. The main session runs on Claude Opus: it talks to me, plans, hands out the work and checks each delivery through the diff. It does not switch models mid-session, because switching rereads the whole context. Agents on Claude Sonnet do the volume: one maps the code, one writes code with TDD, one looks up external documentation. Claude Fable, the most capable model and the one with a weekly usage limit, comes in only for high risk: it writes the spec for business rules, calculations or data models and does the final review of those PRs. Whoever writes the code does not review their own work, and the instructions for the agents are in English, which uses fewer tokens.",
         },
         {
           titulo: "Review and approval",
-          texto: "Each delivery goes through at most two agent reviews. Each finding arrives with the failure scenario and the proof in the code. A critical, high or medium finding is fixed with a new test. The merge into the main branch waits for my approval.",
+          texto: "Each delivery goes through at most two agent reviews. The reviewer reports each finding with the failure scenario and the proof in the code. Whoever implemented the change fixes a critical, high or medium finding with a new test, and the merge into the main branch waits for my approval.",
         },
         {
           titulo: "Guardrails",
-          texto: "Claude Code hooks block what an agent must not do alone: a direct push to the main branch, a PR without the sections and the review verdict, a merge without my approval, and a local server without a time limit. When a guardrail denies something, the agent adjusts the request and follows the rule. On this site, the guardrail denied the push to the main branch, and I published it myself.",
+          texto: "Claude Code hooks block what an agent must not do alone: a direct push to the main branch, a PR without the sections and the review verdict, a merge without my approval, and a local server without a time limit. When a guardrail denies something, the agent adjusts the request and follows the rule. On this site, the guardrail denied the push to the main branch, and I published it by hand.",
+        },
+        {
+          titulo: "A case from this site",
+          texto: "On 2026-11-12, I opened this panel and it appeared all at once, with no animation. I asked for a fixed design system in which every clickable element has an animation, and halfway through the request I told the agent to just log the problem. It opened <a href=\"https://github.com/gomesbeduardo/gomesbeduardo.github.io/issues/29\" rel=\"noopener\">issue #29</a> with the request and a draft of the acceptance criteria. Then I asked that every session read the open issues before starting new work and fold in the ones about the same subject. The agent wrote that rule into my global instructions, made reading the issues the first step of the process and created a local hook that lists the open issues when a session starts in this project. On its first run, the hook showed #29. The design system is still waiting for its spec.",
         },
       ],
       perfil: {
         titulo: "My AI usage profile",
-        texto: "Claude analyzed my setup and the history of this repository. This is its reading:",
-        itens: ["Eduardo uses AI as a team with roles and written rules. The rules live in instruction files and skills, and apply to every session.", "He keeps product and business-rule decisions for himself. When information is missing, the agent asks with a concrete example and a recommendation.", "He measures cost. A skill compares each week's token spend with a baseline, and each session has a context ceiling before the work is handed off.", "He reviews the text. Everything someone will read goes through a check for AI writing patterns, such as catchphrases and em dashes.", "The method costs time: a behavior change goes through spec, test and review before the merge. Text fixes and small adjustments follow only acceptance criteria."],
+        texto: "Claude read my setup and the history of this repository and described how I work with AI:",
+        itens: ["Eduardo organizes AI as a team, with defined roles and written rules. The rules live in instruction files, skills and hooks, and apply to every session in every project.", "He keeps product and business-rule decisions for himself. When information is missing, the agent asks with a concrete example and a recommendation, one decision per question.", "He asks for proof. A task closes only with the command, test or screen that shows the result, and the final report marks each acceptance criterion as met, not met or not verified.", "He controls cost. A skill compares each week's token spend with a baseline, each session hands the work off when it reaches 350 thousand tokens of context, and local servers run with a time limit so they do not compete for memory with the rest of the machine.", "He reviews the text. Everything someone will read goes through a check for AI writing patterns, such as catchphrases, rhetorical contrasts and em dashes.", "He accepts paying in time. A behavior change goes through spec, test and review before the merge; text fixes and small adjustments follow only acceptance criteria."],
       },
       link: "See the specs and PRs on GitHub",
     },

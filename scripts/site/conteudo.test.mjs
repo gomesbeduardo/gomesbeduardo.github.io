@@ -184,3 +184,36 @@ test('A6: a ficha não cita CS50 nem Coderace', () => {
   assert.ok(m, 'objeto FICHA não encontrado');
   assert.doesNotMatch(m[0], /CS50|Coderace/i);
 });
+
+// Novo texto do modal (cópia aprovada): seções, caso do site, perfil.
+for (const h of HOMES) {
+  const pt = h.id === 'pt';
+  const modal = () => modalDe(ler(h.arquivo));
+  const h3s = (m) => [...m.matchAll(/<h3\b[^>]*>([\s\S]*?)<\/h3>/g)].map((x) => textoDe(x[1]));
+
+  test(`modal texto (${h.id}): seção do time de agentes e modelos`, () => {
+    assert.ok(h3s(modal()).includes(pt ? 'Time de agentes e modelos' : 'Team of agents and models'));
+  });
+
+  test(`modal texto (${h.id}): caso deste site com link da issue 29`, () => {
+    const m = modal();
+    assert.ok(h3s(m).includes(pt ? 'Um caso deste site' : 'A case from this site'));
+    assert.ok(m.includes('href="https://github.com/gomesbeduardo/gomesbeduardo.github.io/issues/29"'));
+  });
+
+  test(`modal texto (${h.id}): 7 h3 no total (6 seções e o perfil)`, () => {
+    assert.equal(h3s(modal()).length, 7);
+  });
+
+  test(`modal texto (${h.id}): a lista do perfil tem 6 itens`, () => {
+    const m = modal();
+    const ul = m.match(/<ul\b[\s\S]*?<\/ul>/)?.[0] ?? '';
+    assert.equal((ul.match(/<li\b/g) ?? []).length, 6);
+  });
+
+  test(`modal texto (${h.id}): abertura do perfil nova e a antiga ausente`, () => {
+    const t = textoDe(modal());
+    assert.ok(t.includes(pt ? 'O Claude leu a minha configuração' : 'Claude read my setup'));
+    assert.ok(!t.includes(pt ? 'Esta é a leitura dele' : 'This is its reading'));
+  });
+}
