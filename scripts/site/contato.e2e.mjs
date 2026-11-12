@@ -1,31 +1,17 @@
 // Aceite no navegador do contato e do rodapé (spec 006): A2, A3, A4, A6, A7, C6, C12 e o Esc com o verso da foto aberto.
 // Fora do glob do `node --test` (nome sem .test.mjs). Sem dependência no repo: usa o Playwright do cache do npx.
 // Rodar (fora do sandbox, o Chromium não abre dentro dele):
-//   NODE_PATH=$HOME/.npm/_npx/e41f203b7505f1fb/node_modules node scripts/site/contato.e2e.mjs
+//   node scripts/site/contato.e2e.mjs [--raiz dist]
 // Os prints do A7 vão para $TMPDIR/contato-e2e (fora do repo).
-import { createServer } from 'node:http';
-import { readFile, mkdir } from 'node:fs/promises';
+import { mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { createRequire } from 'node:module';
-import { extname, join, normalize } from 'node:path';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { argumento, carregarPlaywright, servir } from './lib-e2e.mjs';
 
-const require = createRequire(import.meta.url);
-const base = process.env.NODE_PATH || join(process.env.HOME, '.npm/_npx/e41f203b7505f1fb/node_modules');
-const { chromium } = require(join(base, 'playwright'));
+const { chromium } = await carregarPlaywright();
 
-const raiz = fileURLToPath(new URL('../../site/', import.meta.url));
-const tipos = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.json': 'application/json', '.woff2': 'font/woff2' };
-const srv = createServer(async (req, res) => {
-  try {
-    let p = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname)).replace(/^(\.\.[/\\])+/, '');
-    if (p.endsWith('/')) p += 'index.html';
-    const buf = await readFile(join(raiz, p));
-    res.writeHead(200, { 'content-type': tipos[extname(p)] || 'application/octet-stream' }); res.end(buf);
-  } catch { res.writeHead(404); res.end('nao achei'); }
-});
-await new Promise((ok) => srv.listen(0, '127.0.0.1', ok));
-const url = `http://127.0.0.1:${srv.address().port}/`;
+const { url, fechar } = await servir(resolve(fileURLToPath(new URL('../../', import.meta.url)), argumento('raiz', 'dist')));
 
 const MAIL = 'eduardobgomes100@gmail.com';
 const prints = join(process.env.TMPDIR || tmpdir(), 'contato-e2e');
@@ -202,7 +188,7 @@ try {
   }
 } finally {
   await browser.close();
-  srv.close();
+  await fechar();
 }
 console.log('\nPrints do A7:\n' + caminhos.join('\n'));
 console.log(falhas ? `\n${falhas} falha(s)` : '\ntudo certo');
