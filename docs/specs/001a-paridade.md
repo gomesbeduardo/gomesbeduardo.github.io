@@ -1,6 +1,6 @@
 # Spec 001a: etapa 1, Astro e Tailwind com paridade do site atual
 
-Estado: aprovada pelo responsável em 11/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026; ajuste da R1 (configuração do Astro 7) aprovado em 12/11/2026.
 Parte 2 de 5 da spec 001. Ordem: `001-astro.md` (índice, decisões, regras transversais), `001a-paridade.md` (esta), `001b-seo-geo.md`, `001c-desempenho.md`. As decisões P1 a P9 e P3b estão no índice.
 
 ## Objetivo da etapa
@@ -23,8 +23,12 @@ O site publicado em `site/` (HTML, CSS e JS sem framework) passa a ser gerado pe
 
 Recomendação técnica (o worker pode mudar nomes internos; URLs e comportamento não mudam):
 
-- `astro.config.mjs`: `site: 'https://gomesbeduardo.github.io'`, `output: 'static'`, `build.format: 'file'`, `trailingSlash: 'ignore'`, `i18n: { defaultLocale: 'pt', locales: ['pt', 'en'], routing: { prefixDefaultLocale: false } }`, plugin `@tailwindcss/vite` em `vite.plugins`.
-- `src/pages/index.astro`, `projeto-leadgate.astro`, `projeto-infohub.astro`, `projeto-lms.astro`, `404.astro`; `src/pages/en/` com as quatro primeiras. Com `build.format: 'file'` as saídas são `dist/index.html`, `dist/projeto-leadgate.html`, `dist/en/index.html`, `dist/en/projeto-leadgate.html`, `dist/404.html`, e as URLs públicas ficam as de hoje (R2).
+- `astro.config.mjs`: `site: 'https://gomesbeduardo.github.io'`, `output: 'static'`, `build.format: 'preserve'`, `build.inlineStylesheets: 'never'`, `compressHTML: false`, `trailingSlash: 'ignore'`, `i18n: { defaultLocale: 'pt', locales: ['pt', 'en'], routing: { prefixDefaultLocale: false } }`, plugin `@tailwindcss/vite` em `vite.plugins`.
+- Ajuste aprovado em 12/11/2026, medido num build de teste com o Astro 7.4.11. A versão original desta regra pedia `build.format: 'file'` e não citava as outras duas opções. Os três ajustes:
+  - `'file'` gera `dist/en.html` no lugar de `dist/en/index.html`, e `/en/` daria 404; `'preserve'` mantém as saídas abaixo.
+  - O padrão do Astro 7, `compressHTML: 'jsx'`, apaga a quebra de linha entre elementos inline e some com o espaço visível, o que quebra C1.
+  - O padrão `inlineStylesheets: 'auto'` embute CSS pequeno no HTML; `'never'` garante o arquivo único de C2.
+- `src/pages/index.astro`, `projeto-leadgate.astro`, `projeto-infohub.astro`, `projeto-lms.astro`, `404.astro`; `src/pages/en/` com as quatro primeiras. Com `build.format: 'preserve'` as saídas são `dist/index.html`, `dist/projeto-leadgate.html`, `dist/en/index.html`, `dist/en/projeto-leadgate.html`, `dist/404.html`, e as URLs públicas ficam as de hoje (R2).
 - `src/layouts/Base.astro`: `head`, cabeçalho, rodapé, carga de CSS e JS. `src/components/`: uma pasta por seção (`Topo`, `Sobre`, `Trajetoria`, `Experiencia`, `Stack`, `Projetos`, `NumerosGithub`, `Contato`, `Rodape`, `ModalSobreSite`).
 - Textos em `src/i18n/pt.ts` e `src/i18n/en.ts` (um objeto por língua, mesmas chaves); cada componente recebe `lang` e lê o dicionário. Suposição de baixo impacto: as páginas PT e EN de hoje têm a mesma estrutura e só mudam os textos; onde a estrutura diferir, o componente recebe a diferença por prop, sem duplicar a página.
 - `public/`: `favicon.svg`, `.nojekyll`, `img/`, `vendor/`, `inicio.js`, `tema.js`, `main.js`, `surpresas.js`, `rodape.js`, `dados/` (008) e `curriculo/` (gerado, R6). Na etapa 1 os JS ficam byte a byte iguais aos de `site/`, servidos nos mesmos caminhos (R4).
@@ -36,7 +40,7 @@ Recomendação técnica (o worker pode mudar nomes internos; URLs e comportament
 |---|---|---|
 | `/` e `/index.html` | iguais | `src/pages/index.astro` |
 | `/en/` e `/en/index.html` | iguais | `src/pages/en/index.astro` |
-| `/projeto-leadgate.html` (e infohub, lms, PT e EN) | iguais | `build.format: 'file'` |
+| `/projeto-leadgate.html` (e infohub, lms, PT e EN) | iguais | `build.format: 'preserve'` |
 | `/404.html` | igual; o Pages serve na URL inexistente | `src/pages/404.astro` |
 | `/favicon.svg`, `/.nojekyll`, `/img/*`, `/vendor/*`, `/*.js`, `/curriculo/*.pdf`, `/dados/processo.json` | iguais | `public/` |
 | `/style.css`, `/surpresas.css`, `/transicoes.css` | saem; vira `/_astro/<nome>.<hash>.css` | import no layout |
