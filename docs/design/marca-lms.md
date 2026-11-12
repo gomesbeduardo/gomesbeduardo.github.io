@@ -31,8 +31,8 @@ O ícone tem cantos com raio de 22% do lado, o símbolo ocupa 48% da largura e "
 
 As peças saem de uma página HTML renderizada no Chromium do Playwright, com as fontes do LMS baixadas localmente e os SVG da CentralEng embutidos como data URI (o Chromium bloqueia `mask-image` lido de arquivo local). Cada peça é capturada pelo seu `id`, com escala 2 para a capa (1200×630) e o ícone (512), e escala 1 para o ícone de 16 px.
 
-## Pendências
+## Decisões de 12/11
 
-- Confirmar com o responsável o ícone de 16 px só com o símbolo.
-- Pôr a capa e o lockup na página do projeto no site pede spec de tela própria, aprovada antes do código.
-- Trocar a miniatura do card do LMS no LinkedIn depende do ok do responsável.
+- Em 16 px o ícone usa só o símbolo, sem "LMS" (confirmado pelo responsável).
+- A capa e o lockup entram na página do projeto LMS no site pela etapa 2 do Astro, junto com o favicon, com spec de tela aprovada antes do código.
+- A capa clara é a miniatura do card do LMS no "Em destaque" do LinkedIn.
