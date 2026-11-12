@@ -80,7 +80,7 @@ Os rótulos da ficha ("No YourMentor", "Antes", "Base"; EN "At YourMentor", "Bef
 - A5. Dado o site em 320, 360, 390 e 414 px, quando se vira o card, então a caixa da `.photo` e o topo do `h1` medem o mesmo antes, durante e depois (tolerância de 1 px), o verso não tem rolagem nem texto cortado (`scrollHeight` igual a `clientHeight`), a ficha não aparece e nada passa da largura da tela (Playwright e print).
 - A6. Dado `site/surpresas.js`, então os textos da ficha existem em PT e EN, iguais à tabela acima, e o verso não cita CS50 nem Coderace (teste em `scripts/site/conteudo.test.mjs`).
 - A7. Dado o card virado com o mouse sobre ele, quando o mouse se move, então o card não inclina (Playwright).
-- A8. Os cartões da Trajetória e o `.sp-mais` continuam virando como hoje (Playwright: virar um cartão da Trajetória e conferir o verso).
+- A8. Os cartões da Trajetória e o `.sp-mais` continuam virando como hoje (Playwright: virar um cartão da Trajetória e conferir o verso). Nota de 11/11/2026: hoje nenhuma palavra do site liga uma curiosidade ao modo "virar" num cartão da Trajetória (já era assim antes desta spec); o teste cobre o mecanismo trocando o `data-modo` de uma palavra, com o ok do responsável.
 - A9. Dado `site/style.css`, então a regra de `.photo .photo-btn` tem `touch-action: manipulation` (teste estático em `scripts/site/foto.test.mjs`).
 
 ## Fora do escopo
