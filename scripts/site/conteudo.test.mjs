@@ -157,3 +157,30 @@ test('marca: nenhum elemento referencia o símbolo #si-claude', () => {
 test('foto: o arquivo existe no site', () => {
   assert.ok(existsSync(join(raiz, 'site/img/eduardo-gomes.jpg')));
 });
+
+// A6 (spec 005): ficha do verso da foto
+const js = ler('site/surpresas.js');
+const FICHA = {
+  PT: [
+    'No YourMentor', 'Back-end em Python, FastAPI e PostgreSQL; arquitetura, modelo de dados e monetização.',
+    'Antes', 'ToPark, de abr/2024 a out/2025: startup de reserva de vagas de estacionamento, na primeira turma da incubadora InovAMF.',
+    'Base', 'Santa Maria, RS',
+  ],
+  EN: [
+    'At YourMentor', 'Back end in Python, FastAPI and PostgreSQL; architecture, data model and monetization.',
+    'Before', 'ToPark, Apr 2024 to Oct 2025: a startup for booking parking spaces, in the first cohort of the InovAMF incubator.',
+    'Based in', 'Santa Maria, Brazil',
+  ],
+};
+
+for (const [lang, textos] of Object.entries(FICHA)) {
+  test(`A6 (${lang}): textos da ficha iguais à tabela da spec`, () => {
+    for (const t of textos) assert.ok(js.includes(t), `faltou no surpresas.js: ${t}`);
+  });
+}
+
+test('A6: a ficha não cita CS50 nem Coderace', () => {
+  const m = js.match(/FICHA\s*=[\s\S]*?\n {2}\];/);
+  assert.ok(m, 'objeto FICHA não encontrado');
+  assert.doesNotMatch(m[0], /CS50|Coderace/i);
+});

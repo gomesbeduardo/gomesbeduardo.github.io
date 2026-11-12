@@ -58,10 +58,10 @@
       {
         "cargo": "Cofundador",
         "organizacao": "YourMentor",
-        "inicio": "jun/2026",
+        "inicio": "out/2025",
         "fim": null,
         "itens": [
-          "Plataforma que conecta mentores a pessoas que querem aprender. Fiz o back-end em Python, FastAPI e PostgreSQL e defini a arquitetura, o modelo de dados e a monetização."
+          "Cofundei a Mentor.Me, campeã do 1º Ideathon de SI da AMF, que virou YourMentor em jun/2026, com novo nome e novo foco. Plataforma que conecta mentores a pessoas que querem aprender. Fiz o back-end em Python, FastAPI e PostgreSQL e defini a arquitetura, o modelo de dados e a monetização."
         ]
       },
       {
@@ -117,7 +117,7 @@
         "quando": "2026"
       },
       {
-        "titulo": "1º lugar no Coderace 2026 (AMF)",
+        "titulo": "1º lugar no CodeRace 2026 (AMF)",
         "detalhe": "AgroPlanner, plataforma de apoio à decisão com IA, em equipe: 15 entrevistas com usuários antes do código e entrega em 10 horas de maratona.",
         "quando": "jun/2026"
       },
@@ -134,12 +134,12 @@
         "quando": "atual"
       },
       {
-        "titulo": "Assistente financeiro da organização do Code Race 2026",
-        "detalhe": "Atuo só nas finanças, sem papel na avaliação das equipes.",
-        "quando": "desde mar/2026"
+        "titulo": "Assistente financeiro da organização do CodeRace 2026",
+        "detalhe": "Atuei só nas finanças, durante a organização e o evento, sem papel na avaliação das equipes.",
+        "quando": "2026"
       },
       {
-        "titulo": "Comissão organizadora do IX Code Race",
+        "titulo": "Comissão organizadora do CodeRace 2025",
         "detalhe": "28 horas.",
         "quando": "2025"
       },
@@ -261,10 +261,10 @@
       {
         "cargo": "Co-founder",
         "organizacao": "YourMentor",
-        "inicio": "Jun/2026",
+        "inicio": "Oct/2025",
         "fim": null,
         "itens": [
-          "A platform that connects mentors with people who want to learn. I built the back end in Python, FastAPI and PostgreSQL and defined the architecture, the data model and the monetization."
+          "I co-founded Mentor.Me, winner of the 1st AMF IS Ideathon, which became YourMentor in Jun 2026, with a new name and a new focus. A platform that connects mentors with people who want to learn. I built the back end in Python, FastAPI and PostgreSQL and defined the architecture, the data model and the monetization."
         ]
       },
       {
@@ -320,7 +320,7 @@
         "quando": "2026"
       },
       {
-        "titulo": "1st place, Coderace 2026 (AMF)",
+        "titulo": "1st place, CodeRace 2026 (AMF)",
         "detalhe": "AgroPlanner, an AI decision-support platform, built as a team: 15 user interviews before any code and delivery within a 10-hour hackathon.",
         "quando": "Jun/2026"
       },
@@ -337,12 +337,12 @@
         "quando": "present"
       },
       {
-        "titulo": "Financial assistant on the Code Race 2026 organizing team",
-        "detalhe": "I work only on finances, with no role in judging the teams.",
-        "quando": "since Mar/2026"
+        "titulo": "Financial assistant on the CodeRace 2026 organizing team",
+        "detalhe": "I worked only on the finances, during the organization and the event, with no role in judging the teams.",
+        "quando": "2026"
       },
       {
-        "titulo": "Organizing committee of the 9th Code Race",
+        "titulo": "CodeRace 2025 organizing committee",
         "detalhe": "28 hours.",
         "quando": "2025"
       },

@@ -1,6 +1,6 @@
 # 002. Números do GitHub coletados no build
 
-**Status:** rascunho (provisória até o responsável aprovar)
+**Status:** aprovada pelo responsável em 11/11/2026, com as recomendações das perguntas abertas. Implementação depois da etapa 1 da spec 001 (Astro com paridade).
 **Pedido (literal, do responsável):** "Números do GitHub: Contribuições nos últimos 12 meses (inclui privadas), repos públicos, linguagens mais usadas e calendário de contribuições desenhado no tema do site. Buscados no build pelo Actions (GraphQL com token pessoal só de leitura, guardado como secret), com rebuild semanal e data da coleta visível. Sem JS para isso e sem widget de terceiro."
 **Decisões ligadas:** handoff de 09/11 (site Astro estático no GitHub Pages, deploy pelo Actions, PT em `/` e EN em `/en/`); spec 001 (portfólio, que desenha a seção "Números do GitHub" a partir do JSON desta spec).
 
@@ -149,11 +149,13 @@ Compatibilidade: campo novo entra sem mudar `versao`; campo renomeado ou removid
 - Histórico das coletas (o git guarda os commits semanais; nada além disso).
 - Scaffold do Astro, `package.json` e dependências.
 
-## Perguntas abertas
+## Decisões (11/11/2026)
 
-- P1. Como manter o cron vivo depois de 60 dias sem commit. Opções: (a) commit semanal do JSON pelo próprio workflow (R8); (b) um segundo workflow ou cron externo que chama `gh workflow enable`; (c) action de terceiro de keep-alive. Recomendação e implementado: (a), porque resolve também o "dado anterior" de R6 sem cache externo e não usa terceiro. Custo: um commit de bot por semana na `main`.
-- P2. Se o `contribuicoes.total` do primeiro run real ficar abaixo do número do perfil, ligar "Include private contributions on my profile" nas configurações do perfil e rodar `workflow_dispatch` de novo (S1). Recomendação: conferir no primeiro run.
-- P3. Se a fine-grained PAT falhar no GraphQL com erro de autorização (S3), trocar por PAT clássico com `read:user` e `repo`, mantendo o mesmo nome de secret. Recomendação: começar com a fine-grained.
-- P4. Repositórios públicos: contar forks ou não (R3 não conta). O perfil do GitHub conta. Recomendação: manter sem forks, que é código próprio.
-- P5. Em dado de amostra (`amostra: true`), publicar os números com aviso ou esconder a seção. Recomendação: publicar com o aviso, para o layout ser visto antes do secret existir. Decisão do front end (spec 001).
-- P6. Proteção da `main`: hoje não há regra; se o responsável criar uma que exija PR, o commit semanal do bot (R8) precisa de exceção ou de outra branch. Recomendação: sem proteção que bloqueie o bot, ou exceção para `github-actions[bot]`.
+A aprovação aceitou as recomendações abaixo.
+
+- P1. Cron vivo: (a), commit semanal do JSON pelo próprio workflow (R8). Custo: um commit de bot por semana na `main`.
+- P2. Conferir no primeiro run real se `contribuicoes.total` bate com o perfil; se ficar abaixo, ligar "Include private contributions on my profile" e rodar `workflow_dispatch` de novo (S1).
+- P3. Começar com a fine-grained PAT; se o GraphQL negar autorização (S3), trocar por PAT clássico com `read:user` e `repo`, com o mesmo nome de secret.
+- P4. Repositórios públicos sem forks (R3).
+- P5. Com `amostra: true`, a seção aparece com o aviso "dados de exemplo". O desenho fica na spec 001.
+- P6. Sem proteção da `main` que bloqueie o bot; se uma regra exigir PR, ela ganha exceção para `github-actions[bot]`.

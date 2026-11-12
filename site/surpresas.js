@@ -5,27 +5,37 @@
     c1: 'Meu primeiro contato com programação foi o CS50 de Harvard, online, em 2018. O primeiro exercício é um hello, world em C.',
     c2: 'Na pandemia eu mexia em mods de jogos, principalmente Minecraft.',
     c3: 'O leadgate tem cerca de 570 testes. A IA dele é avaliada com um conjunto de casos guardado à parte, que não entra no desenvolvimento.',
-    c4: 'Fui campeão do Coderace 2026 com o AgroPlanner.',
+    c4: 'Fui campeão do CodeRace 2026 com o AgroPlanner.',
     c5: '1º lugar no 1º Ideathon de SI da AMF, em outubro de 2025, com a equipe Mentor.Me.',
     c6: 'A frase do rodapé é do Zen of Python e também está no README do meu perfil no GitHub.',
     c7: 'PMOC é o plano de manutenção de ar-condicionado que a Lei 13.589/2018 exige em prédios de uso coletivo. Lidero o sistema que gere isso na CentralEng.',
     c8: 'Fui professor bolsista no JET e dei aulas de tecnologia para 100 alunos de 4 escolas públicas.',
     c9: 'Este site começou por uma spec, como meus outros projetos. A spec 001 descreve esta página.',
-    c10: 'Sou cofundador do YourMentor desde junho de 2026.'
+    c10: 'Sou cofundador do YourMentor desde outubro de 2025, quando ele ainda se chamava Mentor.Me.'
   };
   var TXT_EN = {
     c1: 'My first contact with programming was Harvard\'s CS50, online, in 2018. The first exercise is a hello, world in C.',
     c2: 'During the pandemic I tinkered with game mods, mostly Minecraft.',
     c3: 'leadgate has about 570 tests. Its AI is evaluated on a held-out set of cases that is not used during development.',
-    c4: 'I won Coderace 2026 with AgroPlanner.',
+    c4: 'I won CodeRace 2026 with AgroPlanner.',
     c5: '1st place at the 1st AMF Information Systems Ideathon, in October 2025, with team Mentor.Me.',
     c6: 'The footer quote is from the Zen of Python and is also in the README of my GitHub profile.',
     c7: 'PMOC is the air-conditioning maintenance plan that Brazilian Law 13.589/2018 requires in buildings for collective use. I lead the system that manages it at CentralEng.',
     c8: 'I was a scholarship teacher at JET and taught technology to 100 students from 4 public schools.',
     c9: 'This site started from a spec, like my other projects. Spec 001 describes this page.',
-    c10: 'I have been a co-founder of YourMentor since June 2026.'
+    c10: 'I have been a co-founder of YourMentor since October 2025, back when it was called Mentor.Me.'
   };
   var TXT = EN ? TXT_EN : TXT_PT;
+  // Ficha do verso da foto (spec 005): fatos que já estão na Trajetória do site, encurtados.
+  var FICHA = EN ? [
+    ['At YourMentor', 'Back end in Python, FastAPI and PostgreSQL; architecture, data model and monetization.'],
+    ['Before', 'ToPark, Apr 2024 to Oct 2025: a startup for booking parking spaces, in the first cohort of the InovAMF incubator.'],
+    ['Based in', 'Santa Maria, Brazil']
+  ] : [
+    ['No YourMentor', 'Back-end em Python, FastAPI e PostgreSQL; arquitetura, modelo de dados e monetização.'],
+    ['Antes', 'ToPark, de abr/2024 a out/2025: startup de reserva de vagas de estacionamento, na primeira turma da incubadora InovAMF.'],
+    ['Base', 'Santa Maria, RS']
+  ];
   var T = EN ? { curio: 'Curiosity', testes: 'Test results', volta: 'flip back', fechar: 'Close', cat: '$ cat curiosity.txt', ilus: '# illustrative output', spec: '# Spec 001: portfolio', of: ' of ', found: ' found', all: '. You found them all.', yes: 'yes', no: 'no', ret: ' found', term: 'Terminal' }
              : { curio: 'Curiosidade', testes: 'Resultado dos testes', volta: 'virar de volta', fechar: 'Fechar', cat: '$ cat curiosidade.txt', ilus: '# saída ilustrativa', spec: '# Spec 001: portfólio', of: ' de ', found: ' achados', all: '. Você achou tudo.', yes: 'sim', no: 'não', ret: ' achados', term: 'Terminal' };
   var IDS = Object.keys(TXT), TOTAL = IDS.length;
@@ -261,7 +271,62 @@
       { duration: 200, easing: de === 0 ? 'cubic-bezier(.5,0,1,.5)' : 'cubic-bezier(0,.5,.5,1)' });
     a.onfinish = fim;
   }
+  // Foto do topo: carta de duas faces. O .photo-card gira inteiro (a caixa não muda de tamanho); o verso fica dentro dele.
+  var GIRO = 500;
+  function inertar(e, v) {
+    if (!e) return;
+    if (v) { e.setAttribute('inert', ''); e.setAttribute('aria-hidden', 'true'); } else { e.removeAttribute('inert'); e.removeAttribute('aria-hidden'); }
+  }
+  function limparFoto(host) {
+    (host._t || []).forEach(clearTimeout); host._t = [];
+    var v = $('.sp-verso', host); if (v) v.remove();
+    host.classList.remove('girando');
+  }
+  function virarFoto(host, texto, cont, origem) {
+    var card = $('.photo-card', host), btn = $('.photo-btn', host);
+    limparFoto(host);
+    host._origem = origem;
+    cur = { el: host, origem: origem, fora: false, fechar: function (dev) { desvirarFoto(host, dev); } };
+    if (window.gsap) { window.gsap.killTweensOf(host); window.gsap.set(host, { rotationX: 0, rotationY: 0 }); }
+    var v = el('div', 'sp-verso');
+    v.setAttribute('role', 'group'); v.setAttribute('aria-label', T.curio); v.setAttribute('aria-live', 'polite');
+    v.appendChild(el('p', 'sec-label', T.curio));
+    var p = el('p', 'sp-txt'); p.textContent = texto; p.id = 'sp-v-' + Math.random().toString(36).slice(2, 8);
+    v.appendChild(p);
+    var dl = el('dl', 'sp-ficha');
+    FICHA.forEach(function (f) {
+      var g = el('div'), dt = el('dt'), dd = el('dd'); dt.textContent = f[0]; dd.textContent = f[1];
+      g.appendChild(dt); g.appendChild(dd); dl.appendChild(g);
+    });
+    v.appendChild(dl);
+    var rod = el('div', 'sp-rodape');
+    var n = el('p', 'sp-cont'); n.textContent = cont;
+    var b = el('button', 'sp-volta', T.volta); b.type = 'button'; b.setAttribute('aria-describedby', p.id);
+    b.addEventListener('click', function () { fecharAtual(true); });
+    rod.appendChild(n); rod.appendChild(b); v.appendChild(rod);
+    card.appendChild(v);
+    void host.offsetHeight;
+    var r = reduce(), dur = r ? 150 : GIRO;
+    host.classList.add('girando', 'virado');
+    inertar(btn, true);
+    b.focus({ preventScroll: true });
+    host._t.push(setTimeout(function () { host.classList.remove('girando'); }, dur));
+    return host;
+  }
+  function desvirarFoto(host, devolver) {
+    if (!host.classList.contains('virado')) return;
+    if (cur && cur.el === host) cur = null;
+    var btn = $('.photo-btn', host), v = $('.sp-verso', host), dur = reduce() ? 150 : GIRO;
+    (host._t || []).forEach(clearTimeout); host._t = [];
+    inertar(v, true);
+    inertar(btn, false);
+    host.classList.add('girando');
+    host.classList.remove('virado');
+    if (devolver) devolverFoco(host._origem);
+    host._t.push(setTimeout(function () { limparFoto(host); }, dur));
+  }
   function desvirar(host, devolver) {
+    if (host.classList.contains('photo')) { desvirarFoto(host, devolver); return; }
     if (!host.classList.contains('virado')) return;
     if (cur && cur.el === host) cur = null;
     animar(host, 0, 90, function () {
@@ -275,6 +340,7 @@
     var host = origem && origem.closest('[data-flip], .traj-card, .sp-mais');
     if (!host) return MODOS.banner(id, texto, cont, origem);
     if (host.classList.contains('virado')) { desvirar(host, true); return host; }
+    if (host.classList.contains('photo')) return virarFoto(host, texto, cont, origem);
     host._origem = origem;
     cur = { el: host, origem: origem, fora: false, fechar: function (dev) { desvirar(host, dev); } };
     animar(host, 0, 90, function () {
@@ -305,7 +371,7 @@
   }
 
   // Esc fecha a peça aberta; clique fora fecha as que não ficam presas ao texto.
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && cur) fecharAtual(true); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && cur && !document.querySelector('.aviso.falha.on')) fecharAtual(true); }); // o aviso de falha do e-mail fica por cima: o primeiro Esc é dele
   document.addEventListener('pointerdown', function (e) {
     if (cur && cur.fora && !cur.el.contains(e.target) && !(cur.origem && cur.origem.contains(e.target))) fecharAtual(false);
   });

@@ -20,7 +20,7 @@ Portfólio pessoal de Eduardo Bergoli Gomes, desenvolvedor full stack. Mostra qu
 
 ## Positioning
 
-Processo e resultado juntos. Ele trabalha com spec antes do código, TDD, PR revisado com CI e avaliação com conjunto reservado em recursos com IA, e isso aparece em sistemas rodando: LMS em validação com colaboradores na CentralEng, leadgate com 570 testes, 1º lugar no Ideathon de SI da AMF, campeão do Coderace 2026.
+Processo e resultado juntos. Ele trabalha com spec antes do código, TDD, PR revisado com CI e avaliação com conjunto reservado em recursos com IA, e isso aparece em sistemas rodando: LMS em validação com colaboradores na CentralEng, leadgate com 570 testes, 1º lugar no Ideathon de SI da AMF, campeão do CodeRace 2026.
 
 ## Operating Context
 
@@ -48,7 +48,7 @@ O visitante lê em desktop no horário de trabalho ou no celular entre uma coisa
 
 - leadgate: repo público `gomesbeduardo/leadgate`, triagem de leads com IA, 570 testes (conferir no merge), prévia social em imagem.
 - InfoHub InovAMF: repo público `gomesbeduardo/infohub-inovamf`, prints de landing, login e 3 painéis.
-- Experiência: CentralEng (Full Stack e Analista de TI, LMS em validação com colaboradores, sistema de PMOC), estágio na Asten AVMB (time de Inovação), Sistemas de Informação na AMF, YourMentor (co-founder desde jun/2026), JET (passado).
+- Experiência: CentralEng (Full Stack e Analista de TI, LMS em validação com colaboradores, sistema de PMOC), estágio na Asten AVMB (time de Inovação), Sistemas de Informação na AMF, YourMentor (co-founder desde out/2025), JET (passado).
 - Não há depoimentos, clientes nem métricas de negócio. Não inventar.
 
 ## Product Principles
