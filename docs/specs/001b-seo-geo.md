@@ -1,6 +1,6 @@
 # Spec 001b: etapa 2, SEO e GEO
 
-Estado: aprovada pelo responsável em 11/11/2026. Alteração de 12/11/2026 (favicon com a marca pessoal em R8, C10, T13 e T14; fundo da imagem OG em R2 e P10) aguardando aprovação.
+Estado: aprovada pelo responsável em 11/11/2026. Alteração de 12/11/2026 (favicon com a marca pessoal em R8, C10, T13 e T14; fundo da imagem OG em R2 e P10) aprovada pelo responsável em 12/11/2026.
 Parte 3 de 5 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md` (esta), `001c-desempenho.md`. Decisões P1 a P9 e P3b no índice.
 
 ## Objetivo da etapa
