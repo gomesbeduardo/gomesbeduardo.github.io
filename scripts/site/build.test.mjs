@@ -54,3 +54,22 @@ test('(d) 404: dist equivale a site', () => {
   const [site, dist] = htmlEquivalente('site/404.html', 'dist/404.html');
   assert.deepEqual(dist, site);
 });
+
+const projetos = ['projeto-leadgate', 'projeto-infohub', 'projeto-lms'];
+const paginasProjeto = [...projetos.map((p) => `${p}.html`), ...projetos.map((p) => `en/${p}.html`)];
+
+test('(e) páginas de projeto: dist equivale a site', () => {
+  for (const f of paginasProjeto) {
+    const [site, dist] = htmlEquivalente(`site/${f}`, `dist/${f}`);
+    assert.deepEqual(dist, site, f);
+  }
+});
+
+// Lista ordenada das tags <script> (src e demais atributos) de um HTML.
+const scripts = (arquivo) => [...readFileSync(arquivo, 'utf8').matchAll(/<script\b([^>]*)>/gi)].map((m) => m[1].replace(/\s+/g, ' ').trim());
+
+test('(f) 404 e projetos: tags <script> iguais em site e dist, na mesma ordem', () => {
+  for (const f of ['404.html', ...paginasProjeto]) {
+    assert.deepEqual(scripts(`dist/${f}`), scripts(`site/${f}`), f);
+  }
+});

@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base htmlAttrs={{ lang: "pt-BR" }} bodyAttrs={{ class: "proj" }}>
+<Fragment slot="head">
+<title>InfoHub InovAMF | Eduardo Gomes</title>
+<meta charset="utf-8"><meta name="description" content="InfoHub InovAMF: estudo de caso de projeto de Eduardo Gomes, desenvolvedor full stack."><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="alternate" hreflang="pt-BR" href="https://gomesbeduardo.github.io/projeto-infohub.html"><link rel="alternate" hreflang="en" href="https://gomesbeduardo.github.io/en/projeto-infohub.html"><link rel="alternate" hreflang="x-default" href="https://gomesbeduardo.github.io/projeto-infohub.html"><meta property="og:locale:alternate" content="en_US"><link rel="canonical" href="https://gomesbeduardo.github.io/projeto-infohub.html"><link rel="icon" href="favicon.svg" type="image/svg+xml"><meta property="og:title" content="InfoHub InovAMF | Eduardo Gomes"><meta property="og:description" content="InfoHub InovAMF: estudo de caso de projeto de Eduardo Gomes, desenvolvedor full stack."><meta property="og:url" content="https://gomesbeduardo.github.io/projeto-infohub.html"><meta property="og:type" content="article"><meta property="og:locale" content="pt_BR"><meta property="og:site_name" content="Eduardo Gomes">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@700..800&family=Funnel+Sans:wght@400..600&family=Reddit+Mono:wght@500&display=swap">
+<script is:inline src="vendor/gsap.min.js" defer></script>
+<link rel="preload" as="script" href="vendor/ScrollTrigger.min.js">
+<script is:inline src="vendor/lenis.min.js" defer></script>
+<script is:inline src="inicio.js" blocking="render"></script>
+<script is:inline src="tema.js" defer></script>
+</Fragment>
+<a class="skip" href="#conteudo">Ir para o conteúdo</a>
+<Fragment set:html={`<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></symbol>
+</svg>`} />
+<header class="top">
+  <a class="back" href="index.html#projetos"><Fragment set:html={`<svg class="icon" aria-hidden="true"><use href="#i-left"/></svg>`} />Voltar</a>
+  <span class="sep" aria-hidden="true"></span>
+  <span class="lang"><a href="projeto-infohub.html" aria-current="true" lang="pt-BR" hreflang="pt-BR">PT</a><span aria-hidden="true">·</span><a href="en/projeto-infohub.html" lang="en" hreflang="en" aria-label="English">EN</a></span>
+  <button class="icon-btn theme" id="theme-toggle" type="button" aria-label="Alternar tema"><Fragment set:html={`<svg class="icon i-sun"><use href="#i-sun"/></svg>`} /><Fragment set:html={`<svg class="icon i-moon"><use href="#i-moon"/></svg>`} /></button>
+</header>
+<main class="wrap" id="conteudo">
+  <div class="shot" data-cover="infohub" style="--ar:1568/734"><img class="crop-sb" src="img/infohub.jpg" alt="Captura da página inicial do InfoHub InovAMF" width="1568" height="734"></div>
+  <div class="proj-head">
+  <h1>InfoHub InovAMF</h1>
+  <p class="lede">Acompanhamento da jornada do empreendedor no InfoHub da AMF até o centro de inovação InovAMF.</p>
+  <div class="figs"><div><b>6</b><span>etapas da jornada</span></div><div><b>3</b><span>painéis por perfil</span></div></div>
+  </div>
+
+  <section><h2 class="reveal">Contexto</h2>
+    <p>A jornada do empreendedor do InfoHub, da AMF, até o InovAMF. Projeto da disciplina de Arquitetura de Sistemas, feito em dupla.</p>
+  </section>
+  <section><h2 class="reveal">O que fiz</h2>
+    <p>Planejei e executei toda a parte de desenvolvimento; a arquitetura foi pensada em conjunto com a dupla.</p>
+    <p><a class="link-codigo" href="https://github.com/gomesbeduardo/infohub-inovamf" rel="noopener">Código no GitHub</a></p>
+  </section>
+  <section><h2 class="reveal">Stack</h2>
+    <div class="tags"><span>Next.js</span><span>TypeScript</span><span>Prisma</span><span>PostgreSQL</span></div>
+  </section>
+  <section><h2 class="reveal">Galeria</h2>
+    <div class="gallery">
+      <figure class="stag"><div class="tile" style="--ar:1568/734"><img class="crop-sb" src="img/infohub.jpg" alt="" width="1568" height="734"></div><figcaption>Página inicial do InfoHub InovAMF</figcaption></figure>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><a class="back" href="index.html#projetos"><Fragment set:html={`<svg class="icon" aria-hidden="true"><use href="#i-left"/></svg>`} />Voltar aos projetos</a>
+  <div class="foot-fim"><p>© <span data-ano>2026</span> Eduardo Bergoli Gomes · Santa Maria, RS</p><span class="foot-lang"><a href="projeto-infohub.html" aria-current="true" lang="pt-BR" hreflang="pt-BR">PT</a><span aria-hidden="true">·</span><a href="en/projeto-infohub.html" lang="en" hreflang="en" aria-label="English">EN</a></span><a href="#" data-topo>Voltar ao topo ↑</a></div>
+</div></footer>
+<script is:inline src="main.js" defer></script>
+</Base>

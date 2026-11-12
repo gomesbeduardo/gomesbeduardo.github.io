@@ -56,3 +56,16 @@ test('sem Preflight nem @import "tailwindcss"', () => {
   assert.doesNotMatch(global, /@import\s+["']tailwindcss["']/);
   assert.doesNotMatch(global, /preflight/i);
 });
+
+test('C9: @theme inline não tem token fora da lista (cor, espaço, raio, texto, fonte, ease)', () => {
+  const permitidos = new Set([
+    ...Object.keys(cores).map((n) => `--color-${n}`),
+    ...Object.keys(espacos).map((n) => `--spacing-${n}`),
+    ...Object.keys(raios).map((n) => `--radius-${n}`),
+    ...Object.keys(textos).map((n) => `--text-${n}`),
+    ...Object.keys(fontes).map((n) => `--font-${n}`),
+    '--ease',
+  ]);
+  const extras = Object.keys(token).filter((t) => !permitidos.has(t));
+  assert.deepEqual(extras, []);
+});
