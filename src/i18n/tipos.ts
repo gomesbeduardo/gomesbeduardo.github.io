@@ -79,6 +79,16 @@ export interface Home {
     tabela: { tech: string; onde: string; como: string; tag: string }[];
   };
   projetos: SecaoTitulo & { cards: CardProjeto[] };
+  numeros: SecaoTitulo & {
+    aviso: string;
+    coleta: string;
+    janela: string;
+    contribuicoes: string;
+    repos: string;
+    linguagens: string;
+    calTitulo: string;
+    calAria: string;
+  };
   contato: SecaoTitulo & {
     local: string;
     emailAria: string;

@@ -1,0 +1,62 @@
+---
+import { dicionario } from '../i18n';
+import type { Lang } from '../i18n/tipos';
+import github from '../data/github.json';
+interface Props { lang: Lang }
+const lang = Astro.props.lang;
+const { home: t } = dicionario(lang);
+const s = t.numeros;
+
+if (github.versao !== 1) throw new Error(`github.json: versão ${github.versao} desconhecida; esperada 1`);
+
+const loc = lang === 'en' ? 'en-US' : 'pt-BR';
+const num = (n: number) => n.toLocaleString(loc);
+const pct = (n: number) => n.toLocaleString(loc, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const data = (iso: string, tz: string) => {
+  const d = lang === 'en'
+    ? new Intl.DateTimeFormat('en-US', { timeZone: tz, month: 'short', day: 'numeric', year: 'numeric' })
+    : new Intl.DateTimeFormat('pt-BR', { timeZone: tz, day: '2-digit', month: '2-digit', year: 'numeric' });
+  return d.format(new Date(iso));
+};
+const coleta = data(github.coletadoEm, 'America/Sao_Paulo');
+const de = data(github.janela.de + 'T12:00:00Z', 'UTC');
+const ate = data(github.janela.ate + 'T12:00:00Z', 'UTC');
+const total = num(github.contribuicoes.total);
+const restritas = num(github.contribuicoes.restritas);
+
+const tons = [
+  'var(--fg)',
+  'color-mix(in srgb,var(--fg) 62%,var(--bg))',
+  'color-mix(in srgb,var(--fg) 50%,var(--bg))',
+  'color-mix(in srgb,var(--fg) 38%,var(--bg))',
+  'var(--muted2)',
+];
+const langs = github.linguagens.map((l, i) => ({ nome: l.nome, p: l.percentual, cor: tons[i] }));
+
+const dias = github.calendario.semanas.flatMap((w) => w.dias);
+const json = JSON.stringify({ pad: dias[0].diaSemana, d: dias.map((d) => [d.data, d.nivel, d.contagem]) });
+---
+<section id="numeros"><div class="wrap">
+  <p class="sec-label reveal" aria-hidden="true" set:html={s.label}></p>
+  <h2 class="reveal" set:html={s.titulo}></h2>
+  {github.amostra === true && <p class="sec-label" set:html={s.aviso}></p>}
+  <p class="sample"><span>{s.coleta.replace('{data}', coleta)}</span><span>{s.janela.replace('{de}', de).replace('{ate}', ate)}</span></p>
+  <div class="counters">
+    <div class="counter stag"><span class="num" data-v={github.contribuicoes.total}><span class="sr-only">{total}</span><span aria-hidden="true">{total}</span></span><span class="lbl">{s.contribuicoes.replace('{restritas}', restritas)}</span></div>
+    <div class="counter stag"><span class="num" data-v={github.reposPublicos}><span class="sr-only">{num(github.reposPublicos)}</span><span aria-hidden="true">{num(github.reposPublicos)}</span></span><span class="lbl">{s.repos}</span></div>
+  </div>
+  <div class="langs reveal">
+    <h3>{s.linguagens}</h3>
+    <div class="bar" role="img" aria-label={langs.map((l) => `${l.nome} ${pct(l.p)}%`).join(', ')}>
+      <Fragment set:html={'\n      ' + langs.map((l) => `<i style="width:${l.p}%;background:${l.cor}"></i>`).join('') + '\n    '} />
+    </div>
+    <ul class="legend" aria-hidden="true">
+      <Fragment set:html={langs.map((l) => `\n      <li><i style="background:${l.cor}"></i>${l.nome} <b>${pct(l.p)}%</b></li>`).join('') + '\n    '} />
+    </ul>
+  </div>
+  <div class="cal reveal">
+    <h3>{s.calTitulo.replace('{de}', de).replace('{ate}', ate)}</h3>
+    <div class="cal-scroll" data-lenis-prevent-horizontal><div class="cal-grid" id="cal" role="img" aria-label={s.calAria.replace('{total}', total)}></div></div>
+    <script is:inline type="application/json" id="cal-dados" set:html={json}></script>
+  </div>
+</div></section>

@@ -219,6 +219,18 @@ export const pt: Dicionario = {
         },
       ],
     },
+    numeros: {
+      label: "06 / NÚMEROS",
+      titulo: "Números do GitHub",
+      aviso: "Dados de exemplo: a coleta real entra com a spec 002.",
+      coleta: "dados do GitHub de {data}",
+      janela: "janela de {de} a {ate}",
+      contribuicoes: "contribuições em 12 meses, incluindo {restritas} em repositórios privados",
+      repos: "repositórios públicos",
+      linguagens: "Linguagens por volume de código",
+      calTitulo: "Contribuições por dia, de {de} a {ate}",
+      calAria: "Calendário de contribuições por dia, incluindo privadas, com {total} no total",
+    },
     contato: {
       label: "07 / CONTATO",
       titulo: "Contato",

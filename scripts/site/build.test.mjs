@@ -146,3 +146,65 @@ test('(i) C8: PDFs do currículo em dist/ e links da home iguais aos de site/', 
   assert.ok(hrefs('dist/en/index.html').includes('../curriculo/curriculo-eduardo-gomes-en.pdf'));
   for (const f of homes) assert.deepEqual(hrefs(`dist/${f}`), hrefs(`site/${f}`), f);
 });
+
+// ---- C6: contrato do src/data/github.json (spec 001a R5) ----
+const JSON_GH = 'src/data/github.json';
+function comFixture(prefixo, alterar, fn) {
+  mkdirSync('.astro', { recursive: true });
+  const tmp = mkdtempSync(join('.astro', `teste-${prefixo}-`));
+  const original = readFileSync(JSON_GH);
+  try {
+    const d = JSON.parse(original.toString('utf8'));
+    alterar(d);
+    writeFileSync(JSON_GH, JSON.stringify(d, null, 2) + '\n');
+    fn(tmp);
+  } finally {
+    writeFileSync(JSON_GH, original);
+    rmSync(tmp, { recursive: true, force: true });
+  }
+  assert.deepEqual(readFileSync(JSON_GH), original);
+}
+
+test('(T6) C6: versao desconhecida em github.json derruba o build com a mensagem da spec', () => {
+  comFixture('c6-versao', (d) => { d.versao = 2; }, (tmp) => {
+    let saida = '';
+    let codigo = 0;
+    try {
+      execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'o')], { stdio: 'pipe' });
+    } catch (e) {
+      codigo = e.status;
+      saida = `${e.stdout}${e.stderr}`;
+    }
+    assert.notEqual(codigo, 0, 'o build deveria falhar');
+    assert.ok(saida.includes('github.json: versão 2 desconhecida; esperada 1'), saida.slice(-600));
+  });
+});
+
+test('(T7) C6: aviso de dados de exemplo só aparece com amostra true', () => {
+  const pt = 'Dados de exemplo: a coleta real entra com a spec 002.';
+  const en = 'Sample data: real numbers arrive with spec 002.';
+  for (const f of homes) {
+    const h = readFileSync(`dist/${f}`, 'utf8');
+    assert.ok(!h.includes(pt) && !h.includes(en), `${f} não deveria ter aviso com amostra false`);
+  }
+  comFixture('c6-amostra', (d) => { d.amostra = true; }, (tmp) => {
+    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'o')], { stdio: 'pipe' });
+    assert.ok(readFileSync(join(tmp, 'o/index.html'), 'utf8').includes(pt));
+    assert.ok(readFileSync(join(tmp, 'o/en/index.html'), 'utf8').includes(en));
+  });
+});
+
+test('(T8) C6: números e calendário vêm do github.json', () => {
+  let nivel;
+  comFixture('c6-dados', (d) => {
+    d.contribuicoes.total = 3001;
+    d.calendario.semanas[0].dias[0].contagem = 9;
+    nivel = d.calendario.semanas[0].dias[0].nivel;
+  }, (tmp) => {
+    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'o')], { stdio: 'pipe' });
+    const h = readFileSync(join(tmp, 'o/index.html'), 'utf8');
+    assert.ok(h.includes('data-v="3001"'));
+    const cal = h.match(/id="cal-dados">([^<]*)</)[1];
+    assert.ok(cal.includes(`["2025-11-12",${nivel},9]`), cal.slice(0, 80));
+  });
+});
