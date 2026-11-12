@@ -11,13 +11,13 @@ const raiz = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const ler = (rel) => readFileSync(join(raiz, rel), 'utf8');
 
 const HOMES = [
-  { id: 'pt', arquivo: 'site/index.html', foto: 'img/eduardo-gomes.jpg', validacao: /em validação com colaboradores/ },
-  { id: 'en', arquivo: 'site/en/index.html', foto: '../img/eduardo-gomes.jpg', validacao: /in validation with employees/ },
+  { id: 'pt', arquivo: 'dist/index.html', foto: 'img/eduardo-gomes.jpg', validacao: /em validação com colaboradores/ },
+  { id: 'en', arquivo: 'dist/en/index.html', foto: '../img/eduardo-gomes.jpg', validacao: /in validation with employees/ },
 ];
 const ARQUIVOS_LMS = [
   ...HOMES.map((h) => ({ ...h, rotulo: h.arquivo })),
-  { id: 'pt', arquivo: 'site/projeto-lms.html', rotulo: 'site/projeto-lms.html', validacao: /em validação com colaboradores/ },
-  { id: 'en', arquivo: 'site/en/projeto-lms.html', rotulo: 'site/en/projeto-lms.html', validacao: /in validation with employees/ },
+  { id: 'pt', arquivo: 'dist/projeto-lms.html', rotulo: 'dist/projeto-lms.html', validacao: /em validação com colaboradores/ },
+  { id: 'en', arquivo: 'dist/en/projeto-lms.html', rotulo: 'dist/en/projeto-lms.html', validacao: /in validation with employees/ },
   { id: 'pt', arquivo: 'PRODUCT.md', rotulo: 'PRODUCT.md', validacao: /valida[çc][ãa]o/ },
 ];
 
@@ -149,17 +149,17 @@ for (const h of HOMES) {
 }
 
 test('marca: nenhum elemento referencia o símbolo #si-claude', () => {
-  for (const f of ['site/index.html', 'site/en/index.html']) {
+  for (const f of ['dist/index.html', 'dist/en/index.html']) {
     assert.doesNotMatch(ler(f), /si-claude/, f);
   }
 });
 
 test('foto: o arquivo existe no site', () => {
-  assert.ok(existsSync(join(raiz, 'site/img/eduardo-gomes.jpg')));
+  assert.ok(existsSync(join(raiz, 'public/img/eduardo-gomes.jpg')));
 });
 
 // A6 (spec 005): ficha do verso da foto
-const js = ler('site/surpresas.js');
+const js = ler('public/surpresas.js');
 const FICHA = {
   PT: [
     'No YourMentor', 'Back-end em Python, FastAPI e PostgreSQL; arquitetura, modelo de dados e monetização.',

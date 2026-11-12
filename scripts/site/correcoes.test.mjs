@@ -7,8 +7,8 @@ import { fileURLToPath } from 'node:url';
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const ler = (rel) => readFileSync(join(raiz, rel), 'utf8');
-const F = ['src/data/curriculo.json', 'site/index.html', 'site/en/index.html', 'site/surpresas.js', 'README.md', 'PRODUCT.md'];
-const HTMLS = ['site/index.html', 'site/en/index.html'];
+const F = ['src/data/curriculo.json', 'dist/index.html', 'dist/en/index.html', 'public/surpresas.js', 'README.md', 'PRODUCT.md'];
+const HTMLS = ['dist/index.html', 'dist/en/index.html'];
 
 test('A1: sem numeral romano ou ordinal no CodeRace', () => {
   for (const f of F) {
@@ -42,12 +42,13 @@ test('A2: assistente financeiro do CodeRace 2026 sem "atual" nem início em mar�
   }
   for (const f of HTMLS) {
     const t = ler(f);
-    const lis = t.split('\n').filter((l) => /financ/i.test(l) && /CodeRace/.test(l));
+    // Itens por <li>: o Astro junta vários <li> numa linha.
+    const lis = t.split(/<li[\s>]/).filter((l) => /financ/i.test(l) && /CodeRace/.test(l));
     assert.ok(lis.length >= 2, f);
     for (const l of lis) assert.doesNotMatch(l, /atual|to present|since Mar 2026|mar\/2026|Mar 2026/i, f);
   }
-  assert.match(ler('site/index.html'), /Atuei só nas finanças, durante a organização e o evento, sem papel na avaliação das equipes\./);
-  assert.match(ler('site/en/index.html'), /I worked only on the finances, during the organization and the event, with no role in judging the teams\./);
+  assert.match(ler('dist/index.html'), /Atuei só nas finanças, durante a organização e o evento, sem papel na avaliação das equipes\./);
+  assert.match(ler('dist/en/index.html'), /I worked only on the finances, during the organization and the event, with no role in judging the teams\./);
   const jt = JSON.stringify(j);
   assert.match(jt, /Atuei só nas finanças, durante a organização e o evento, sem papel na avaliação das equipes\./);
   assert.match(jt, /I worked only on the finances, during the organization and the event, with no role in judging the teams\./);
@@ -71,8 +72,8 @@ test('A3: YourMentor começa em out/2025 e cita Mentor.Me e a mudança de jun/20
   for (const x of ym) assert.match(JSON.stringify(x), /Mentor\.Me/);
   assert.match(t, /que virou YourMentor em jun\/2026, com novo nome e novo foco/);
   assert.match(t, /which became YourMentor in Jun 2026, with a new name and a new focus/);
-  const pt = ler('site/index.html');
-  const en = ler('site/en/index.html');
+  const pt = ler('dist/index.html');
+  const en = ler('dist/en/index.html');
   assert.match(pt, /desde out\/2025/);
   assert.match(pt, /out\/2025 – atual/);
   assert.match(pt, /Cofundei a Mentor\.Me, campeã do 1º Ideathon de SI da AMF, que virou YourMentor em jun\/2026, com novo nome e novo foco\./);
@@ -84,8 +85,9 @@ test('A3: YourMentor começa em out/2025 e cita Mentor.Me e a mudança de jun/20
 });
 
 test('A3b: na Trajetória o YourMentor vem logo depois do Ideathon (out/2025)', () => {
-  for (const [f, ym] of [['site/index.html', '<h3>YourMentor</h3>'], ['site/en/index.html', '<h3>YourMentor</h3>']]) {
-    const lis = ler(f).split('\n').filter((l) => l.includes('traj-card'));
+  for (const [f, ym] of [['dist/index.html', '<h3>YourMentor</h3>'], ['dist/en/index.html', '<h3>YourMentor</h3>']]) {
+    // Itens por <li>: o Astro junta vários <li> numa linha.
+    const lis = ler(f).split(/<li[\s>]/).filter((l) => l.includes('traj-card'));
     const i = lis.findIndex((l) => /<h3>[^<]*Ideathon/.test(l));
     assert.ok(i >= 0, f);
     assert.ok(lis[i + 1].includes(ym), f);
@@ -93,7 +95,7 @@ test('A3b: na Trajetória o YourMentor vem logo depois do Ideathon (out/2025)', 
 });
 
 test('A4: c10 com o texto novo', () => {
-  const js = ler('site/surpresas.js');
+  const js = ler('public/surpresas.js');
   assert.ok(js.includes('Sou cofundador do YourMentor desde outubro de 2025, quando ele ainda se chamava Mentor.Me.'));
   assert.ok(js.includes('I have been a co-founder of YourMentor since October 2025, back when it was called Mentor.Me.'));
 });

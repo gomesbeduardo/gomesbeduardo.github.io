@@ -132,7 +132,7 @@ footer { margin-top: 10pt; font-size: 8.4pt; color: #666; }
 `;
 
 // Monta o HTML de um idioma. Texto real, uma coluna, sem tabela; a foto e so decoracao do cabecalho (spec 004, R4 alterada).
-const FOTO_PADRAO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..', 'site', 'img', 'eduardo-gomes.jpg');
+const FOTO_PADRAO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..', 'public', 'img', 'eduardo-gomes.jpg');
 
 export function renderizarHtml(dados, idioma, { foto = FOTO_PADRAO } = {}) {
   if (!IDIOMAS.includes(idioma)) throw new Error(`idioma desconhecido: ${idioma}`);

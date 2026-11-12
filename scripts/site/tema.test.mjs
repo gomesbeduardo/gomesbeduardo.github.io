@@ -1,4 +1,4 @@
-// Testes do tema (site/inicio.js + site/tema.js): data-mode acompanha o sistema quando não há tema salvo.
+// Testes do tema (public/inicio.js + public/tema.js): data-mode acompanha o sistema quando não há tema salvo.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -6,7 +6,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 
-const site = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'site');
+const site = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'public');
 const fonte = (n) => readFileSync(join(site, n), 'utf8');
 
 // Sandbox mínimo: carrega inicio.js e tema.js de verdade, com matchMedia controlável.
