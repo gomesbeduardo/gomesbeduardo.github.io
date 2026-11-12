@@ -178,6 +178,8 @@
   .photo-card{box-sizing:border-box;border:1px solid var(--line-strong);border-radius:var(--r-md)}
   .photo .photo-btn,.photo .sp-verso{border:0}
   .photo .photo-btn{transition:opacity .15s linear}
+  /* o zerar global de style.css (*{transition-duration:0s!important}) não vale para o esmaecer das duas faces: mesma importância, seletor mais específico */
+  .photo .sp-verso,.photo .photo-btn{transition-duration:.15s!important}
   .photo.virado .sp-verso{opacity:1;pointer-events:auto}
   .photo.virado .photo-btn{opacity:0;pointer-events:none}
 }
