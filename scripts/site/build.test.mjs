@@ -1,7 +1,10 @@
 // Confere o dist/ gerado pelo `astro build` contra public/ e contra site/ (referência de paridade).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const ler = (p) => readFileSync(p);
 
@@ -72,4 +75,74 @@ test('(f) 404 e projetos: tags <script> iguais em site e dist, na mesma ordem', 
   for (const f of ['404.html', ...paginasProjeto]) {
     assert.deepEqual(scripts(`dist/${f}`), scripts(`site/${f}`), f);
   }
+});
+
+// Home PT e EN: mesmo conteúdo e mesmos <script>, incluindo o texto exato do JSON do calendário.
+const homes = ['index.html', 'en/index.html'];
+
+test('(e2) home PT e EN: dist equivale a site', () => {
+  for (const f of homes) {
+    const [site, dist] = htmlEquivalente(`site/${f}`, `dist/${f}`);
+    assert.deepEqual(dist, site, f);
+  }
+});
+
+test('(f2) home PT e EN: tags <script> iguais e JSON do calendário idêntico', () => {
+  const json = (a) => readFileSync(a, 'utf8').match(/<script[^>]*id="cal-dados"[^>]*>([\s\S]*?)<\/script>/)?.[1];
+  for (const f of homes) {
+    assert.deepEqual(scripts(`dist/${f}`), scripts(`site/${f}`), f);
+    assert.ok(json(`site/${f}`), `site/${f} sem cal-dados`);
+    assert.equal(json(`dist/${f}`), json(`site/${f}`), `${f}: cal-dados`);
+  }
+});
+
+// Lista recursiva de arquivos de uma pasta, com caminhos relativos e "/".
+const listar = (base, rel = '') =>
+  readdirSync(`${base}/${rel}`, { withFileTypes: true }).flatMap((e) => {
+    const r = rel ? `${rel}/${e.name}` : e.name;
+    return e.isDirectory() ? listar(base, r) : [r];
+  });
+
+test('(g) C2: dist tem exatamente as páginas, os arquivos de public/ e um .css; sem CSS legado', () => {
+  const paginas = ['index.html', 'en/index.html', '404.html', ...paginasProjeto];
+  const esperado = [...paginas, ...listar('public'), ...css.map((f) => `_astro/${f}`)].sort();
+  const atual = listar('dist').sort();
+  assert.deepEqual(atual, esperado);
+  assert.ok(existsSync('dist/.nojekyll') || existsSync('public/.nojekyll'), '.nojekyll');
+  for (const f of atual.filter((x) => x.endsWith('.html'))) {
+    assert.doesNotMatch(readFileSync(`dist/${f}`, 'utf8'), /(?:style|surpresas|transicoes)\.css/, f);
+  }
+  for (const legado of ['style.css', 'surpresas.css', 'transicoes.css']) assert.ok(!existsSync(`dist/${legado}`), legado);
+});
+
+test('(h) C7: dados/processo.json é copiado quando existe e dist/dados/ não existe quando falta', () => {
+  const tmp = mkdtempSync(join(tmpdir(), 'c7-'));
+  const criouPasta = !existsSync('public/dados');
+  const arq = 'public/dados/processo.json';
+  const antes = existsSync(arq) ? readFileSync(arq) : null;
+  try {
+    mkdirSync('public/dados', { recursive: true });
+    writeFileSync(arq, '{"versao":1,"teste":true}\n');
+    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'c7-presente')], { stdio: 'pipe' });
+    assert.deepEqual(readFileSync(join(tmp, 'c7-presente/dados/processo.json')), readFileSync(arq));
+    rmSync(arq, { force: true });
+    if (criouPasta) rmSync('public/dados', { recursive: true, force: true });
+    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'c7-ausente')], { stdio: 'pipe' });
+    assert.ok(!existsSync(join(tmp, 'c7-ausente/dados')), 'dist/dados/ não deveria existir');
+  } finally {
+    rmSync(arq, { force: true });
+    if (criouPasta) rmSync('public/dados', { recursive: true, force: true });
+    else if (antes) writeFileSync(arq, antes);
+    rmSync(tmp, { recursive: true, force: true });
+  }
+});
+
+test('(i) C8: PDFs do currículo em dist/ e links da home iguais aos de site/', () => {
+  const pdfs = ['curriculo-eduardo-gomes-pt.pdf', 'curriculo-eduardo-gomes-en.pdf'];
+  for (const p of pdfs) assert.ok(existsSync(`public/curriculo/${p}`), 'rode node scripts/curriculo/gerar.mjs antes');
+  for (const p of pdfs) assert.deepEqual(ler(`dist/curriculo/${p}`), ler(`public/curriculo/${p}`), p);
+  const hrefs = (a) => [...readFileSync(a, 'utf8').matchAll(/href="([^"]*curriculo-eduardo-gomes-[^"]*\.pdf)"/g)].map((m) => m[1]);
+  assert.ok(hrefs('dist/index.html').includes('curriculo/curriculo-eduardo-gomes-pt.pdf'));
+  assert.ok(hrefs('dist/en/index.html').includes('../curriculo/curriculo-eduardo-gomes-en.pdf'));
+  for (const f of homes) assert.deepEqual(hrefs(`dist/${f}`), hrefs(`site/${f}`), f);
 });
