@@ -74,7 +74,7 @@ Fatos, números e o que roda onde. Sem frase de efeito, slogan, contraste retór
 - 005: virada da foto do topo, com a ficha no verso.
 - 006: e-mail que copia com aviso e rodapé completo.
 - 007: correções do CodeRace e do YourMentor.
-- 008: números do processo no modal do rodapé (rascunho; implementada depois da etapa 1 da 001).
+- 008: números do processo no modal do rodapé (aprovada em 12/11/2026; implementada depois da etapa 1 da 001).
 
 ## Critérios de aceite
 
