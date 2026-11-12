@@ -21,21 +21,41 @@ const B = await servir(resolve(raiz, argumento('b', 'dist')));
 const browser = await chromium.launch();
 console.log(`Chromium ${browser.version()}`);
 
+// Espera o que se decide fora do tempo fixo: imagens decodificadas, fontes prontas, rolagem parada em um valor e dois quadros.
+async function assentar(page) {
+  await page.evaluate(async () => {
+    const imgs = [...document.images];
+    imgs.forEach((i) => { i.loading = 'eager'; });
+    await Promise.all(imgs.map((i) => i.decode().catch(() => {})));
+    await document.fonts.ready;
+    const quadro = () => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
+    let y = -1;
+    for (let n = 0; n < 50 && (y !== window.scrollY || n < 2); n++) { y = window.scrollY; await quadro(); }
+  });
+}
+
 async function capturar(url, [w, h], [, tema]) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 1, reducedMotion: 'reduce', colorScheme: tema });
   try {
     await ctx.addInitScript((t) => { try { localStorage.setItem('tema', t); } catch {} }, tema);
     const page = await ctx.newPage();
     await page.goto(url, { waitUntil: 'load' });
-    await page.evaluate(() => document.fonts.ready);
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2500);
     await page.addStyleTag({ content: CSS });
+    await assentar(page);
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
     await page.waitForTimeout(300);
+    await assentar(page);
     await page.evaluate(() => window.scrollTo(0, 0));
-    await page.waitForTimeout(300);
-    return PNG.sync.read(await page.screenshot({ fullPage: true }));
+    await assentar(page);
+    // Só vale a captura que se repete: duas fotos seguidas iguais, ou a página ainda estava se ajeitando.
+    for (let i = 0; i < 6; i++) {
+      const x = await page.screenshot({ fullPage: true });
+      if (x.equals(await page.screenshot({ fullPage: true }))) return PNG.sync.read(x);
+      await assentar(page);
+    }
+    throw new Error('a página não estabilizou');
   } finally { await ctx.close(); }
 }
 
@@ -45,7 +65,8 @@ try {
     const rot = `${p} ${lang} ${larg[0]} ${tema[0]}`;
     let linha, ia, ib, diff;
     try {
-      [ia, ib] = await Promise.all([capturar(A.url + caminho, larg, tema), capturar(B.url + caminho, larg, tema)]);
+      ia = await capturar(A.url + caminho, larg, tema);
+      ib = await capturar(B.url + caminho, larg, tema);
       if (ia.width !== ib.width || ia.height !== ib.height) linha = `FALHA ${rot} dimensões ${ia.width}x${ia.height} vs ${ib.width}x${ib.height}`;
       else {
         diff = new PNG({ width: ia.width, height: ia.height });

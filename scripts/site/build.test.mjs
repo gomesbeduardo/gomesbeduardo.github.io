@@ -3,7 +3,6 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 const ler = (p) => readFileSync(p);
@@ -108,7 +107,7 @@ test('(g) C2: dist tem exatamente as páginas, os arquivos de public/ e um .css;
   const esperado = [...paginas, ...listar('public'), ...css.map((f) => `_astro/${f}`)].sort();
   const atual = listar('dist').sort();
   assert.deepEqual(atual, esperado);
-  assert.ok(existsSync('dist/.nojekyll') || existsSync('public/.nojekyll'), '.nojekyll');
+  assert.ok(existsSync('dist/.nojekyll'), 'dist/.nojekyll');
   for (const f of atual.filter((x) => x.endsWith('.html'))) {
     assert.doesNotMatch(readFileSync(`dist/${f}`, 'utf8'), /(?:style|surpresas|transicoes)\.css/, f);
   }
@@ -116,7 +115,8 @@ test('(g) C2: dist tem exatamente as páginas, os arquivos de public/ e um .css;
 });
 
 test('(h) C7: dados/processo.json é copiado quando existe e dist/dados/ não existe quando falta', () => {
-  const tmp = mkdtempSync(join(tmpdir(), 'c7-'));
+  mkdirSync('.astro', { recursive: true });
+  const tmp = mkdtempSync(join('.astro', 'teste-c7-'));
   const criouPasta = !existsSync('public/dados');
   const arq = 'public/dados/processo.json';
   const antes = existsSync(arq) ? readFileSync(arq) : null;
