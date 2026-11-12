@@ -1,5 +1,5 @@
 // Aceite no navegador da spec 007: Trajetória (YourMentor logo depois do Ideathon) e sem rolagem horizontal.
-// Fora do glob do `node --test`. Rodar fora do sandbox (o Chromium não abre dentro dele):
+// Fora do glob do `node --test`. Rodar depois de `npm run build` (ou `npm run e2e`, que roda todos):
 //   node scripts/site/correcoes.e2e.mjs [--raiz dist]
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';

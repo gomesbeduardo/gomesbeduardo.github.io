@@ -1,6 +1,6 @@
 // Aceites A2, A4, A1a, A5 (320 a 414 px, PT e EN) e A8 da spec 005 no navegador. Complementa foto.e2e.mjs (arquivo separado de propósito).
-// Fora do glob do `node --test` (nome sem .test.mjs). Sem dependência no repo: usa o Playwright do cache do npx.
-// Rodar (fora do sandbox, o Chromium não abre dentro dele):
+// Fora do glob do `node --test` (nome sem .test.mjs). Usa o Playwright do node_modules (lib-e2e.mjs).
+// Rodar depois de `npm run build` (ou `npm run e2e`, que roda todos):
 //   node scripts/site/foto-aceites.e2e.mjs [--raiz dist]
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
