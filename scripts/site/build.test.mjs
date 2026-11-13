@@ -1,11 +1,15 @@
 // Confere o dist/ gerado pelo `astro build` contra public/ e contra site/ (referência de paridade).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync, existsSync, mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync, mkdtempSync, mkdirSync, writeFileSync, rmSync, statSync, cpSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 
 const ler = (p) => readFileSync(p);
+
+// Estado dos insumos versionados no carregamento do arquivo; o último teste confere que as fixtures não os tocaram.
+const mtimeGithubJson = statSync('src/data/github.json').mtimeMs;
+const existiaPublicDados = existsSync('public/dados');
 
 // Reduz um HTML a uma lista ordenada de tags (com atributos) e textos, sem os CSS legados nem o CSS do Astro.
 export function normalizarHtml(html) {
@@ -122,22 +126,18 @@ test('(g) C2: dist tem exatamente as páginas, os arquivos de public/ e um .css;
 test('(h) C7: dados/processo.json é copiado quando existe e dist/dados/ não existe quando falta', () => {
   mkdirSync('.astro', { recursive: true });
   const tmp = mkdtempSync(join('.astro', 'teste-c7-'));
-  const criouPasta = !existsSync('public/dados');
-  const arq = 'public/dados/processo.json';
-  const antes = existsSync(arq) ? readFileSync(arq) : null;
   try {
-    mkdirSync('public/dados', { recursive: true });
+    const presente = join(process.cwd(), tmp, 'public-presente');
+    const ausente = join(process.cwd(), tmp, 'public-ausente');
+    for (const d of [presente, ausente]) cpSync('public', d, { recursive: true, filter: (o) => !/(^|\/)public\/dados$/.test(o) });
+    mkdirSync(join(presente, 'dados'), { recursive: true });
+    const arq = join(presente, 'dados/processo.json');
     writeFileSync(arq, '{"versao":1,"teste":true}\n');
-    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'c7-presente')], { stdio: 'pipe' });
+    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'c7-presente')], { stdio: 'pipe', env: { ...process.env, PUBLIC_DIR_TESTE: presente } });
     assert.deepEqual(readFileSync(join(tmp, 'c7-presente/dados/processo.json')), readFileSync(arq));
-    rmSync(arq, { force: true });
-    if (criouPasta) rmSync('public/dados', { recursive: true, force: true });
-    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'c7-ausente')], { stdio: 'pipe' });
+    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'c7-ausente')], { stdio: 'pipe', env: { ...process.env, PUBLIC_DIR_TESTE: ausente } });
     assert.ok(!existsSync(join(tmp, 'c7-ausente/dados')), 'dist/dados/ não deveria existir');
   } finally {
-    rmSync(arq, { force: true });
-    if (criouPasta) rmSync('public/dados', { recursive: true, force: true });
-    else if (antes) writeFileSync(arq, antes);
     rmSync(tmp, { recursive: true, force: true });
   }
 });
@@ -157,25 +157,23 @@ const JSON_GH = 'src/data/github.json';
 function comFixture(prefixo, alterar, fn) {
   mkdirSync('.astro', { recursive: true });
   const tmp = mkdtempSync(join('.astro', `teste-${prefixo}-`));
-  const original = readFileSync(JSON_GH);
   try {
-    const d = JSON.parse(original.toString('utf8'));
+    const d = JSON.parse(readFileSync(JSON_GH, 'utf8'));
     alterar(d);
-    writeFileSync(JSON_GH, JSON.stringify(d, null, 2) + '\n');
-    fn(tmp);
+    const fixture = join(process.cwd(), tmp, 'github.json');
+    writeFileSync(fixture, JSON.stringify(d, null, 2) + '\n');
+    fn(tmp, { ...process.env, GH_JSON_TESTE: fixture });
   } finally {
-    writeFileSync(JSON_GH, original);
     rmSync(tmp, { recursive: true, force: true });
   }
-  assert.deepEqual(readFileSync(JSON_GH), original);
 }
 
 test('(T6) C6: versao desconhecida em github.json derruba o build com a mensagem da spec', () => {
-  comFixture('c6-versao', (d) => { d.versao = 2; }, (tmp) => {
+  comFixture('c6-versao', (d) => { d.versao = 2; }, (tmp, env) => {
     let saida = '';
     let codigo = 0;
     try {
-      execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'o')], { stdio: 'pipe' });
+      execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'o')], { stdio: 'pipe', env });
     } catch (e) {
       codigo = e.status;
       saida = `${e.stdout}${e.stderr}`;
@@ -192,8 +190,8 @@ test('(T7) C6: aviso de dados de exemplo só aparece com amostra true', () => {
     const h = readFileSync(`dist/${f}`, 'utf8');
     assert.ok(!h.includes(pt) && !h.includes(en), `${f} não deveria ter aviso com amostra false`);
   }
-  comFixture('c6-amostra', (d) => { d.amostra = true; }, (tmp) => {
-    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'o')], { stdio: 'pipe' });
+  comFixture('c6-amostra', (d) => { d.amostra = true; }, (tmp, env) => {
+    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'o')], { stdio: 'pipe', env });
     assert.ok(readFileSync(join(tmp, 'o/index.html'), 'utf8').includes(pt));
     assert.ok(readFileSync(join(tmp, 'o/en/index.html'), 'utf8').includes(en));
   });
@@ -206,11 +204,16 @@ test('(T8) C6: números e calendário vêm do github.json', () => {
     d.calendario.semanas[0].dias[0].contagem = 9;
     nivel = d.calendario.semanas[0].dias[0].nivel;
     primeiroDia = d.calendario.semanas[0].dias[0].data;
-  }, (tmp) => {
-    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'o')], { stdio: 'pipe' });
+  }, (tmp, env) => {
+    execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'o')], { stdio: 'pipe', env });
     const h = readFileSync(join(tmp, 'o/index.html'), 'utf8');
     assert.ok(h.includes('data-v="3001"'));
     const cal = h.match(/id="cal-dados">([^<]*)</)[1];
     assert.ok(cal.includes(`["${primeiroDia}",${nivel},9]`), cal.slice(0, 80));
   });
+});
+
+test('(z) as fixtures não gravam em src/data/github.json nem em public/dados', () => {
+  assert.equal(statSync('src/data/github.json').mtimeMs, mtimeGithubJson, 'src/data/github.json foi regravado');
+  assert.equal(existsSync('public/dados'), existiaPublicDados, 'public/dados foi criado ou removido');
 });
