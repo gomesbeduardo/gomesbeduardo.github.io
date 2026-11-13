@@ -16,6 +16,8 @@ A troca de língua é um link comum para a página equivalente na outra língua 
 - D1. A troca continua indo para a outra URL, com o mesmo esmaecimento de 250 ms entre páginas. O texto não troca no lugar.
 - D2. A página nova abre no mesmo ponto de leitura, sem repetir as animações de entrada.
 - D3. "Mesmo ponto" é medido por âncora: o bloco que está no topo da janela é o mesmo bloco na outra língua e fica exatamente na mesma distância em px do topo da janela, com tolerância de 0 px.
+  - Alteração de 12/11/2026, aprovada pelo responsável: o Chromium rola em pixels inteiros (com densidade de tela 1 e 2), e o layout tem frações de pixel, então "0 px" quer dizer diferença de até 0,5 px, o menor passo possível da rolagem. A implementação mira a posição fracionária, e o máximo medido na etapa 1 foi 0,42 px.
+  - A distância é a do bloco em repouso: se o bloco ou um ancestral está no meio da animação de revelação no momento do clique, o deslocamento passageiro (`translateY`) não entra na conta.
 - D4. Vale na home e nas três páginas de projeto, nas duas direções (PT para EN e EN para PT). A 404 não tem troca de língua e fica como está.
 - D5. Entra na etapa 1, como a última fatia, depois da paridade.
 
@@ -74,7 +76,7 @@ A troca de língua é um link comum para a página equivalente na outra língua 
 | # | Critério | Dado | Ação | Resultado | Tipo e arquivo |
 |---|---|---|---|---|---|
 | T1 | C1 | `dist/` servido, 1280 e 390 px | rolar até `proj-infohub` a 120 px; clicar "EN"; ler `top` do mesmo id | 120 px, diferença 0 | e2e, `scripts/site/lingua.e2e.mjs` |
-| T2 | C2 | todas as âncoras da home e dos 3 projetos, PT e EN, 390 e 1280 | para cada âncora: rolar até ela ficar a 80 px do topo, trocar, medir | diferença 0 px; nas âncoras em que a página chegou ao fim, a rolagem é a máxima | e2e, `lingua.e2e.mjs` |
+| T2 | C2 | todas as âncoras da home e dos 3 projetos, PT e EN, 390 e 1280 | para cada âncora: rolar até ela ficar a 80 px do topo, esperar as animações terminarem, trocar e medir o bloco que a R2 escolheu (o primeiro ainda visível, que pode ser o anterior, se ele passa por baixo do cabeçalho) | diferença de até 0,5 px (D3); nas âncoras em que a página chegou ao fim, a rolagem é a máxima | e2e, `lingua.e2e.mjs` |
 | T3 | C2 | home PT rolada até o fim | trocar | `/en/` rolada até o fim; teste registra a diferença e passa | e2e, `lingua.e2e.mjs` |
 | T4 | C3 | troca a partir de Projetos | capturar o primeiro quadro (`requestAnimationFrame` no `pagereveal`) | nome completo, contadores no valor final, nada visível escondido | e2e, `lingua.e2e.mjs` |
 | T5 | C4 | abrir `/en/` direto; clicar num card | observar o nome | a digitação acontece | e2e, `lingua.e2e.mjs` |
