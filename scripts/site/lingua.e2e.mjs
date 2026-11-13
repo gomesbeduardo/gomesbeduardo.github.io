@@ -297,7 +297,7 @@ try {
       await ctx.close();
     }
   }
-  if (SO.length === 0 || SO.includes('T2')) {
+  if (SO.length === 0 || SO.includes('T2') || SO.includes('T6')) {
 
   // ---- T1 (C1): InfoHub a 120 px, PT->EN em 1280 e 390; EN->PT em 1280 ----
   if (SO.length === 0) for (const [larg, alt, de, para, rot, dpr] of [[1280, 800, '', 'en/', 'PT->EN 1280'], [390, 844, '', 'en/', 'PT->EN 390'], [1280, 800, 'en/', '', 'EN->PT 1280'], [390, 844, '', 'en/', 'PT->EN 390 DPR2', 2]]) {
@@ -323,6 +323,7 @@ try {
     await ctx.close();
   }
 
+  if (quero('T2')) {
   // ---- T2 (C2): todas as âncoras, home e 3 projetos, PT<->EN, 390 e 1280 ----
   const todas = ['', 'projeto-leadgate.html', 'projeto-infohub.html', 'projeto-lms.html'];
   const so = argumento('paginas', '').split(',').filter(Boolean); // --paginas projeto-lms.html restringe a varredura
@@ -359,6 +360,7 @@ try {
   for (const [larg, alt] of [[390, 844], [1280, 800]]) for (const pg of paginas) for (const dir of ['PT->EN', 'EN->PT']) tarefas.push(() => varrer(larg, alt, pg, dir));
   for (let i = 0; i < tarefas.length; i += 4) await Promise.all(tarefas.slice(i, i + 4).map((f) => f()));
   ok(`T2 âncoras testadas=${resumo.testadas} (fim de página aceitos=${resumo.fimDePagina}) com diferença <= 0.5 px (máx ${resumo.maxDif.toFixed(3)})`, resumo.falhas.length === 0, resumo.falhas.slice(0, 15).join(' | '));
+  }
 
   // ---- T3: fim da página ----
   if (SO.length === 0) {
@@ -375,15 +377,16 @@ try {
   }
 
   // ---- T6 (C5): entrada velha ou de outro caminho é ignorada e apagada ----
-  if (SO.length === 0) for (const [rot, entrada] of [['(a) 6 s atrás', { caminho: '/en/', ancora: 'proj-infohub', top: 120, quando: Date.now() - 6000 }], ['(b) outro caminho', { caminho: '/projeto-lms.html', ancora: 'proj-infohub', top: 120, quando: Date.now() }]]) {
+  if (quero('T6')) for (const [rot, entrada] of [['(a) 6 s atrás', { caminho: '/en/', ancora: 'proj-infohub', top: 120, quando: Date.now() - 6000 }], ['(b) outro caminho', { caminho: '/projeto-lms.html', ancora: 'proj-infohub', top: 120, quando: Date.now() }]]) {
     const page = await ctx0.newPage();
     await page.goto(url + 'en/', { waitUntil: 'load' });
     await page.evaluate((e) => sessionStorage.setItem('troca-lingua', JSON.stringify(e)), entrada);
     await page.goto(url + 'en/', { waitUntil: 'load' });
     await page.evaluate(() => document.fonts.ready.then(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))));
     await espera(500);
-    const r = await page.evaluate(() => ({ y: window.scrollY, chave: sessionStorage.getItem('troca-lingua') }));
-    ok(`T6 ${rot}: abre no topo e apaga a chave`, r.y === 0 && r.chave === null, JSON.stringify(r));
+    await page.waitForFunction(() => document.querySelector('.hero h1.run'), null, { timeout: 5000 }).catch(() => {});
+    const r = await page.evaluate(() => { const h = document.querySelector('.hero h1'); return { y: window.scrollY, chave: sessionStorage.getItem('troca-lingua'), run: h.classList.contains('run'), marca: h.hasAttribute('data-sem-abertura'), an: getComputedStyle(h.querySelector('.fill .ch')).animationName }; });
+    ok(`T6 ${rot}: abre no topo, com a abertura, e apaga a chave`, r.y === 0 && r.chave === null && r.run && !r.marca && r.an !== 'none', JSON.stringify(r));
     await page.close();
   }
 
