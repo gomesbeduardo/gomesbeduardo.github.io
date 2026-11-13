@@ -1,5 +1,6 @@
-// Paridade de capturas (spec 001a R7): compara duas pastas que servem o mesmo site, página a página, com 0 pixel de diferença.
-//   node scripts/site/paridade.e2e.mjs [--a site] [--b dist]
+// Paridade de capturas (spec 001a R7): compara duas pastas que servem o mesmo site, página a página, com 0 pixel de diferença
+// e com as mesmas cores computadas em cada elemento renderizado (o limiar do pixelmatch deixa passar um cinza sólido que muda uns 26 níveis).
+//   node scripts/site/paridade.e2e.mjs [--a site] [--b dist] [--limiar 0.03]
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
@@ -13,6 +14,8 @@ const pt = ['index', 'projeto-leadgate', 'projeto-infohub', 'projeto-lms', '404'
 const paginas = [...pt.map((p) => ({ p, lang: 'pt', caminho: `${p}.html` })), ...pt.slice(0, 4).map((p) => ({ p, lang: 'en', caminho: `en/${p}.html` }))];
 const larguras = [[390, 844], [1280, 800]];
 const temas = [['claro', 'light'], ['escuro', 'dark']];
+const LIMIAR = Number(argumento('limiar', '0.03'));
+const PROPS = ['color', 'background-color', 'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color', 'outline-color', 'fill', 'stroke'];
 const CSS = '*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; }';
 
 const { chromium } = await carregarPlaywright();
@@ -65,13 +68,56 @@ async function capturar(url, [w, h], [, tema]) {
     await page.evaluate(() => window.scrollTo(0, 0));
     await assentar(page);
     // Só vale a captura que se repete: duas fotos seguidas iguais, ou a página ainda estava se ajeitando.
+    const cores = await page.evaluate(coletarCores, PROPS);
     for (let i = 0; i < 6; i++) {
       const x = await page.screenshot({ fullPage: true });
-      if (x.equals(await page.screenshot({ fullPage: true }))) return PNG.sync.read(x);
+      if (x.equals(await page.screenshot({ fullPage: true }))) return { png: PNG.sync.read(x), cores };
       await assentar(page);
     }
     throw new Error('a página não estabilizou');
   } finally { await ctx.close(); }
+}
+
+// Cor computada de todos os elementos renderizados, em ordem de documento (display:none fica de fora).
+function coletarCores(props) {
+  const out = [];
+  for (const el of document.querySelectorAll('*')) {
+    const cs = getComputedStyle(el);
+    if (cs.display === 'none') continue;
+    const cls = typeof el.className === 'string' ? el.className.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((c) => '.' + c).join('') : '';
+    const pai = el.parentElement;
+    const nth = pai ? [...pai.children].indexOf(el) + 1 : 1;
+    out.push({ tag: el.localName, caminho: `${el.localName}${el.id ? '#' + el.id : ''}${cls}:nth-child(${nth})`, v: props.map((p) => cs.getPropertyValue(p)) });
+  }
+  return out;
+}
+
+// Troca `color(srgb r g b / a)` e `rgb[a](...)` por "r,g,b,a" em 0-255; o que não for reconhecido fica como veio.
+function normalizarCor(v) {
+  const m = /^(rgba?|color)\(\s*(srgb\s+)?([^)]*)\)$/.exec(v.trim());
+  if (!m) return v.trim();
+  const [cor, alfa] = m[3].split('/');
+  const n = cor.trim().split(/[\s,]+/).filter(Boolean);
+  if (m[1] === 'color' && !m[2]) return v.trim();
+  if (n.length < 3) return v.trim();
+  const escala = m[1] === 'color' ? 255 : 1;
+  const a = alfa !== undefined ? alfa.trim() : (n[3] ?? '1');
+  const al = a.endsWith('%') ? parseFloat(a) / 100 : parseFloat(a);
+  const c = n.slice(0, 3).map((x) => Math.round(parseFloat(x) * escala * 1000) / 1000);
+  return `${c.join(',')},${Math.round(al * 1000) / 1000}`;
+}
+
+// Devolve as diferenças de cor entre as duas listas; lista de tamanho ou ordem diferente é falha própria, nunca comparação desalinhada.
+function compararCores(la, lb) {
+  if (la.length !== lb.length) return [`listas desalinhadas: ${la.length} elementos renderizados em A e ${lb.length} em B`];
+  const dif = [];
+  for (let i = 0; i < la.length; i++) {
+    if (la[i].tag !== lb[i].tag) return [...dif, `listas desalinhadas no elemento ${i}: <${la[i].tag}> (${la[i].caminho}) em A e <${lb[i].tag}> (${lb[i].caminho}) em B`];
+    PROPS.forEach((p, k) => {
+      if (normalizarCor(la[i].v[k]) !== normalizarCor(lb[i].v[k])) dif.push(`${la[i].caminho} ${p}: A=${la[i].v[k]} B=${lb[i].v[k]}`);
+    });
+  }
+  return dif;
 }
 
 let falhas = 0;
@@ -80,14 +126,21 @@ try {
     const rot = `${p} ${lang} ${larg[0]} ${tema[0]}`;
     let linha, ia, ib, diff;
     try {
-      ia = await capturar(A.url + caminho, larg, tema);
-      ib = await capturar(B.url + caminho, larg, tema);
+      const ca = await capturar(A.url + caminho, larg, tema);
+      const cb = await capturar(B.url + caminho, larg, tema);
+      ia = ca.png; ib = cb.png;
+      const difCores = compararCores(ca.cores, cb.cores);
+      if (difCores.length) {
+        console.log(`  cor computada: ${difCores.length} diferença(s); primeiras ${Math.min(10, difCores.length)}:`);
+        difCores.slice(0, 10).forEach((d) => console.log(`    ${d}`));
+      }
+      let n = 0;
       if (ia.width !== ib.width || ia.height !== ib.height) linha = `FALHA ${rot} dimensões ${ia.width}x${ia.height} vs ${ib.width}x${ib.height}`;
       else {
         diff = new PNG({ width: ia.width, height: ia.height });
-        const n = pixelmatch(ia.data, ib.data, diff.data, ia.width, ia.height, { threshold: 0.1, includeAA: false });
-        linha = n === 0 ? `ok ${rot} 0 px` : `FALHA ${rot} ${n} px`;
+        n = pixelmatch(ia.data, ib.data, diff.data, ia.width, ia.height, { threshold: LIMIAR, includeAA: false });
       }
+      if (!linha) linha = n === 0 && !difCores.length ? `ok ${rot} 0 px, cores iguais` : `FALHA ${rot} ${n} px, ${difCores.length} diferença(s) de cor`;
     } catch (e) { linha = `FALHA ${rot} erro: ${e.message.split('\n')[0]}`; }
     console.log(linha);
     if (linha.startsWith('FALHA')) {
