@@ -200,16 +200,17 @@ test('(T7) C6: aviso de dados de exemplo só aparece com amostra true', () => {
 });
 
 test('(T8) C6: números e calendário vêm do github.json', () => {
-  let nivel;
+  let nivel, primeiroDia;
   comFixture('c6-dados', (d) => {
     d.contribuicoes.total = 3001;
     d.calendario.semanas[0].dias[0].contagem = 9;
     nivel = d.calendario.semanas[0].dias[0].nivel;
+    primeiroDia = d.calendario.semanas[0].dias[0].data;
   }, (tmp) => {
     execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'o')], { stdio: 'pipe' });
     const h = readFileSync(join(tmp, 'o/index.html'), 'utf8');
     assert.ok(h.includes('data-v="3001"'));
     const cal = h.match(/id="cal-dados">([^<]*)</)[1];
-    assert.ok(cal.includes(`["2025-11-12",${nivel},9]`), cal.slice(0, 80));
+    assert.ok(cal.includes(`["${primeiroDia}",${nivel},9]`), cal.slice(0, 80));
   });
 });
