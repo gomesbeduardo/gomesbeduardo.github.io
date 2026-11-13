@@ -1,0 +1,18 @@
+/* Transições: crossfade entre páginas e T2 na troca de tema (tema.js). */
+@view-transition{navigation:auto}
+
+/* Entre páginas: crossfade curto da raiz (250 ms, ease-out), sem elementos nomeados.
+   O T2 (troca de tema) usa a mesma raiz e desliga estas animações com html[data-tx]. */
+html:not([data-tx])::view-transition-old(root){animation:vt-fade-out 250ms ease-out both}
+html:not([data-tx])::view-transition-new(root){animation:vt-fade-in 250ms ease-out both}
+@keyframes vt-fade-out{from{opacity:1}to{opacity:0}}
+@keyframes vt-fade-in{from{opacity:0}to{opacity:1}}
+html[data-tx]::view-transition-old(root),html[data-tx]::view-transition-new(root){animation:none;mix-blend-mode:normal}
+
+/* T2: o tema novo desce do topo atrás de uma máscara com borda ondulada (imagem em --tx-mask, posta pelo tema.js). */
+html[data-tx]::view-transition-new(root){-webkit-mask:var(--tx-mask) 0 0/100% 210vh no-repeat;mask:var(--tx-mask) 0 0/100% 210vh no-repeat}
+
+@media (prefers-reduced-motion:reduce){
+  @view-transition{navigation:none}
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+}

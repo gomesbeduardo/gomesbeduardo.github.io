@@ -1,16 +1,12 @@
 # Publica a v1 do portfólio (HTML, CSS e JS estáticos da pasta site/) no GitHub Pages.
 #
-# Dispara em push na main e à mão. Sem build: o conteúdo de site/ vai como está.
-# Quando o site migrar para o Astro (spec 001), o publicar.yml assume e este arquivo sai.
+# Desde a etapa 1 da spec 001 dispara só à mão: quem publica é o publicar.yml (Astro).
+# Fica como reversão (spec 001a R10) até a etapa 3, quando site/ e este arquivo saem.
+# Sem build: o conteúdo de site/ vai como está.
 # Versões das actions fixadas por SHA de commit; a tag vai no comentário.
 name: Publicar v1
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'site/**'
-      - '.github/workflows/pages.yml'
   workflow_dispatch:
 
 permissions:

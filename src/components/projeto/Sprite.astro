@@ -1,0 +1,11 @@
+---
+import { ICONES, LOGOS } from './simbolos';
+interface Props { logos: string[] }
+// Os símbolos de logo só entram quando a capa os usa (a do LMS).
+const { logos } = Astro.props;
+const extra = logos.length ? `\n\n  ${logos.map((l) => LOGOS[l]).join('\n  ')}` : '';
+const sprite = `<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  ${ICONES.join('\n  ')}${extra}
+</svg>`;
+---
+<Fragment set:html={sprite} />

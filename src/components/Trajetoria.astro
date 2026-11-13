@@ -1,0 +1,18 @@
+---
+import { dicionario } from '../i18n';
+import type { Lang } from '../i18n/tipos';
+interface Props { lang: Lang }
+const { home: t } = dicionario(Astro.props.lang);
+const s = t.trajetoria;
+// Chave de cada item, na ordem de s.itens; igual nos dois idiomas.
+const chaves = ['cs50', 'mods', 'amf', 'da-si', 'coderace-2025', 'semana-si', 'ideathon', 'yourmentor', 'jet', 'coderace-2026-org', 'centraleng', 'coderace-2026-campeao', 'asten'];
+---
+<section id="trajetoria"><div class="wrap">
+  <p class="sec-label reveal" aria-hidden="true" set:html={s.label}></p>
+  <h2 class="reveal" data-ancora="trajetoria-titulo" set:html={s.titulo}></h2>
+  <div class="traj"><span class="traj-line" aria-hidden="true"><span class="traj-fill"></span></span>
+  <ol>
+    {s.itens.map((i, n) => <li><span class="node" aria-hidden="true"></span><p class="when" set:html={i.quando}></p><div class="traj-card reveal" data-ancora={`traj-${chaves[n]}`}><h3 set:html={i.titulo}></h3><p class="role" set:html={i.papel}></p>{i.paragrafos.map((p) => <p set:html={p}></p>)}</div></li>)}
+  </ol></div>
+  <p class="sp-mais"><button class="btn" id="sp-curio" type="button">{s.curiosidade}</button></p>
+</div></section>

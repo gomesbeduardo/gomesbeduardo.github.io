@@ -1,0 +1,185 @@
+/* Surpresas: palavras clicáveis, cartão no canto, terminal e carta virada. */
+:root{--term-bg:#1b1712;--term-fg:#f1e9dc;--term-dim:#b0a592;--term-acc:#e4a843}
+:root[data-theme="dark"]{--term-bg:#1b1712}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--term-bg:#1b1712}}
+
+/* palavra clicável: texto com sublinhado pontilhado no acento */
+.sp-cola{white-space:nowrap}
+.sp-word{font:inherit;color:inherit;letter-spacing:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;
+  text-decoration:underline dotted var(--accent);text-decoration-thickness:2px;text-underline-offset:.2em;border-radius:3px;white-space:nowrap}
+.sp-word:hover,.sp-word:focus-visible{text-decoration-style:solid}
+.sp-i{width:.62em;height:.62em;margin-left:.12em;vertical-align:.45em;fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round}
+.btn .sp-i{width:16px;height:16px;margin:0;vertical-align:middle;stroke-width:1.8}
+.sp-mais{margin:var(--s7) 0 0}
+
+/* botão de fechar */
+.sp-x{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:999px;border:0;background:transparent;color:inherit;cursor:pointer;flex:none}
+.sp-x:hover{background:color-mix(in srgb,currentColor 12%,transparent)}
+.sp-x .icon{width:16px;height:16px}
+.sp-cont{margin:10px 0 0;font-size:.82rem;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* peças abertas: uma por vez, cada uma com a sua entrada (transform e opacity; 250 a 600 ms) */
+.sp-pec{color:var(--fg);font-size:.95rem;line-height:1.5;max-width:calc(100vw - 32px)}
+.sp-pec:focus{outline:none}
+.sp-pec:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.sp-pec .sp-txt{margin:0}
+.sp-pec .sp-x{color:var(--muted)}
+.sp-sai{animation:sp-fade .25s ease both reverse!important;pointer-events:none}
+@keyframes sp-fade{from{opacity:0}}
+@keyframes sp-sobe{from{opacity:0;transform:translateY(14px)}}
+.sp-m-sobe{animation:sp-sobe .3s var(--ease) both}
+
+/* c1 terminal (escuro nos dois temas) */
+.sp-term{position:absolute;z-index:180;width:min(440px,calc(100vw - 32px));background:var(--term-bg);color:var(--term-fg);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.sp-term.sp-centro{position:fixed;inset:0;margin:auto;height:fit-content;animation:sp-fade .3s both}
+.sp-term-bar{display:flex;align-items:center;gap:10px;padding:6px 6px 6px 14px;font-size:.8rem;color:var(--term-dim)}
+.sp-term-bar span:nth-child(2){flex:1}
+.sp-dots{display:inline-flex;gap:6px}
+.sp-dots i{width:9px;height:9px;border-radius:50%;background:var(--term-dim);opacity:.6}
+.sp-term .sp-x{color:var(--term-dim)}
+.sp-term .sp-x:focus-visible{outline-color:var(--term-acc)!important}
+.sp-term-body{margin:0;padding:4px 16px 0;font:500 .86rem/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;min-height:10.5em}
+.sp-cmd,.sp-out{color:var(--term-fg)}
+.sp-com{color:var(--term-acc)}
+.sp-term .sp-cont{color:var(--term-dim);padding:0 16px 14px}
+
+/* c2 bloco: o painel se monta com quadrados de 16 px */
+.sp-bl{position:absolute;z-index:180;width:min(340px,calc(100vw - 32px));filter:drop-shadow(0 10px 16px rgb(var(--shadow-rgb) / .22))}
+.sp-bl-g{position:absolute;inset:0;display:grid;overflow:hidden;pointer-events:none}
+.sp-bl-g i{background:var(--raised);outline:1px solid color-mix(in srgb,var(--accent) 14%,transparent);animation:sp-bloco .25s var(--ease) var(--d) both}
+.sp-bl-g i.m{background:color-mix(in srgb,var(--accent) 22%,var(--raised))}
+@keyframes sp-bloco{from{opacity:0;transform:scale(.2)}}
+.sp-bl-c{position:relative;padding:16px 48px 16px 18px;animation:sp-fade .25s ease .32s both}
+.sp-bl .sp-x{position:absolute;top:8px;right:8px}
+
+/* c3 corredor de testes, sob o cartão do leadgate */
+.sp-testes{background:var(--term-bg);color:var(--term-fg);border-radius:14px;box-shadow:var(--shadow);padding:14px 18px 16px;margin-top:calc(-1 * var(--s7) + var(--s4));position:relative;z-index:1}
+.sp-testes .sp-x{color:var(--term-dim)}
+.sp-testes .sp-x:focus-visible{outline-color:var(--term-acc)!important}
+.sp-t-top{display:flex;align-items:center;justify-content:space-between;font:500 .86rem/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--term-dim)}
+.sp-t-dots{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0}
+.sp-t-dots i{width:8px;height:8px;border-radius:2px;background:var(--term-acc);animation:sp-ponto .2s ease var(--d) both}
+@keyframes sp-ponto{from{opacity:.12}}
+.sp-t-num{margin:0 0 10px;font:500 1.1rem/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--term-fg);font-variant-numeric:tabular-nums}
+.sp-t-num b{font-size:1.6rem;color:var(--term-acc)}
+.sp-testes .sp-cont{color:var(--term-dim)}
+.sp-testes .sp-txt{color:var(--term-fg)}
+
+/* c4 faixa de chegada */
+.sp-banner{position:fixed;left:0;right:0;margin:0 auto;bottom:16px;z-index:190;width:min(560px,calc(100vw - 32px));background:var(--raised);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.sp-m-banner{animation:sp-banner .5s var(--ease) both}
+@keyframes sp-banner{from{opacity:0;transform:translateY(120%)}}
+.sp-xadrez{height:12px;background:repeating-conic-gradient(var(--fg) 0 25%,var(--raised) 0 50%) 0 0/12px 12px}
+.sp-banner-c{position:relative;padding:14px 52px 16px 18px}
+.sp-banner .sp-x{position:absolute;top:8px;right:8px}
+@media (max-width:640px){.sp-banner{bottom:64px}}
+
+/* c5 balão com seta */
+.sp-pop{position:absolute;z-index:180;width:min(320px,calc(100vw - 32px));background:var(--raised);border-radius:12px;box-shadow:var(--shadow);padding:14px 44px 14px 16px;transform-origin:var(--ax) 0;animation:sp-pop .25s var(--ease) both}
+.sp-pop.sp-cima{transform-origin:var(--ax) 100%}
+.sp-pop::before{content:"";position:absolute;left:calc(var(--ax) - 8px);top:-8px;border:8px solid transparent;border-top:0;border-bottom-color:var(--raised)}
+.sp-pop.sp-cima::before{top:auto;bottom:-8px;border:8px solid transparent;border-bottom:0;border-top-color:var(--raised)}
+.sp-pop .sp-x{position:absolute;top:6px;right:6px}
+@keyframes sp-pop{from{opacity:0;transform:scale(.9)}}
+
+/* c6 REPL de Python */
+.sp-repl{position:absolute;z-index:180;width:min(420px,calc(100vw - 32px));background:var(--raised);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--line-strong,var(--line))}
+.sp-repl-bar{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 4px 14px;background:var(--bg-2);font:500 .8rem/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--muted)}
+.sp-repl-body{margin:0;padding:12px 16px 4px;font:500 .84rem/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;min-height:5.6em;color:var(--fg)}
+.sp-repl .sp-cmd{color:var(--accent)}
+.sp-repl-t{padding:8px 16px 14px}
+
+/* c7 gaveta lateral (abaixo do cabeçalho) */
+.sp-gaveta{position:fixed;top:72px;right:0;max-height:calc(100vh - 72px);z-index:185;width:min(380px,calc(100vw - 24px));background:var(--raised);border-radius:16px 0 0 0;box-shadow:var(--shadow);padding:20px 56px 20px 22px;overflow:auto}
+.sp-m-gaveta{animation:sp-gaveta .45s var(--ease) both}
+@keyframes sp-gaveta{from{opacity:0;transform:translateX(100%)}}
+.sp-g-h{margin:0 0 10px;font-family:var(--f-display);font-size:1.4rem;line-height:1.2}
+.sp-gaveta .sp-x{position:absolute;top:10px;right:10px}
+
+/* c8 acordeão (empurra o conteúdo; é a única apresentação que anima a altura) */
+.sp-acc{grid-column:1/-1;display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s var(--ease)}
+.sp-acc.abre{grid-template-rows:1fr}
+.sp-acc-in{overflow:hidden;min-height:0}
+.sp-acc-c{position:relative;margin:var(--s3) 0 0;padding:12px 48px 12px 16px;border-left:3px solid var(--accent);background:var(--raised);border-radius:0 12px 12px 0}
+.sp-acc .sp-x{position:absolute;top:6px;right:6px}
+
+/* c9 folha de documento */
+.sp-folha{position:fixed;left:0;right:0;margin:0 auto;bottom:0;z-index:190;width:min(640px,calc(100vw - 32px));max-height:min(70vh,520px);overflow:auto;background:var(--raised);border-radius:12px 12px 0 0;box-shadow:var(--shadow);border-top:3px solid var(--accent)}
+.sp-m-folha{animation:sp-folha .5s var(--ease) both}
+@keyframes sp-folha{from{opacity:0;transform:translateY(100%)}}
+.sp-folha-bar{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 4px 18px;background:var(--bg-2);font:500 .8rem/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--muted);position:sticky;top:0}
+.sp-folha-c{padding:18px 22px 22px}
+.sp-folha-c h3{margin:0 0 14px;font-family:var(--f-mono);font-size:1rem;line-height:28px}
+.sp-folha .sp-txt{line-height:28px}
+@media (max-width:640px){.sp-folha{bottom:0}}
+.foot-spec{margin:20px 0 0;color:var(--muted)}
+.foot-spec + small{margin-top:8px}
+
+/* 3. carta virada */
+[data-flip],.traj-card{transform-style:flat}
+.virado:not(.photo) > :not(.sp-verso){display:none!important}
+.sp-verso .sp-cont{margin-top:10px}
+.sp-verso .sp-txt{margin:0;font-size:1.05rem;color:var(--fg)}
+.sp-volta{margin-top:14px;font:inherit;font-size:.92rem;font-weight:600;color:var(--accent);background:none;border:0;padding:6px 0;cursor:pointer;
+  text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.22em}
+.sp-volta:hover{text-decoration-thickness:2px}
+
+/* foto: o disco é um botão; virado, vira cartão ao lado do nome */
+.photo-btn{all:unset;box-sizing:border-box;display:grid;place-items:center;width:100%;height:100%;border-radius:50%;cursor:pointer}
+.photo-btn:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+/* foto do topo: carta de duas faces. O .photo-card gira (perspectiva na própria transformação, então a caixa não muda de tamanho);
+   o bloco ocre mora no .photo e fica parado. */
+.photo-card{transform-style:preserve-3d;transform:perspective(1200px) rotateY(0deg);transition:transform .5s var(--ease)}
+.photo.virado .photo-card{transform:perspective(1200px) rotateY(180deg)}
+.photo .photo-btn{box-sizing:border-box;border:1px solid var(--line-strong);border-radius:var(--r-md);overflow:hidden;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.photo .photo-btn img{border:0;border-radius:0}
+.photo .sp-verso{position:absolute;inset:0;box-sizing:border-box;display:flex;flex-direction:column;gap:var(--s2);padding:var(--s4);
+  background:var(--raised);border:1px solid var(--line-strong);border-radius:var(--r-md);color:var(--fg);container-type:inline-size;
+  transform:rotateY(180deg);-webkit-backface-visibility:hidden;backface-visibility:hidden;font-size:.875rem;line-height:1.4}
+.photo .sp-verso .sec-label{margin:0}
+.photo .sp-verso .sp-txt{margin:0;font-family:var(--f-display);font-weight:700;letter-spacing:-.01em;line-height:1.12;font-size:clamp(1rem,5.6cqi,1.4rem);text-wrap:balance}
+.sp-ficha{display:grid;gap:var(--s2);margin:0}
+.sp-ficha div{display:grid;gap:2px}
+.sp-ficha dt{font-family:var(--f-mono);font-weight:500;font-size:var(--t-label);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);line-height:1.3}
+.sp-ficha dd{margin:0;font-size:clamp(.8125rem,4cqi,.875rem);line-height:1.35;color:var(--fg)}
+.photo .sp-verso .sp-rodape{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:var(--s3);flex-wrap:wrap}
+.photo .sp-verso .sp-cont,.photo .sp-verso .sp-volta{margin:0}
+.photo .sp-verso .sp-volta{padding:2px 0}
+@media (min-width:861px) and (max-width:1100px){
+  /* computador estreito: a moldura é pequena (cerca de 240x300), então o verso fica mais compacto */
+  .photo .sp-verso{padding:var(--s2) var(--s3);gap:var(--s1)}
+  .photo .sp-verso .sp-txt{font-size:var(--t-small);line-height:1.1}
+  .sp-ficha{gap:var(--s1)}
+  .sp-ficha div{gap:0}
+  .sp-ficha dt{line-height:1.1}
+  .sp-ficha dd{line-height:1.2}
+}
+@media (max-width:860px){
+  /* celular: o card vira no tamanho da foto (160x200); o verso mostra só a frase, a contagem e o botão */
+  .photo .sp-verso{padding:var(--s2);gap:var(--s1)}
+  .photo .sp-verso .sec-label,.photo .sp-verso .sp-ficha{display:none}
+  .photo .sp-verso .sp-txt{font-size:clamp(.95rem,10cqi,1.1rem)}
+  .photo .sp-verso .sp-rodape{flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:0}
+  .photo .sp-verso .sp-cont{font-size:var(--t-label);line-height:1.3}
+}
+
+.sp-mais.virado{background:var(--raised);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px;max-width:360px}
+@media (prefers-reduced-motion:reduce){
+  /* tudo só aparece em fade, sem movimento */
+  .sp-pec,.sp-pec *{animation:none!important;transition:none!important}
+  .sp-pec{animation:sp-fade .25s ease both!important}
+  .sp-bl-g{display:none}
+  .sp-bl{background:var(--raised)}
+  .sp-acc{grid-template-rows:1fr}
+  .sp-verso{animation:sp-fade .25s ease both}
+  /* foto: sem giro nem inclinação; as faces trocam por esmaecer de 150 ms */
+  .photo-card{transform:none!important;transition:none}
+  .photo .sp-verso{transform:none;animation:none;opacity:0;pointer-events:none;transition:opacity .15s linear}
+  .photo-card{box-sizing:border-box;border:1px solid var(--line-strong);border-radius:var(--r-md)}
+  .photo .photo-btn,.photo .sp-verso{border:0}
+  .photo .photo-btn{transition:opacity .15s linear}
+  /* o zerar global de style.css (*{transition-duration:0s!important}) não vale para o esmaecer das duas faces: mesma importância, seletor mais específico */
+  .photo .sp-verso,.photo .photo-btn{transition-duration:.15s!important}
+  .photo.virado .sp-verso{opacity:1;pointer-events:auto}
+  .photo.virado .photo-btn{opacity:0;pointer-events:none}
+}

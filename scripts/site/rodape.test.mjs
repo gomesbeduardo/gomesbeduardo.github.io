@@ -1,4 +1,4 @@
-// Spec 006: e-mail que copia com aviso e rodapé completo (testes estáticos).
+// Spec 006: e-mail que copia com aviso e rodapé completo (testes estáticos: HTML lê dist/, JS lê public/; as regras de CSS são medidas em contato.e2e.mjs).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -7,11 +7,10 @@ import { fileURLToPath } from 'node:url';
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const ler = (rel) => readFileSync(join(raiz, rel), 'utf8');
-const css = ler('site/style.css');
-const js = ler('site/main.js');
-const HOMES = { pt: 'site/index.html', en: 'site/en/index.html' };
+const js = ler('public/main.js');
+const HOMES = { pt: 'dist/index.html', en: 'dist/en/index.html' };
 const PROJETOS = ['lms', 'infohub', 'leadgate'].flatMap((p) => [
-  ['pt', `site/projeto-${p}.html`], ['en', `site/en/projeto-${p}.html`],
+  ['pt', `dist/projeto-${p}.html`], ['en', `dist/en/projeto-${p}.html`],
 ]);
 const T = {
   pt: { mail: 'E-mail', aria: 'Copiar e-mail', nav: 'Navegação', contato: 'Contato', topo: 'Voltar ao topo', sobre: 'Sobre este site', cod: 'Código do site', lugar: 'Santa Maria, RS',
@@ -97,47 +96,6 @@ test('JS: o sucesso só é mostrado depois da cópia, nunca antes do writeText',
 test('aviso: role=status e aria-live=polite', () => {
   assert.match(js, /setAttribute\('role', 'status'\)/);
   assert.match(js, /setAttribute\('aria-live', 'polite'\)/);
-});
-
-test('CSS do aviso: fixo embaixo, tokens, safe-area, 44px no fechar', () => {
-  assert.match(css, /\.aviso\{[^}]*position:\s*fixed/);
-  assert.match(css, /\.aviso\{[^}]*env\(safe-area-inset-bottom[,)]/);
-  assert.match(css, /\.aviso-caixa\{[^}]*background:\s*var\(--raised\)/);
-  assert.match(css, /\.aviso-caixa\{[^}]*1px solid var\(--line-strong\)/);
-  assert.match(css, /\.aviso-caixa\{[^}]*box-shadow:\s*var\(--shadow\)/);
-  assert.match(css, /\.aviso-end\{[^}]*font-family:\s*var\(--f-mono\)[^}]*font-size:\s*var\(--t-data\)/);
-  assert.match(css, /\.aviso-ok\{[^}]*color:\s*var\(--accent\)/);
-  assert.match(css, /translateY\(16px\)/); assert.match(css, /scale\(\.96\)/);
-  assert.match(css, /stroke-dashoffset/);
-  assert.match(css, /\.aviso-x\{[^}]*width:\s*44px/);
-});
-
-test('CSS do aviso: movimento reduzido só com opacidade', () => {
-  const i = css.indexOf('@media (prefers-reduced-motion:reduce){.aviso');
-  assert.ok(i >= 0, 'regra de movimento reduzido do aviso ausente');
-  const b = css.slice(i, css.indexOf('}}', i) + 2);
-  assert.doesNotMatch(b, /translate|scale/);
-  assert.match(b, /transform:\s*none/);
-});
-
-test('CSS do rodapé: grade de 12 colunas, colunas 8-9 e 10-12, empilha até 860px', () => {
-  assert.match(css, /\.foot-grid\{[^}]*repeat\(12/);
-  assert.match(css, /\.foot-quote\{[^}]*grid-column:\s*1\s*\/\s*span 6/);
-  assert.match(css, /\.foot-nav\{[^}]*grid-column:\s*8\s*\/\s*span 2/);
-  assert.match(css, /\.foot-contato\{[^}]*grid-column:\s*10\s*\/\s*span 3/);
-  assert.match(css, /\.foot-fim\{[^}]*border-top:\s*1px solid var\(--line\)/);
-  assert.match(css, /\.foot-t\{[^}]*var\(--f-mono\)/);
-  assert.match(css, /@media \(max-width:860px\)\{[^@]*\.foot-grid/);
-  assert.match(css, /\.foot-col a[^{]*\{[^}]*var\(--t-small\)/);
-});
-
-test('CSS: alvos de 44px do rodapé e do contato no bloco de toque', () => {
-  const i = css.indexOf('@media (pointer:coarse),(max-width:560px){');
-  const b = css.slice(i, css.indexOf('\n}', i));
-  assert.match(b, /\.links button/);
-  assert.match(b, /\.foot-col a/);
-  assert.match(b, /\.foot-col button/);
-  assert.match(b, /\.foot-fim a/);
 });
 
 test('JS: voltar ao topo usa a rolagem suave e leva o foco ao início; ano pelo JS', () => {

@@ -1,0 +1,404 @@
+import type { Dicionario } from './tipos';
+
+export const en: Dicionario = {
+  home: {
+    base: "../",
+    navLabel: "Main",
+    links: [
+      {"href":"#sobre","label":"About"},
+      {"href":"#trajetoria","label":"Journey"},
+      {"href":"#experiencia","label":"Experience"},
+      {"href":"#projetos","label":"Projects"},
+      {"href":"#numeros","label":"Numbers"},
+      {"href":"#contato","label":"Contact"},
+    ],
+    idiomas: [
+      {"href":"../","current":false,"lang":"pt-BR","code":"PT","aria":"Português"},
+      {"href":"./","current":true,"lang":"en","code":"EN"},
+    ],
+    temaLabel: "Toggle theme",
+    menuLabel: "Menu",
+    hero: {
+      fotoAria: "Photo of Eduardo Gomes. Five clicks in a row open a curiosity",
+      fotoSrc: "img/eduardo-gomes.jpg",
+      srTitulo: "Developer. Information Systems at AMF, Innovation at Asten AVMB, TypeScript, React and Node.js.",
+      fantasmas: [
+        "Developer. Information Systems at AMF.",
+        "Developer. Innovation at Asten AVMB.",
+        "Developer. TypeScript, React and Node.js.",
+        "Developer. Sytsems Information at AMF.",
+        "Developer. Systems Infromation at AMF.",
+        "Developer. Innovtaion at Asten AVMB.",
+        "Developer. Innovation at Astne AVMB.",
+        "Developer. TypeScirpt, React and Node.js.",
+        "Developer. TypeScript, Reavt and Node.js.",
+      ],
+      digitando: "Developer. Information Systems at AMF.",
+      verProjetos: "View projects",
+      curriculoHref: "curriculo/curriculo-eduardo-gomes-en.pdf",
+      curriculoTexto: "Download résumé",
+      fatos: [
+        "Internship at Asten AVMB",
+        "Information Systems at AMF",
+        "Santa Maria, Brazil",
+      ],
+    },
+    sobre: {
+      label: "01 / ABOUT",
+      titulo: "About",
+      lit: "I started programming in 2018 with CS50, Harvard's online introduction to computer science, writing a hello, world in C. During the pandemic I started opening the code of Minecraft mods to change it and see the result in the game. In 2024 I started Information Systems at AMF, with graduation expected in Dec 2028.",
+      paragrafos: [
+        "I develop at CentralEng, an HVAC engineering company, and I keep serving the company on demand. I built the technical training LMS on my own, and it is now in validation with employees. I lead the PMOC maintenance management system and I integrate the internal systems. Since October 2026 I have been an intern on the Innovation team at Asten AVMB, where the ticket dashboard I built is used in management meetings.",
+        "Outside code, I like motorsport in general, and Formula 1 is the one I follow most. I want to keep growing and see how far curiosity takes me.",
+      ],
+      passosAria: "How I work",
+      passos: [
+        {"titulo":"Spec","texto":"Short, with acceptance criteria, before the code."},
+        {"titulo":"Test","texto":"TDD: the test fails first and passes after."},
+        {"titulo":"Reviewed PR","texto":"Every change goes through a PR, with review."},
+        {"titulo":"CI","texto":"Tests, types and build run on every PR. For AI features, evaluation on a held-out set, run once."},
+      ],
+    },
+    trajetoria: {
+      label: "02 / JOURNEY",
+      titulo: "Journey",
+      itens: [
+        {"quando":"2018","titulo":"<span class=\"sp\" data-c=\"c1\" data-modo=\"terminal\">CS50</span>","papel":"Harvard's introduction to computer science, online","paragrafos":["I started CS50, Harvard's introduction to computer science, online. The first exercise is a hello, world in C, and that is where I became interested in programming."]},
+        {"quando":"2020","titulo":"Game mods","papel":"During the pandemic","paragrafos":["During the pandemic I started tinkering with game mods, mostly <span class=\"sp-cola\"><span class=\"sp\" data-c=\"c2\" data-modo=\"bloco\">Minecraft</span>.</span> It was the first code by someone else that I opened to change it and see the result in the game."]},
+        {"quando":"Feb 2024","titulo":"AMF","papel":"B.Sc. in Information Systems","paragrafos":["I started Information Systems at AMF, with graduation expected in Dec 2028. At university I built InfoHub InovAMF for the Systems Architecture course.","From Apr 2024 to Oct 2025 I founded ToPark, a startup for booking parking spaces in advance, selected for the first cohort of the InovAMF incubator. I built the Python back end, the business model and the sign-up of partner parking lots."]},
+        {"quando":"Mar 2025 to present","titulo":"SI Student Association","papel":"Volunteering, vice-president","paragrafos":["Vice-president of the Information Systems Student Association. On the association since Mar 2025, first as secretary."]},
+        {"quando":"2025","titulo":"CodeRace 2025","papel":"Volunteering, organizing committee","paragrafos":["I was on the organizing committee of CodeRace 2025, for 28 hours."]},
+        {"quando":"2025","titulo":"IS Academic Week","papel":"Volunteering, organizing committee","paragrafos":["I was on the organizing committee of the Information Systems Academic Week, for 40 hours."]},
+        {"quando":"Oct 2025 and 2026","titulo":"AMF Information Systems Ideathon","papel":"1st place in 2025, 2nd place in 2026","paragrafos":["1st place at the 1st Information Systems Ideathon at AMF, with team Mentor.Me, in the first edition of the event.","In 2026, 2nd place at the AMF Information Systems Ideathon."]},
+        {"quando":"Oct 2025 to present","titulo":"YourMentor","papel":"Co-founder","paragrafos":["I co-founded Mentor.Me, winner of the 1st AMF IS Ideathon, which became YourMentor in Jun 2026, with a new name and a new focus. I built the back end in Python, FastAPI and PostgreSQL, with the architecture, the data model and the monetization."]},
+        {"quando":"Feb 2026 to Oct 2026","titulo":"JET","papel":"Scholarship teacher","paragrafos":["Scholarship teacher at JET, from February to October. I taught Python, HTML, CSS, Arduino and responsible use of AI to more than 100 students from 4 public schools. After the first semester, 2 more schools joined, on the coordinators' recommendation.","I also ran an 80-minute workshop on AI for AMF teachers."]},
+        {"quando":"2026","titulo":"CodeRace 2026","papel":"Volunteering, financial assistant","paragrafos":["Financial assistant on the CodeRace 2026 organizing team. I worked only on the finances, during the organization and the event, with no role in judging the teams."]},
+        {"quando":"May 2026 to present","titulo":"CentralEng","papel":"Full-Stack Developer and IT Analyst","paragrafos":["Full-stack developer and IT analyst at an HVAC engineering company, from May 2026 to present, on demand. I joined as an administrative assistant and, after automating routines of the department, was promoted to developer within 7 months. I built an LMS on my own, from architecture to tests, with a PRD of 20 requirements, ADRs and a 36-item backlog, now in validation with employees. I also gathered requirements for and modeled the management system for <span class=\"sp\" data-c=\"c7\" data-modo=\"gaveta\">PMOC</span> and set up CI with lint and build on every push."]},
+        {"quando":"Jun 2026","titulo":"CodeRace 2026","papel":"Champion with AgroPlanner","paragrafos":["Champion of AMF's CodeRace 2026 with AgroPlanner."]},
+        {"quando":"Oct 2026 to present","titulo":"Asten AVMB","papel":"Development intern, Innovation team","paragrafos":["Development internship on the Innovation team."]},
+      ],
+      curiosidade: "Tell me a curiosity",
+    },
+    experiencia: {
+      label: "03 / EXPERIENCE",
+      titulo: "Experience and education",
+      itens: [
+        {"quando":"present","titulo":"CentralEng","papel":"Full-Stack Developer and IT Analyst","texto":"LMS built on my own, from architecture to tests, in validation with employees. Requirements and modeling for PMOC. CI with lint and build on every push. From May 2026 to present, on demand."},
+        {"quando":"present","titulo":"Asten AVMB","papel":"Development intern, Innovation team","texto":"Dashboard with indicators by status, overdue SLA and tickets open for 60 days or more, shown on a TV. Development by specs with AI agents and human approval before the merge, and a PRD with more than 100 decisions."},
+        {"quando":"in progress","titulo":"AMF","papel":"Information Systems"},
+        {"quando":"since Oct 2025","titulo":"YourMentor","papel":"Co-founder","texto":"I co-founded Mentor.Me, winner of the 1st AMF IS Ideathon, which became YourMentor in Jun 2026, with a new name and a new focus. Back end in Python, FastAPI and PostgreSQL; architecture, data model and monetization."},
+        {"quando":"Oct 2025","titulo":"1st AMF IS <span class=\"sp\" data-c=\"c5\" data-modo=\"popover\">Ideathon</span>","papel":"1st place, team Mentor.Me"},
+        {"quando":"2026","titulo":"AMF IS Ideathon","papel":"2nd place"},
+        {"quando":"2026","titulo":"<span class=\"sp\" data-c=\"c4\" data-modo=\"banner\">CodeRace</span> 2026","papel":"Champion"},
+        {"quando":"until Oct 2026","titulo":"Project <span class=\"sp\" data-c=\"c8\" data-modo=\"acordeao\">JET</span>","papel":"Scholarship teacher","texto":"Python, HTML, CSS, Arduino and responsible use of AI for more than 100 students from 4 public schools; an 80-minute workshop on AI for AMF teachers."},
+        {"quando":"since Mar 2025","titulo":"Volunteering","papel":"SI Student Association and CodeRace","texto":"Vice-president of the IS Student Association; financial assistant on the CodeRace 2026 organizing team; organizing committee of CodeRace 2025 (28&nbsp;h) and of the IS Academic Week (40&nbsp;h)."},
+      ],
+    },
+    stack: {
+      label: "04 / STACK",
+      titulo: "Stack",
+      linhasAria: "Technologies, AI tools and software I use",
+      linhas: [
+        {
+          aria: "Technologies and languages",
+          chips: ["TypeScript", "React", "Next.js", "Node.js", "PostgreSQL", "Prisma", "Zod", "Docker", "Vitest", "Playwright", "n8n", "Astro", "Tailwind CSS", "Python", "GSAP"],
+          extras: ["FastAPI", "Vite", "shadcn/ui", "Recharts", "SheetJS"],
+        },
+        {
+          aria: "AI tools and software",
+          chips: ["Git", "GitHub", "GitHub Actions", "Vercel", "Linux", "Claude and Claude Code", "ChatGPT", "Gemini", "Cursor", "GitHub Copilot", "Supabase", "Notion", "Figma", "Google Workspace"],
+          extras: ["Vercel Functions", "Neon", "Portainer", "GitLab", "Codex"],
+        },
+      ],
+      cabecalho: ["Technology", "Where I used it", "How"],
+      tabelaAria: "Main stack: where I used it and how",
+      tabela: [
+        {
+          tech: "TypeScript",
+          onde: "leadgate, LMS, InfoHub, Asten dashboard",
+          como: "Language of all four projects, on the front end and the back end.",
+          tag: "daily",
+        },
+        {
+          tech: "React",
+          onde: "Asten dashboard (React with Vite)",
+          como: "Indicator dashboards at Asten.",
+          tag: "in production",
+        },
+        { tech: "Next.js", onde: "LMS, InfoHub", como: "Course and progress screens in the LMS.", tag: "project" },
+        {
+          tech: "Node.js",
+          onde: "leadgate",
+          como: "Service that talks to the customer and moves on only when the model's answer passes validation.",
+          tag: "project",
+        },
+        {
+          tech: "PostgreSQL and Prisma",
+          onde: "Asten dashboard",
+          como: "Versioned monthly loads at Asten.",
+          tag: "in production",
+        },
+        {
+          tech: "PostgreSQL and Prisma",
+          onde: "LMS, InfoHub",
+          como: "Progress and assessments per employee in the LMS.",
+          tag: "project",
+        },
+        {
+          tech: "Zod",
+          onde: "leadgate",
+          como: "Checks each model answer, together with fixed rules, before sending the JSON to sales.",
+          tag: "project",
+        },
+        {
+          tech: "Vitest and Playwright",
+          onde: "leadgate, Asten dashboard",
+          como: "About 570 Vitest tests in leadgate; unit and end-to-end tests with Vitest and Playwright at Asten.",
+          tag: "daily",
+        },
+        {
+          tech: "Docker",
+          onde: "leadgate, LMS",
+          como: "Same environment on the machine and on the server.",
+          tag: "project",
+        },
+        { tech: "GitHub Actions", onde: "leadgate", como: "Tests, type checks and build on every PR.", tag: "daily" },
+        {
+          tech: "n8n",
+          onde: "leadgate",
+          como: "Orchestrates the flow: receives the message by webhook and calls the Node service that prepares the prompt and validates the answer.",
+          tag: "project",
+        },
+        {
+          tech: "Claude",
+          onde: "leadgate",
+          como: "The model that talks to the customer; the code checks each answer and asks for a new generation up to 2 times when it fails.",
+          tag: "project",
+        },
+        {
+          tech: "Python",
+          onde: "RPA integration, YourMentor",
+          como: "RPA integration: receives JSON data from an external system and sends WhatsApp and email notifications, with validation scripts in Python (RestrictedPython, sandboxed). FastAPI on the YourMentor back end.",
+          tag: "project",
+        },
+      ],
+    },
+    projetos: {
+      label: "05 / PROJECTS",
+      titulo: "Projects",
+      cards: [
+        {
+          alt: "Screenshot of the leadgate chat",
+          titulo: "leadgate",
+          paragrafos: ["AI assistant that chats with the lead and hands sales a JSON validated by deterministic rules.", "The model proposes and the code decides: service, segment, city and urgency go through closed rules before the lead goes on to the sales team."],
+          figuras: [
+            { valor: "<span class=\"sp\" data-c=\"c3\" data-modo=\"testes\">570</span>", rotulo: "tests" },
+            { valor: "6 of 6", rotulo: "on the held-out set" },
+          ],
+          tags: ["TypeScript", "Node.js", "n8n", "Zod"],
+        },
+        {
+          alt: "Screenshot of the InfoHub InovAMF home page",
+          titulo: "InfoHub InovAMF",
+          paragrafos: ["Tracking the entrepreneur's journey from AMF's InfoHub to the InovAMF innovation center."],
+          figuras: [
+            { valor: "6", rotulo: "journey stages" },
+            { valor: "3", rotulo: "dashboards by role" },
+          ],
+          tags: ["Next.js", "TypeScript", "Prisma", "PostgreSQL"],
+        },
+        {
+          capaAria: "LMS cover: courses and progress per employee. Next.js, TypeScript, Prisma, PostgreSQL, Docker",
+          capaSub: "Courses and progress per employee",
+          titulo: "Technical training LMS",
+          paragrafos: ["Course platform with progress per employee and assessments. The private version is in validation with employees at CentralEng."],
+          figuras: [
+            { valor: "in validation", rotulo: "with employees" },
+          ],
+          tags: ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "Docker"],
+        },
+      ],
+    },
+    numeros: {
+      label: "06 / NUMBERS",
+      titulo: "GitHub numbers",
+      aviso: "Sample data: real numbers arrive with spec 002.",
+      coleta: "GitHub data from {data}",
+      janela: "window from {de} to {ate}",
+      contribuicoes: "contributions in 12 months, including {restritas} in private repositories",
+      repos: "public repositories",
+      linguagens: "Languages by code volume",
+      calTitulo: "Contributions per day, {de} to {ate}",
+      calAria: "Contributions per day, including private ones, {total} in total",
+    },
+    contato: {
+      label: "07 / CONTACT",
+      titulo: "Contact",
+      local: "Santa Maria, Brazil",
+      emailAria: "Copy email",
+      email: "Email",
+      curriculo: "Download résumé",
+      curriculoArquivo: "curriculo-eduardo-gomes-en.pdf",
+    },
+    rodape: {
+      citacao: "In the face of ambiguity, refuse the temptation to guess.",
+      autorCitacao: "Tim Peters, The <span class=\"sp\" data-c=\"c6\" data-modo=\"repl\">Zen of Python</span>",
+      claudeBtn: "Made with Claude Code",
+      spec: "Built from a <span class=\"sp-cola\"><span class=\"sp\" data-c=\"c9\" data-modo=\"folha\">spec</span>.</span>",
+      navAria: "Footer navigation",
+      navTitulo: "Navigation",
+      sobreTitulo: "About this site",
+      sobreTexto: "Written in HTML, CSS and JavaScript, no framework, with GSAP and Lenis. Funnel Display, Funnel Sans and Reddit Mono fonts. Published on GitHub Pages.",
+      codigo: "Site source",
+      autor: "Eduardo Bergoli Gomes · Santa Maria, Brazil",
+      topo: "Back to top ↑",
+    },
+    modal: {
+      fechar: "Close",
+      titulo: "How this site was built",
+      intro: "I decided what the site shows and approved every change. Claude Code, from Anthropic, wrote most of the code, specs and tests, inside a workflow I built for working with AI agents. The specs, PRs and reviews are public in the repository.",
+      secoes: [
+        {
+          titulo: "Spec before code (SDD)",
+          texto: "In spec-driven development, the spec is the contract. Before any line of code, a short spec fixes the literal request, the problem, the acceptance criteria in Given/When/Then and what stays out. The implementing agent works against that contract, and the reviewer checks the delivery against it. If the spec changes along the way, I approve it again. For spec 004 of this site, I answered 18 questions, one decision at a time, before the first file changed.",
+        },
+        {
+          titulo: "Test before implementation (TDD)",
+          texto: "In TDD, the test comes first and has to fail for the right reason. Only then does the code that makes it pass come in. With agents, this solves a specific problem: a model can write a test that passes without proving anything. Seeing the test fail before the fix shows that it measures the requested behavior. An example from this site: the header cut off the theme button at the top of the page because two CSS rules used the same class. The test that prevents this collision failed before the fix and passed after it.",
+        },
+        {
+          titulo: "One agent, one role",
+          texto: "Each agent does one thing. A main session coordinates and decides. Smaller agents read the code, write code with TDD or look up external documentation. Whoever writes the code does not review their own work. The most capable and most expensive model comes in only for business rules, calculations, data or sensitive areas.",
+        },
+        {
+          titulo: "Review and approval",
+          texto: "Each delivery goes through at most two agent reviews. Each finding arrives with the failure scenario and the proof in the code. A critical, high or medium finding is fixed with a new test. The merge into the main branch waits for my approval.",
+        },
+        {
+          titulo: "Guardrails",
+          texto: "Claude Code hooks block what an agent must not do alone: a direct push to the main branch, a PR without the sections and the review verdict, a merge without my approval, and a local server without a time limit. When a guardrail denies something, the agent adjusts the request and follows the rule. On this site, the guardrail denied the push to the main branch, and I published it myself.",
+        },
+      ],
+      perfil: {
+        titulo: "My AI usage profile",
+        texto: "Claude analyzed my setup and the history of this repository. This is its reading:",
+        itens: ["Eduardo uses AI as a team with roles and written rules. The rules live in instruction files and skills, and apply to every session.", "He keeps product and business-rule decisions for himself. When information is missing, the agent asks with a concrete example and a recommendation.", "He measures cost. A skill compares each week's token spend with a baseline, and each session has a context ceiling before the work is handed off.", "He reviews the text. Everything someone will read goes through a check for AI writing patterns, such as catchphrases and em dashes.", "The method costs time: a behavior change goes through spec, test and review before the merge. Text fixes and small adjustments follow only acceptance criteria."],
+      },
+      link: "See the specs and PRs on GitHub",
+    },
+  },
+  projetos: {
+    "base": "../",
+    "pular": "Skip to content",
+    "voltar": "Back",
+    "voltarProjetos": "Back to projects",
+    "tema": "Toggle theme",
+    "rodape": "Eduardo Bergoli Gomes · Santa Maria, Brazil",
+    "topo": "Back to top ↑",
+    "paginas": {
+      "leadgate": {
+        "titulo": "leadgate",
+        "lede": "AI assistant that triages leads in the chat of an HVAC company and hands sales a validated JSON. Prototype in testing, with CentralEng as a fictional pilot.",
+        "capaAlt": "Screenshot of the leadgate chat",
+        "figuras": [
+          {
+            "valor": "570",
+            "rotulo": "tests"
+          },
+          {
+            "valor": "6 of 6",
+            "rotulo": "on the held-out set"
+          },
+          {
+            "valor": "9 of 9",
+            "rotulo": "on regression"
+          }
+        ],
+        "secoes": [
+          {
+            "titulo": "Problem",
+            "paragrafos": [
+              "An air-conditioning company receives requests through its website with no triage. The office that needs maintenance, the apartment the company does not serve, the request from another city and the spam all arrive in the same place. The sales team spends time sorting out what is worth a call.",
+              "A form with fixed fields does not catch a misspelled city or notice an emergency. The business rules, however, are closed: which services, which segments, which cities."
+            ]
+          },
+          {
+            "titulo": "What I did",
+            "paragrafos": [
+              "A chat that collects the minimum (service, segment, city and, later, name and phone) and decides whether the lead is qualified. The model proposes and the code decides: the output is a JSON checked by deterministic rules, with the next action (ask, send to sales, close or hand over to a person).",
+              "Layered guards stop the agent from promising a price or a deadline and from denying that it is an AI. Company, cities and texts live in configuration, outside the code. The validation runs in a Node service called by n8n over HTTP."
+            ]
+          },
+          {
+            "titulo": "Results",
+            "paragrafos": [
+              "On the held-out set, 6 cases run only once, the service, city, urgency, qualification and next-action fields were right 6 of 6; segment was right 5 of 6. On the regression set, 9 cases of past failures, every field was right 9 of 9. Regeneration is rare: an average of 1.13 attempts per turn on the held-out set."
+            ],
+            "codigo": "Code and evaluation on GitHub"
+          }
+        ]
+      },
+      "infohub": {
+        "titulo": "InfoHub InovAMF",
+        "lede": "Tracking the entrepreneur's journey from AMF's InfoHub to the InovAMF innovation center.",
+        "capaAlt": "Screenshot of the InfoHub InovAMF home page",
+        "figuras": [
+          {
+            "valor": "6",
+            "rotulo": "journey stages"
+          },
+          {
+            "valor": "3",
+            "rotulo": "dashboards by role"
+          }
+        ],
+        "secoes": [
+          {
+            "titulo": "Context",
+            "paragrafos": [
+              "The entrepreneur's journey from InfoHub (AMF) to InovAMF. Systems Architecture course project, built as a pair."
+            ]
+          },
+          {
+            "titulo": "What I did",
+            "paragrafos": [
+              "I planned and carried out all of the development; the architecture was designed together with my pair."
+            ],
+            "codigo": "Code on GitHub"
+          },
+          {
+            "titulo": "Stack"
+          },
+          {
+            "titulo": "Gallery",
+            "legenda": "InfoHub InovAMF home page"
+          }
+        ]
+      },
+      "lms": {
+        "titulo": "Technical training LMS",
+        "lede": "Course platform with progress per employee and assessments. The private version is in validation with employees at CentralEng.",
+        "capaAria": "LMS cover: courses and progress per employee. Next.js, TypeScript, Prisma, PostgreSQL, Docker",
+        "capaSub": "Courses and progress per employee",
+        "figuras": [
+          {
+            "valor": "in validation",
+            "rotulo": "with employees"
+          }
+        ],
+        "secoes": [
+          {
+            "titulo": "Context",
+            "paragrafos": [
+              "Course platform with progress per employee and assessments. The private version is in validation with employees at CentralEng."
+            ],
+            "codigo": "Code on GitHub"
+          },
+          {
+            "titulo": "Stack"
+          }
+        ]
+      }
+    }
+  },
+};

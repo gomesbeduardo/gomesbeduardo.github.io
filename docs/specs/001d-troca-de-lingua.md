@@ -1,6 +1,6 @@
 # Spec 001d: troca de língua sem perder o ponto de leitura
 
-Estado: aprovada pelo responsável em 11/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026; tolerância de 0,5 px aprovada em 12/11/2026; carregamento do `lingua.js` (R6) aprovado em 13/11/2026.
 Parte 5 de 5 da spec 001. Entra na etapa 1, como a última fatia, depois que a paridade de 001a passar. Vale também nas etapas 2 e 3.
 
 ## Pedido literal
@@ -16,6 +16,8 @@ A troca de língua é um link comum para a página equivalente na outra língua 
 - D1. A troca continua indo para a outra URL, com o mesmo esmaecimento de 250 ms entre páginas. O texto não troca no lugar.
 - D2. A página nova abre no mesmo ponto de leitura, sem repetir as animações de entrada.
 - D3. "Mesmo ponto" é medido por âncora: o bloco que está no topo da janela é o mesmo bloco na outra língua e fica exatamente na mesma distância em px do topo da janela, com tolerância de 0 px.
+  - Alteração de 12/11/2026, aprovada pelo responsável: o Chromium rola em pixels inteiros (com densidade de tela 1 e 2), e o layout tem frações de pixel, então "0 px" quer dizer diferença de até 0,5 px, o menor passo possível da rolagem. A implementação mira a posição fracionária, e o máximo medido na etapa 1 foi 0,42 px.
+  - A distância é a do bloco em repouso: se o bloco ou um ancestral está no meio da animação de revelação no momento do clique, o deslocamento passageiro (`translateY`) não entra na conta.
 - D4. Vale na home e nas três páginas de projeto, nas duas direções (PT para EN e EN para PT). A 404 não tem troca de língua e fica como está.
 - D5. Entra na etapa 1, como a última fatia, depois da paridade.
 
@@ -54,7 +56,11 @@ A troca de língua é um link comum para a página equivalente na outra língua 
 
 ### R6. JS nesta etapa
 
-- A regra de 001a R4 (JS copiados de `site/` sem alteração) ganha uma exceção só para esta fatia: o código de R2 a R4 entra num arquivo novo `public/lingua.js`, carregado com `defer` em todas as páginas que têm troca de língua, mais a leitura de `troca-lingua` em `inicio.js`, que roda no `head` com `blocking="render"`. Nenhuma outra linha dos JS herdados muda.
+- A regra de 001a R4 (JS copiados de `site/` sem alteração) ganha uma exceção só para esta fatia: o código de R2 a R4 entra num arquivo novo `public/lingua.js`, carregado em todas as páginas que têm troca de língua (forma de carregar no item seguinte), mais a leitura de `troca-lingua` em `inicio.js`, que roda no `head` com `blocking="render"`. Nenhuma outra linha dos JS herdados muda.
+- Carregamento, ajuste aprovado em 13/11/2026. Com `defer`, o `lingua.js` rodava depois do fim da leitura do HTML, e com a carga rápida (folha de fontes em cache, o caso comum na troca de língua) o primeiro quadro saía no topo, com os contadores em zero, e só no quadro seguinte a página pulava para o ponto de leitura. Agora:
+  - o `lingua.js` é um script clássico, sem `defer`, no fim do `<body>` de toda página com troca de língua, seguido de `<i id="lingua-pronta" hidden></i>`;
+  - a linha do `inicio.js` que lê `troca-lingua`, com entrada válida, também acrescenta ao `head` um `<link rel="expect" href="#lingua-pronta" blocking="render">`, e o navegador segura a primeira pintura até o parser passar desse elemento, quando o `lingua.js` já posicionou a página;
+  - sem entrada válida o link não entra e a navegação pinta como antes.
 - Na etapa 3, `lingua.js` vira o módulo `lingua` de 001c R1, com o mesmo comportamento, coberto pelos testes desta parte.
 - A paridade de 001a C1 não muda: as capturas abrem cada página do zero, sem `troca-lingua`.
 
@@ -74,7 +80,7 @@ A troca de língua é um link comum para a página equivalente na outra língua 
 | # | Critério | Dado | Ação | Resultado | Tipo e arquivo |
 |---|---|---|---|---|---|
 | T1 | C1 | `dist/` servido, 1280 e 390 px | rolar até `proj-infohub` a 120 px; clicar "EN"; ler `top` do mesmo id | 120 px, diferença 0 | e2e, `scripts/site/lingua.e2e.mjs` |
-| T2 | C2 | todas as âncoras da home e dos 3 projetos, PT e EN, 390 e 1280 | para cada âncora: rolar até ela ficar a 80 px do topo, trocar, medir | diferença 0 px; nas âncoras em que a página chegou ao fim, a rolagem é a máxima | e2e, `lingua.e2e.mjs` |
+| T2 | C2 | todas as âncoras da home e dos 3 projetos, PT e EN, 390 e 1280 | para cada âncora: rolar até ela ficar a 80 px do topo, esperar as animações terminarem, trocar e medir o bloco que a R2 escolheu (o primeiro ainda visível, que pode ser o anterior, se ele passa por baixo do cabeçalho) | diferença de até 0,5 px (D3); nas âncoras em que a página chegou ao fim, a rolagem é a máxima | e2e, `lingua.e2e.mjs` |
 | T3 | C2 | home PT rolada até o fim | trocar | `/en/` rolada até o fim; teste registra a diferença e passa | e2e, `lingua.e2e.mjs` |
 | T4 | C3 | troca a partir de Projetos | capturar o primeiro quadro (`requestAnimationFrame` no `pagereveal`) | nome completo, contadores no valor final, nada visível escondido | e2e, `lingua.e2e.mjs` |
 | T5 | C4 | abrir `/en/` direto; clicar num card | observar o nome | a digitação acontece | e2e, `lingua.e2e.mjs` |

@@ -1,0 +1,33 @@
+{
+  "name": "gomesbeduardo.github.io",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "test": "astro build && node --test 'scripts/**/*.test.mjs'",
+    "e2e": "node scripts/site/e2e.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gomesbeduardo/gomesbeduardo.github.io.git"
+  },
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/gomesbeduardo/gomesbeduardo.github.io/issues"
+  },
+  "homepage": "https://github.com/gomesbeduardo/gomesbeduardo.github.io#readme",
+  "private": true,
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "4.3.5",
+    "astro": "7.4.11",
+    "tailwindcss": "4.3.5"
+  },
+  "devDependencies": {
+    "pixelmatch": "8.0.0",
+    "playwright": "1.65.0",
+    "pngjs": "7.0.0"
+  }
+}

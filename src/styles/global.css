@@ -1,0 +1,73 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-raised: var(--raised);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-card: var(--card);
+  --color-hi: var(--hi);
+  --color-edge: var(--edge);
+
+  --spacing-s1: 4px;
+  --spacing-s2: 8px;
+  --spacing-s3: 12px;
+  --spacing-s4: 16px;
+  --spacing-s5: 24px;
+  --spacing-s6: 32px;
+  --spacing-s7: 48px;
+  --spacing-s8: 64px;
+  --spacing-s9: 96px;
+  --spacing-s10: 128px;
+  --spacing-s11: 160px;
+  --spacing-section: clamp(var(--s9),12vw,var(--s11));
+  --spacing-after-h2: clamp(var(--s6),4vw,var(--s7));
+  --spacing-gutter: clamp(20px,5vw,40px);
+  --spacing-col-gap: clamp(16px,2.5vw,32px);
+  --spacing-wrap: 1180px;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-pill: 999px;
+
+  --text-body: 1.0625rem;
+  --text-small: .9375rem;
+  --text-h3: clamp(1.5rem,2.4vw,2rem);
+  --text-h2: clamp(2.5rem,5.2vw,3.5rem);
+  --text-display: clamp(4rem,9.5vw,9rem);
+  --text-label: .75rem;
+  --text-data: .8125rem;
+
+  --font-display: "Funnel Display","Funnel Display Fallback",system-ui,sans-serif;
+  --font-sans: "Funnel Sans","Funnel Sans Fallback",system-ui,sans-serif;
+  --font-mono: "Reddit Mono","Reddit Mono Fallback",ui-monospace,"Courier New",monospace;
+
+  --ease: cubic-bezier(.16,1,.3,1);
+}
+
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) { @slot; }
+  }
+  &:where(:root[data-theme="dark"], :root[data-theme="dark"] *) { @slot; }
+}
+
+@import "./legado/style.css" layer(components);
+@import "./legado/surpresas.css" layer(components);
+@import "./legado/transicoes.css" layer(components);
+
+/* Troca de língua (spec 001d R4): a página aberta pelo seletor PT/EN não repete a escrita do nome. Enquanto o
+   <html> tem data-troca-lingua (primeiro quadro) e depois, pela marca que o lingua.js põe no h1, as letras ficam
+   cheias e sem animação, mesmo com a classe .run do main.js. Em carga normal nenhuma das duas existe. */
+@layer components {
+  html[data-troca-lingua] .hero h1 .fill .ch,
+  .hero h1[data-sem-abertura] .fill .ch { opacity: 1; animation: none; }
+}

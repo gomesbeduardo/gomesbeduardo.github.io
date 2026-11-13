@@ -1,0 +1,27 @@
+---
+import { dicionario } from '../i18n';
+import type { Lang } from '../i18n/tipos';
+import { logo } from './icones';
+interface Props { lang: Lang }
+const { home: t } = dicionario(Astro.props.lang);
+const s = t.stack;
+// Logo e classe de fonte de cada chip, na ordem de s.linhas[i].chips; igual nos dois idiomas.
+const meta: [string | null, string | null][][] = [
+  [['typescript', null], ['react', null], ['nextdotjs', 'f-geist'], ['nodedotjs', 'f-open'], ['postgresql', null], ['prisma', 'f-sora'], ['zod', 'f-inter'], ['docker', null], ['vitest', 'f-readex'], [null, null], ['n8n', null], ['astro', null], ['tailwindcss', 'f-inter'], ['python', null], ['gsap', null]],
+  [['git', null], ['github', 'f-mona'], ['githubactions', 'f-mona'], ['vercel', 'f-geist'], ['linux', null], [null, null], ['openai', null], ['googlegemini', 'f-google'], ['cursor', null], ['githubcopilot', 'f-mona'], ['supabase', 'f-manrope'], ['notion', 'f-inter'], ['figma', null], ['google', 'f-google']],
+];
+const classe = (fonte: string | null, dup: boolean) => ['chip', fonte, dup ? 'dup' : null].filter(Boolean).join(' ');
+---
+<section id="stack"><div class="wrap">
+  <p class="sec-label reveal" aria-hidden="true">{s.label}</p>
+  <h2 class="reveal" data-ancora="stack-titulo">{s.titulo}</h2>
+</div>
+  <div class="stack-rows" data-ancora="stack-faixa" aria-label={s.linhasAria}>
+    {s.linhas.map((l, i) => <ul class={i ? 'row rev' : 'row'} role="group" tabindex="0" aria-label={l.aria}>{[false, true].map((dup) => l.chips.map((nome, j) => <li class={classe(meta[i][j][1], dup)} aria-hidden={dup ? 'true' : undefined}>{meta[i][j][0] && <Fragment set:html={logo(meta[i][j][0]!)} />}{nome}</li>))}{l.extras.map((nome) => <li class="chip">{nome}</li>)}</ul>)}
+  </div>
+  <div class="wrap">
+  <div class="stack-head" aria-hidden="true"><span>#</span>{s.cabecalho.map((c) => <span>{c}</span>)}<span></span></div>
+  <ol class="stack-table" data-ancora="stack-tabela" aria-label={s.tabelaAria}>
+    {s.tabela.map((r, i) => <li><span class="n">{String(i + 1).padStart(2, '0')}</span><b class="tech" set:html={r.tech}></b><span class="where" set:html={r.onde}></span><span class="how" set:html={r.como}></span><span class="tag" set:html={r.tag}></span></li>)}
+  </ol>
+</div></section>

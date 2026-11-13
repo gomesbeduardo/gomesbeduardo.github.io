@@ -1,0 +1,57 @@
+---
+import Base from '../layouts/Base.astro';
+import Topo from '../components/Topo.astro';
+import Hero from '../components/Hero.astro';
+import Sobre from '../components/Sobre.astro';
+import Trajetoria from '../components/Trajetoria.astro';
+import Experiencia from '../components/Experiencia.astro';
+import Sprites from '../components/Sprites.astro';
+import Stack from '../components/Stack.astro';
+import Projetos from '../components/Projetos.astro';
+import NumerosGithub from '../components/NumerosGithub.astro';
+import Contato from '../components/Contato.astro';
+import Rodape from '../components/Rodape.astro';
+import ModalSobreSite from '../components/ModalSobreSite.astro';
+---
+<Base htmlAttrs={{ lang: "pt-BR" }} bodyAttrs={{  }}>
+<Fragment slot="head">
+<title>Eduardo Gomes, desenvolvedor full stack, IA aplicada e automação</title>
+<meta charset="utf-8"><meta name="description" content="Portfólio de Eduardo Gomes, desenvolvedor full stack, IA aplicada e automação, IA aplicada e automação: projetos, trajetória e contato."><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="alternate" hreflang="pt-BR" href="https://gomesbeduardo.github.io/"><link rel="alternate" hreflang="en" href="https://gomesbeduardo.github.io/en/"><link rel="alternate" hreflang="x-default" href="https://gomesbeduardo.github.io/"><meta property="og:locale:alternate" content="en_US"><link rel="canonical" href="https://gomesbeduardo.github.io/"><link rel="icon" href="favicon.svg" type="image/svg+xml"><meta property="og:title" content="Eduardo Gomes, desenvolvedor full stack, IA aplicada e automação"><meta property="og:description" content="Portfólio de Eduardo Gomes, desenvolvedor full stack, IA aplicada e automação, IA aplicada e automação: projetos, trajetória e contato."><meta property="og:url" content="https://gomesbeduardo.github.io/"><meta property="og:type" content="website"><meta property="og:locale" content="pt_BR"><meta property="og:site_name" content="Eduardo Gomes">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@700..800&family=Funnel+Sans:wght@400..600&family=Reddit+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500&family=Mona+Sans:wght@500&family=Open+Sans:wght@500&family=Sora:wght@500&family=Manrope:wght@500&family=Inter:wght@500&family=Readex+Pro:wght@500&family=Google+Sans:wght@500&text=.ACGHNPSTVWZabcdegijklmnoprstuwx&display=swap">
+<script is:inline src="vendor/gsap.min.js" defer></script>
+<link rel="preload" as="script" href="vendor/ScrollTrigger.min.js">
+<script is:inline src="vendor/lenis.min.js" defer></script>
+<script is:inline src="inicio.js" blocking="render"></script>
+<script is:inline src="tema.js" defer></script>
+</Fragment>
+<a class="skip" href="#conteudo">Ir para o conteúdo</a>
+<Sprites />
+<Topo lang="pt" />
+<main id="conteudo">
+<Hero lang="pt" />
+
+<Sobre lang="pt" />
+
+<Trajetoria lang="pt" />
+
+<Experiencia lang="pt" />
+
+<Stack lang="pt" />
+
+<Projetos lang="pt" />
+
+<NumerosGithub lang="pt" />
+
+<Contato lang="pt" />
+</main>
+<Rodape lang="pt" />
+<ModalSobreSite lang="pt" />
+<script is:inline src="main.js" defer></script>
+<script is:inline src="surpresas.js" defer></script>
+<script is:inline src="rodape.js" defer></script>
+<script is:inline src="lingua.js"></script>
+<i id="lingua-pronta" hidden></i>
+</Base>

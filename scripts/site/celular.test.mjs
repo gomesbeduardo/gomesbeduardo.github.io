@@ -1,4 +1,5 @@
-// Ajustes de leitura e toque no celular (QA a 320/360/390/414 px).
+// Partes estáticas dos ajustes de leitura e toque no celular (HTML de dist/ e JS de public/).
+// As regras de CSS (largura, alvo de toque, nowrap, overflow) são medidas no navegador em celular.e2e.mjs.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -7,54 +8,24 @@ import { fileURLToPath } from 'node:url';
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const ler = (rel) => readFileSync(join(raiz, rel), 'utf8');
-const css = ler('site/style.css');
-const HOMES = ['site/index.html', 'site/en/index.html'];
-const PROJETOS = ['lms', 'infohub', 'leadgate'].flatMap((p) => [`site/projeto-${p}.html`, `site/en/projeto-${p}.html`]);
-// Corpo do bloco @media que começa na condição dada.
-const bloco = (cond) => {
-  const i = css.indexOf(cond);
-  assert.ok(i >= 0, `@media ${cond} ausente`);
-  let d = 0, j = css.indexOf('{', i);
-  const ini = j;
-  for (; j < css.length; j++) { if (css[j] === '{') d++; else if (css[j] === '}' && --d === 0) break; }
-  return css.slice(ini + 1, j);
-};
-
-test('1. texto das páginas de projeto ocupa a largura toda até 860px', () => {
-  const b = bloco('@media (max-width:860px){.proj section p');
-  assert.match(b, /\.proj section p\s*\{[^}]*max-width:\s*none/);
-});
+const HOMES = ['dist/index.html', 'dist/en/index.html'];
+const PROJETOS = ['lms', 'infohub', 'leadgate'].flatMap((p) => [`dist/projeto-${p}.html`, `dist/en/projeto-${p}.html`]);
 
 test('2. e-mail por extenso saiu das páginas; o aviso quebra o endereço sem estourar a tela (spec 006)', () => {
   // Antes: .mail com <wbr> depois do @. A spec 006 removeu o endereço do Contato; ele só aparece no aviso de cópia.
   for (const f of HOMES) {
     assert.doesNotMatch(ler(f), /class="mail"|<wbr>/, f);
   }
-  assert.doesNotMatch(css, /\.mail\{/);
-  assert.match(css, /\.aviso-end\{[^}]*overflow-wrap:\s*anywhere/);
-  assert.match(ler('site/main.js'), /writeText\('eduardobgomes100@gmail\.com'\)/);
+  assert.match(ler('public/main.js'), /writeText\('eduardobgomes100@gmail\.com'\)/);
 });
 
 test('3. links de código no GitHub têm alvo de toque de 44px', () => {
-  assert.match(css, /\.link-codigo\{[^}]*display:\s*inline-flex[^}]*min-height:\s*44px/);
   for (const f of PROJETOS) {
     assert.match(ler(f), /<a class="link-codigo" href="https:\/\/github\.com\/[^"]+"/, f);
   }
 });
 
-test('4. .lang a tem largura mínima de 44px no bloco de toque', () => {
-  const b = bloco('@media (pointer:coarse)');
-  assert.match(b, /\.lang a\{[^}]*min-width:\s*44px/);
-  assert.match(b, /\.lang a\{[^}]*(justify-content|text-align):\s*center/);
-});
-
-test('5. button.sp-word tem largura mínima de 44px no bloco de toque', () => {
-  const b = bloco('@media (pointer:coarse)');
-  assert.match(b, /button\.sp-word\{[^}]*min-width:\s*44px/);
-});
-
 test('6. pontuação depois de palavra-surpresa fica colada em wrapper nowrap', () => {
-  assert.match(ler('site/surpresas.css'), /\.sp-cola\{[^}]*white-space:\s*nowrap/);
   for (const f of HOMES) {
     const h = ler(f);
     for (const m of h.matchAll(/<span class="sp"[^>]*>[^<]*<\/span>[.,;:!?]/g)) {

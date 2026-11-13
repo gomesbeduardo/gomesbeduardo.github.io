@@ -1,14 +1,17 @@
 # Publica o site no GitHub Pages (spec 002, seção "Workflow e secret"; spec 003, R5).
 #
-# Quando religado, dispara em push na main, toda segunda às 06:00 UTC (03:00 em Brasília) e à mão.
-# Jobs: testes -> coletar (números do GitHub; commit do JSON em schedule/dispatch) -> build -> deploy.
+# Dispara em push na main e à mão (spec 001a R10).
+# Jobs: testes -> coletar (números do GitHub, só para o build) -> build -> deploy (só na main).
+# Sem schedule e sem commit do JSON até o site/ sair na etapa 3: o build.test e a paridade comparam o dist/ com o site/
+# congelado, e um github.json novo na main quebraria os dois (001a R10, emenda de 13/11/2026).
+# Rodado à mão em outra branch, vai até o build: não publica.
 # Secret necessário: GH_TOKEN_LEITURA (fine-grained PAT do usuário, só leitura). Nunca escreva o token aqui.
 # Versões das actions fixadas por SHA de commit; a tag vai no comentário.
 name: Publicar site
 
-# Desligado até a migração para o Astro (spec 001): a v1 estática publica pelo pages.yml.
-# Para religar, volte o push na main e o schedule.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -30,41 +33,26 @@ jobs:
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Testes dos scripts (coletor e currículo)
-        run: node --test 'scripts/**/*.test.mjs'
+      - name: Instalar dependências
+        run: npm ci
+      - name: Gerar os PDFs do currículo (os testes do build conferem a cópia em dist/)
+        run: node scripts/curriculo/gerar.mjs
+      - name: Testes (build do Astro e testes estáticos)
+        run: npm test
 
   coletar:
     name: Coletar números do GitHub
     needs: testes
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # commit semanal do JSON (spec 002, R8: mantém o cron vivo e guarda o último dado bom)
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Coletar (estrito no run agendado, para falhar e avisar por e-mail)
+      - name: Coletar (sem --estrito; se falhar, mantém o github.json existente, 002 R6)
         env:
           GH_TOKEN_LEITURA: ${{ secrets.GH_TOKEN_LEITURA }}
-        run: |
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            node scripts/github/coletar.mjs --estrito
-          else
-            node scripts/github/coletar.mjs
-          fi
-      - name: Commit do JSON quando mudou (só schedule e workflow_dispatch)
-        if: github.event_name != 'push'
-        run: |
-          if git diff --quiet -- src/data/github.json; then
-            echo "src/data/github.json sem mudança; nada a commitar"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/github.json
-          git commit -m "chore(dados): números do GitHub de $(date -u +%F)"
-          git push
+        run: node scripts/github/coletar.mjs
       - name: Guardar o JSON para o build
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
@@ -90,7 +78,7 @@ jobs:
       - name: Gerar os PDFs do currículo (Chrome do runner)
         run: node scripts/curriculo/gerar.mjs
       - name: Instalar dependências
-        run: npm ci # depende do scaffold do Astro (package.json e package-lock.json)
+        run: npm ci
       - name: Build do Astro
         run: npm run build
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
@@ -101,6 +89,7 @@ jobs:
   deploy:
     name: Deploy no Pages
     needs: build
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       pages: write

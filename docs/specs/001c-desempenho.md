@@ -73,7 +73,7 @@ No Chrome do responsável (F4): painel Performance, CPU 4x, mesmas interações;
 
 ### R7. Fim de `site/` e de `pages.yml`
 
-No PR desta etapa, depois de C1 a C7 passarem: `site/` sai do repositório, `pages.yml` sai, `scripts/site/paridade.e2e.mjs` sai (não há mais referência), e `ci.yml` e `publicar.yml` perdem os passos que citam `site/`. Os `.e2e.mjs` seguem contra `dist/`. Quem edita os workflows é a sessão principal com ok do responsável. A reversão depois disso é reverter o merge desta etapa (o site da etapa 2 volta), não mais voltar ao `site/` estático.
+No PR desta etapa, depois de C1 a C7 passarem: `site/` sai do repositório, `pages.yml` sai, `scripts/site/paridade.e2e.mjs` sai (não há mais referência), e `ci.yml` e `publicar.yml` perdem os passos que citam `site/`. O `publicar.yml` ganha o `schedule` semanal e o commit semanal de `src/data/github.json` na `main`, com o coletor em `--estrito` no run agendado (001-astro P7, emenda de 13/11/2026), e o `build.test` deixa de comparar os números com o `site/`. Os `.e2e.mjs` seguem contra `dist/`. Quem edita os workflows é a sessão principal com ok do responsável. A reversão depois disso é reverter o merge desta etapa (o site da etapa 2 volta), não mais voltar ao `site/` estático.
 
 ### R9. Preflight do Tailwind
 

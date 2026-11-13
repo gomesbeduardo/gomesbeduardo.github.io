@@ -64,7 +64,7 @@ Pré-condição da etapa 1: a implementação da spec 007 entrar na `staging`. A
 
 ## Fora do escopo da 001
 
-- Implementar as specs 002 e 008 (calendário sem JS, gerador da 008). O `schedule` do `publicar.yml` e o coletor que já existe em `scripts/github/` passam a rodar na etapa 1 (P7).
+- Implementar as specs 002 e 008 (calendário sem JS, gerador da 008). O coletor que já existe em `scripts/github/` passa a rodar no push da etapa 1; o `schedule` do `publicar.yml` fica para a etapa 3 (P7).
 - Fundo com nuances, grão e brilho (D8), redesenho de qualquer seção, pirâmide de projetos ou outra mudança visual do feedback que ainda não esteja em `site/`.
 - Domínio próprio, analytics, formulário de contato, blog, RSS.
 - React, `shadcn`, service worker, CDN.
@@ -79,7 +79,7 @@ Respostas do responsável em 11/11/2026, já aplicadas nas partes:
 - P4. Fontes das 11 marcas da Stack: continuam no Google Fonts com `text=` e `media="print"`; só as três fontes do site viram locais (001c R3).
 - P5. Variação do runner: mediana de 5 execuções do Lighthouse e de 5 interações, falha acima da meta sem nova tentativa; se o job falhar duas vezes em duas semanas com o `dist/` sem mudança, a meta de CI ganha 10% (INP 220 ms, quadro 22 ms) e a meta de produto fica a mesma (001c R5).
 - P6. `backdrop-filter` e `scrub` na Trajetória: medir primeiro; se as metas fecharem, nada muda; se não, o responsável escolhe, com nova base de paridade aprovada (001c R2, R6).
-- P7. `schedule` semanal no `publicar.yml`: ligado já na etapa 1. O responsável cria o secret `GH_TOKEN_LEITURA` antes do merge da etapa 1; o run agendado roda com `--estrito` e faz o commit semanal da 002 R8 (001a R10).
+- P7. `schedule` semanal no `publicar.yml`: a decisão de 11/11 o ligava já na etapa 1. Emenda de 13/11/2026, aprovada pelo responsável depois da revisão final da etapa 1: o `schedule` e o commit semanal da 002 R8 ficam desligados até o `site/` sair, na etapa 3, porque um `github.json` novo na `main` quebra o `build.test` e a paridade, que comparam com o `site/` congelado. Na etapa 3, o run agendado roda com `--estrito` e faz o commit semanal (001a R10). O responsável cria o secret `GH_TOKEN_LEITURA` antes do merge da etapa 1, porque o coletor roda no push.
 - P8. Fontes locais: pacotes `@fontsource-variable/funnel-display`, `@fontsource-variable/funnel-sans` e `@fontsource/reddit-mono` (ou os equivalentes que existirem no dia; o worker confere antes de instalar), só o subset `latin`, com `preload` escrito à mão (001c R3).
 - P9. Dependências de R5 e Node 24: aprovadas como estão, sem React nem `shadcn`. Qualquer pacote novo volta ao responsável.
 

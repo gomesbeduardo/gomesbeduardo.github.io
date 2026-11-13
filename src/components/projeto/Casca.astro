@@ -1,0 +1,42 @@
+---
+import { dicionario } from '../../i18n';
+import type { IdProjeto, Lang } from '../../i18n/tipos';
+import { icone } from '../icones';
+import { PROJETOS } from './dados';
+import Capa from './Capa.astro';
+import Idiomas from './Idiomas.astro';
+import Secao from './Secao.astro';
+import Sprite from './Sprite.astro';
+interface Props { lang: Lang; id: IdProjeto }
+const { lang, id } = Astro.props;
+const t = dicionario(lang).projetos;
+const p = t.paginas[id];
+const meta = PROJETOS[id];
+const voltar = icone('left');
+const sol = `<svg class="icon i-sun"><use href="#i-sun"/></svg>`;
+const lua = `<svg class="icon i-moon"><use href="#i-moon"/></svg>`;
+---
+<a class="skip" href="#conteudo">{t.pular}</a>
+<Sprite logos={'logos' in meta.capa ? meta.capa.logos : []} />
+<header class="top">
+  <a class="back" href="index.html#projetos"><Fragment set:html={voltar} />{t.voltar}</a>
+  <span class="sep" aria-hidden="true"></span>
+  <Idiomas lang={lang} id={id} classe="lang" />
+  <button class="icon-btn theme" id="theme-toggle" type="button" aria-label={t.tema}><Fragment set:html={sol} /><Fragment set:html={lua} /></button>
+</header>
+<main class="wrap" id="conteudo">
+  <Capa id={id} meta={meta} texto={p} base={t.base} />
+  <div class="proj-head" data-ancora={`${id}-capa`}>
+  <h1>{p.titulo}</h1>
+  <p class="lede" set:html={p.lede}></p>
+  <div class="figs">{p.figuras.map((f) => <div><b set:html={f.valor}></b><span>{f.rotulo}</span></div>)}</div>
+  </div>
+
+  {meta.secoes.map((e, i) => <Secao id={id} meta={meta} estrutura={e} texto={p.secoes[i]} base={t.base} />)}
+</main>
+<footer><div class="wrap"><a class="back" href="index.html#projetos"><Fragment set:html={voltar} />{t.voltarProjetos}</a>
+  <div class="foot-fim"><p>© <span data-ano>2026</span> {t.rodape}</p><Idiomas lang={lang} id={id} classe="foot-lang" /><a href="#" data-topo>{t.topo}</a></div>
+</div></footer>
+<script is:inline src={`${t.base}main.js`} defer></script>
+<script is:inline src={`${t.base}lingua.js`}></script>
+<i id="lingua-pronta" hidden></i>

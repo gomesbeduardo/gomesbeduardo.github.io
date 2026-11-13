@@ -1,0 +1,21 @@
+---
+import { dicionario } from '../i18n';
+import type { Lang } from '../i18n/tipos';
+interface Props { lang: Lang }
+const { home: t } = dicionario(Astro.props.lang);
+const s = t.sobre;
+const lit = s.lit.split(' ').map((w) => `<span class="w">${w}</span>`).join(' ');
+---
+<section id="sobre"><div class="wrap">
+  <p class="sec-label reveal" aria-hidden="true" set:html={s.label}></p>
+  <h2 class="reveal" data-ancora="sobre-titulo" set:html={s.titulo}></h2>
+  <div class="about">
+    <div class="about-text reveal">
+      <p class="lit" data-ancora="sobre-1" set:html={lit}></p>
+      {s.paragrafos.map((p, i) => <p data-ancora={`sobre-${i + 2}`} set:html={p}></p>)}
+    </div>
+    <ol class="steps" aria-label={s.passosAria}>
+      {s.passos.map((p) => <li class="stag"><b set:html={p.titulo}></b><span set:html={p.texto}></span></li>)}
+    </ol>
+  </div>
+</div></section>

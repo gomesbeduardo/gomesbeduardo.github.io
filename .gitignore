@@ -25,3 +25,6 @@ public/curriculo/*.pdf
 
 # Screenshots das auditorias do protótipo (48 MB); ficam só na máquina
 docs/design/auditoria/*.png
+
+# Saída da comparação de capturas da etapa 1 (spec 001a R7)
+scripts/site/paridade/saida/

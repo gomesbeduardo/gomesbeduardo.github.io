@@ -1,31 +1,17 @@
-// Aceite no navegador do contato e do rodapé (spec 006): A2, A3, A4, A6, A7, C6, C12 e o Esc com o verso da foto aberto.
-// Fora do glob do `node --test` (nome sem .test.mjs). Sem dependência no repo: usa o Playwright do cache do npx.
-// Rodar (fora do sandbox, o Chromium não abre dentro dele):
-//   NODE_PATH=$HOME/.npm/_npx/e41f203b7505f1fb/node_modules node scripts/site/contato.e2e.mjs
+// Aceite no navegador do contato e do rodapé (spec 006): A2, A3, A4, A6, A7, C6, C12 e o Esc com o verso da foto aberto.  As regras de CSS do aviso e do rodapé (CSS-*) são medidas com getComputedStyle (spec 001a R8).
+// Fora do glob do `node --test` (nome sem .test.mjs). Usa o Playwright do node_modules (lib-e2e.mjs).
+// Rodar depois de `npm run build` (ou `npm run e2e`, que roda todos):
+//   node scripts/site/contato.e2e.mjs [--raiz dist]
 // Os prints do A7 vão para $TMPDIR/contato-e2e (fora do repo).
-import { createServer } from 'node:http';
-import { readFile, mkdir } from 'node:fs/promises';
+import { mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { createRequire } from 'node:module';
-import { extname, join, normalize } from 'node:path';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { argumento, carregarPlaywright, servir } from './lib-e2e.mjs';
 
-const require = createRequire(import.meta.url);
-const base = process.env.NODE_PATH || join(process.env.HOME, '.npm/_npx/e41f203b7505f1fb/node_modules');
-const { chromium } = require(join(base, 'playwright'));
+const { chromium } = await carregarPlaywright();
 
-const raiz = fileURLToPath(new URL('../../site/', import.meta.url));
-const tipos = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.json': 'application/json', '.woff2': 'font/woff2' };
-const srv = createServer(async (req, res) => {
-  try {
-    let p = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname)).replace(/^(\.\.[/\\])+/, '');
-    if (p.endsWith('/')) p += 'index.html';
-    const buf = await readFile(join(raiz, p));
-    res.writeHead(200, { 'content-type': tipos[extname(p)] || 'application/octet-stream' }); res.end(buf);
-  } catch { res.writeHead(404); res.end('nao achei'); }
-});
-await new Promise((ok) => srv.listen(0, '127.0.0.1', ok));
-const url = `http://127.0.0.1:${srv.address().port}/`;
+const { url, fechar } = await servir(resolve(fileURLToPath(new URL('../../', import.meta.url)), argumento('raiz', 'dist')));
 
 const MAIL = 'eduardobgomes100@gmail.com';
 const prints = join(process.env.TMPDIR || tmpdir(), 'contato-e2e');
@@ -200,9 +186,108 @@ try {
       await ctx.close();
     }
   }
+  // ---- Regras de CSS medidas no navegador (spec 001a R8). Valores de token são comparados com uma sonda criada na página. ----
+  const sonda = (page, css, prop) => page.evaluate(([c, p]) => { const e = document.createElement('div'); e.style.cssText = c; document.body.append(e); const v = getComputedStyle(e)[p]; e.remove(); return v; }, [css, prop]);
+  const estilo = (page, sel, props) => page.evaluate(([s, ps]) => { const e = document.querySelector(s), cs = getComputedStyle(e), r = e.getBoundingClientRect(); return { ...Object.fromEntries(ps.map((p) => [p, cs[p]])), w: r.width, b: r.bottom, vh: innerHeight }; }, [sel, props]);
+
+  // CSS-aviso: aviso de sucesso aberto no 1280 px
+  {
+    const { ctx, page } = await abrir(1280, 800);
+    const btn = page.locator('#contato [data-copiar-email]');
+    await btn.scrollIntoViewIfNeeded();
+    // antes de abrir, a caixa está renderizada (oculta por visibility) com o estado inicial de entrada
+    const ini = await estilo(page, '.aviso-caixa', ['transform']);
+    ok('CSS-aviso-entrada: caixa fechada começa deslocada 16 px e a 96% (matrix(.96, 0, 0, .96, 0, 16))', ini.transform === 'matrix(0.96, 0, 0, 0.96, 0, 16)', ini.transform);
+    await btn.click();
+    // sem depender de tempo: pausa a animação do traço no instante 0 (dentro do atraso) e lê o valor inicial; os keyframes têm de terminar em 0
+    // (a classe .tr entra quando a cópia termina, então espera pela animação em vez de um tempo fixo)
+    const tr = await page.waitForFunction(() => {
+      const path = document.querySelector('.aviso-ok path');
+      const an = path.getAnimations().find((x) => x.animationName === 'aviso-traco');
+      if (!an) return false;
+      const quadros = an.effect.getKeyframes().map((k) => k.strokeDashoffset);
+      an.pause(); an.currentTime = 0;
+      return { anim: true, quadros, inicio: getComputedStyle(path).strokeDashoffset };
+    }, null, { timeout: 3000 }).then((h) => h.jsonValue()).catch(() => ({ anim: false }));
+    ok('CSS-aviso-entrada: o traço do ✓ anima stroke-dashoffset até 0, partindo de valor diferente de 0', tr.anim && parseFloat(tr.quadros[tr.quadros.length - 1]) === 0 && parseFloat(tr.inicio) > 0, JSON.stringify(tr));
+    await espera(400);
+    const av = await estilo(page, '.aviso', ['position']);
+    ok('CSS-aviso: .aviso fixo e dentro da tela (base ≤ altura)', av.position === 'fixed' && av.b <= av.vh, JSON.stringify(av));
+    const cx = await estilo(page, '.aviso-caixa', ['backgroundColor', 'borderTopWidth', 'borderTopStyle', 'borderTopColor', 'boxShadow']);
+    const esp = { bg: await sonda(page, 'background-color: var(--raised)', 'backgroundColor'), bc: await sonda(page, 'border-top-color: var(--line-strong)', 'borderTopColor'), sh: await sonda(page, 'box-shadow: var(--shadow)', 'boxShadow') };
+    ok('CSS-aviso: caixa com fundo --raised', cx.backgroundColor === esp.bg, `${cx.backgroundColor} / ${esp.bg}`);
+    ok('CSS-aviso: caixa com borda de 1px sólida em --line-strong', cx.borderTopWidth === '1px' && cx.borderTopStyle === 'solid' && cx.borderTopColor === esp.bc, `${cx.borderTopWidth} ${cx.borderTopStyle} ${cx.borderTopColor} / ${esp.bc}`);
+    ok('CSS-aviso: caixa com sombra --shadow', cx.boxShadow === esp.sh && esp.sh !== 'none', `${cx.boxShadow} / ${esp.sh}`);
+    const en = await estilo(page, '.aviso-end', ['fontFamily', 'fontSize']);
+    ok('CSS-aviso: endereço em --f-mono e --t-data', en.fontFamily === await sonda(page, 'font-family: var(--f-mono)', 'fontFamily') && en.fontSize === await sonda(page, 'font-size: var(--t-data)', 'fontSize'), JSON.stringify(en));
+    const oks = await estilo(page, '.aviso-ok', ['color']);
+    ok('CSS-aviso: ✓ na cor --accent', oks.color === await sonda(page, 'color: var(--accent)', 'color'), oks.color);
+    await ctx.close();
+  }
+  // CSS-aviso: o botão de fechar só aparece no aviso de falha; precisa de 44 px de largura
+  {
+    const { ctx, page } = await abrir(1280, 800, {}, { clip: 'falha' });
+    await page.locator('#contato [data-copiar-email]').scrollIntoViewIfNeeded();
+    await page.locator('#contato [data-copiar-email]').click();
+    await espera(400);
+    const x = await estilo(page, '.aviso-x', []);
+    ok('CSS-aviso: botão de fechar com 44 px de largura ou mais', x.w >= 44, `${x.w}`);
+    await ctx.close();
+  }
+  // CSS-aviso-reduzido: movimento reduzido sem transform no aviso aberto
+  {
+    const { ctx, page } = await abrir(1280, 800, { reducedMotion: 'reduce' });
+    await page.locator('#contato [data-copiar-email]').scrollIntoViewIfNeeded();
+    const fechada = await estilo(page, '.aviso-caixa', ['transform']);
+    await page.locator('#contato [data-copiar-email]').click();
+    await espera(400);
+    const a = await estilo(page, '.aviso', ['transform']), c = await estilo(page, '.aviso-caixa', ['transform']);
+    ok('CSS-aviso-reduzido: .aviso e .aviso-caixa sem transform, aberto e fechado', a.transform === 'none' && c.transform === 'none' && fechada.transform === 'none', `${a.transform} / ${c.transform} / fechada ${fechada.transform}`);
+    await ctx.close();
+  }
+  // CSS-grade: rodapé a 1280 px
+  {
+    const { ctx, page } = await abrir(1280, 800);
+    const g = await page.evaluate(() => {
+      const cs = (s) => getComputedStyle(document.querySelector(s));
+      return {
+        trilhas: cs('.foot-grid').gridTemplateColumns.split(' ').map(parseFloat), // colunas implícitas também contam: exige 12 e todas iguais
+        col: Object.fromEntries(['.foot-quote', '.foot-nav', '.foot-contato'].map((s) => [s, `${cs(s).gridColumnStart} / ${cs(s).gridColumnEnd}`])),
+        fim: [cs('.foot-fim').borderTopWidth, cs('.foot-fim').borderTopStyle, cs('.foot-fim').borderTopColor],
+        mono: [...document.querySelectorAll('.foot-t')].map((e) => getComputedStyle(e).fontFamily),
+        small: [...document.querySelectorAll('.foot-col a')].map((e) => getComputedStyle(e).fontSize),
+      };
+    });
+    ok('CSS-grade: .foot-grid com 12 colunas iguais', g.trilhas.length === 12 && g.trilhas.every((w) => Math.abs(w - g.trilhas[0]) < 1), g.trilhas.join(' '));
+    ok('CSS-grade: frase 1 / span 6, Navegação 8 / span 2, Contato 10 / span 3', g.col['.foot-quote'] === '1 / span 6' && g.col['.foot-nav'] === '8 / span 2' && g.col['.foot-contato'] === '10 / span 3', JSON.stringify(g.col));
+    ok('CSS-grade: .foot-fim com borda de cima de 1px sólida em --line', g.fim[0] === '1px' && g.fim[1] === 'solid' && g.fim[2] === await sonda(page, 'border-top-color: var(--line)', 'borderTopColor'), g.fim.join(' '));
+    const mono = await sonda(page, 'font-family: var(--f-mono)', 'fontFamily');
+    ok('CSS-grade: todo .foot-t em --f-mono', g.mono.length > 0 && g.mono.every((f) => f === mono), `${g.mono.length} itens / ${mono}`);
+    const peq = await sonda(page, 'font-size: var(--t-small)', 'fontSize');
+    ok('CSS-grade: todo .foot-col a em --t-small', g.small.length > 0 && g.small.every((f) => f === peq), `${g.small.length} itens / ${peq}`);
+    await ctx.close();
+  }
+  // CSS-grade-860: a 860 px a frase ocupa a linha toda e Navegação e Contato vêm abaixo dela
+  {
+    const { ctx, page } = await abrir(860, 800);
+    const g = await page.evaluate(() => {
+      const r = (s) => document.querySelector(s).getBoundingClientRect(), cs = (s) => getComputedStyle(document.querySelector(s));
+      return { q: [cs('.foot-quote').gridColumnStart, cs('.foot-quote').gridColumnEnd], qb: r('.foot-quote').bottom, nt: r('.foot-nav').top, ct: r('.foot-contato').top };
+    });
+    ok('CSS-grade-860: frase em 1 / -1 e Navegação e Contato abaixo dela', g.q.join(' / ') === '1 / -1' && g.nt >= g.qb - 1 && g.ct >= g.qb - 1, JSON.stringify(g));
+    await ctx.close();
+  }
+  // CSS-toque: alvos de 44 px no celular
+  {
+    const { ctx, page } = await abrir(390, 800, { isMobile: true, hasTouch: true });
+    const medidos = await page.evaluate(() => [...document.querySelectorAll('.links button, .foot-col a, .foot-col button, .foot-fim a')].filter((e) => e.getClientRects().length).map((e) => ({ t: (e.textContent || '').trim().slice(0, 18), h: Math.round(e.getBoundingClientRect().height * 10) / 10 })));
+    const peq = medidos.filter((e) => e.h < 44);
+    ok('CSS-toque: .links button, .foot-col a, .foot-col button e .foot-fim a com 44 px de altura ou mais', medidos.length > 0 && peq.length === 0, `${medidos.length} medidos; ${peq.map((e) => `${e.t} ${e.h}`).join('; ')}`);
+    await ctx.close();
+  }
 } finally {
   await browser.close();
-  srv.close();
+  await fechar();
 }
 console.log('\nPrints do A7:\n' + caminhos.join('\n'));
 console.log(falhas ? `\n${falhas} falha(s)` : '\ntudo certo');
