@@ -58,7 +58,7 @@ try {
       return {
         chars: [...document.querySelectorAll('.hero h1 .fill .ch')].map((c) => ({ op: +getComputedStyle(c).opacity, an: getComputedStyle(c).animationName })),
         nums: [...document.querySelectorAll('.num')].filter(vis).map((e) => ({ txt: e.querySelector('[aria-hidden]').textContent.trim(), fim: fim(e) })),
-        reveals: [...document.querySelectorAll('.reveal, .stag, .project')].filter(vis).map((e) => ({ c: e.className, op: +getComputedStyle(e).opacity })),
+        reveals: [...document.querySelectorAll('.reveal, .stag, .project .shot, .project .body')].filter(vis).map((e) => ({ c: e.className, op: +getComputedStyle(e).opacity })),
         marca: !!document.querySelector('.hero h1[data-sem-abertura]'),
         troca: document.documentElement.hasAttribute('data-troca-lingua'),
       };
@@ -196,6 +196,40 @@ try {
     const depois = await page.evaluate(() => window.scrollY);
     ok('T8 rolou antes do load: a posição do visitante é mantida depois do load', durante.load !== 'complete' && depois > chegada + 300 && Math.abs(depois - durante.y) <= 2, `chegada=${chegada} durante=${durante.y} (${durante.load}) depois=${depois}`);
     await ctx.close();
+  }
+
+  // ---- T9 (item 2; spec 001d R4): revelações dentro da janela chegam no estado final ----
+  if (quero('T9')) {
+    const estado = (page) => page.evaluate(() => [...document.querySelectorAll('.reveal, .stag, .project .shot, .project .body')]
+      .filter((e) => e.offsetParent !== null && e.getBoundingClientRect().top < innerHeight)
+      .map((e) => { const tr = getComputedStyle(e).transform; return { c: (e.className || e.tagName) + '', op: +getComputedStyle(e).opacity, dy: tr && tr !== 'none' ? new DOMMatrix(tr).m42 : 0, top: e.getBoundingClientRect().top, card: !!e.closest('.project') }; }));
+    for (const [rot, id, alvo, faixa] of [['reveal entre 0,9h e 1h', 'projetos-titulo', 760, (e) => !e.card && e.top >= 720], ['card entre 0,85h e 1h', 'proj-leadgate', 700, (e) => e.card && e.top >= 680]]) {
+      const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'no-preference' });
+      const page = await ctx.newPage();
+      await abrir(page, '');
+      await colocar(page, id, alvo);
+      await trocar(page);
+      await espera(500);
+      const el = await estado(page);
+      const naFaixa = el.filter((e) => e.top < 800 && faixa(e)).length;
+      const ruins = el.filter((e) => e.op < 0.99 || Math.abs(e.dy) > 0.5);
+      ok(`T9 ${rot}: tudo que está na janela chega no estado final`, ruins.length === 0 && naFaixa > 0, `naFaixa=${naFaixa} n=${el.length} ruins=${JSON.stringify(ruins.slice(0, 4))}`);
+      await ctx.close();
+    }
+    // o que está abaixo da janela continua se revelando ao rolar
+    {
+      const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'no-preference' });
+      const page = await ctx.newPage();
+      await abrir(page, '');
+      await colocar(page, 'projetos-titulo', 80);
+      await trocar(page);
+      const ocultos = await page.evaluate(() => [...document.querySelectorAll('.stag, .project .shot')].filter((e) => e.getBoundingClientRect().top > innerHeight && +getComputedStyle(e).opacity < 0.5).length);
+      await page.evaluate(() => { const e = document.querySelector('.project .shot'); const y = scrollY + e.getBoundingClientRect().top - 300; if (window.__lenis) window.__lenis.scrollTo(y, { immediate: true }); else window.scrollTo(0, y); });
+      await espera(1500);
+      const shot = await page.evaluate(() => +getComputedStyle(document.querySelector('.project .shot')).opacity);
+      ok('T9 abaixo da janela segue ocultando e revela ao rolar', ocultos > 0 && shot > 0.99, `ocultos=${ocultos} shot=${shot}`);
+      await ctx.close();
+    }
   }
 
   if (SO.length === 0) {

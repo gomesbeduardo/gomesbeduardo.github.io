@@ -113,9 +113,30 @@
         if (cheio && tela) tela.textContent = cheio.textContent;
       });
     };
+    // Revelações na faixa que o main.js esconde no init (.reveal e .stag entre 0,9 e 1 da altura, capas e textos dos
+    // projetos entre 0,85 e 1) têm o gatilho em 'top 88%'/'top 85%' e só disparam ao rolar. Tudo que começa acima do
+    // fim da janela chega no estado final; o que está abaixo segue o main.js.
+    var revelacoesFinais = function () {
+      if (!window.gsap) return;
+      var els = document.querySelectorAll('.reveal, .stag, .project .shot, .project .body');
+      var alvos = [], gatilhos = [];
+      for (var i = 0; i < els.length; i++) {
+        var el = els[i];
+        if (el.getBoundingClientRect().top >= window.innerHeight) continue;
+        gatilhos.push(el, el.closest('.project'));
+        if (+getComputedStyle(el).opacity < 0.99 || gsap.getProperty(el, 'y') !== 0) alvos.push(el);
+      }
+      if (!alvos.length) return;
+      if (window.ScrollTrigger) ScrollTrigger.getAll().forEach(function (st) {
+        if (st.trigger && gatilhos.indexOf(st.trigger) !== -1) st.kill();
+      });
+      gsap.killTweensOf(alvos);
+      gsap.set(alvos, { y: 0, opacity: 1 });
+    };
+    var final = function () { numerosFinais(); revelacoesFinais(); };
     Promise.all([window.pageShown || Promise.resolve(), window.libsReady || Promise.resolve()]).then(function () {
-      numerosFinais(); // logo depois do init, antes de pintar o zero
-      requestAnimationFrame(function () { numerosFinais(); requestAnimationFrame(numerosFinais); });
+      final(); // logo depois do init, antes de pintar o zero
+      requestAnimationFrame(function () { final(); requestAnimationFrame(final); });
     });
   }
   // O atributo que o inicio.js pôs no <html> sai depois do primeiro quadro.
