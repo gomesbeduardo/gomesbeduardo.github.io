@@ -213,6 +213,18 @@ test('(T8) C6: números e calendário vêm do github.json', () => {
   });
 });
 
+test('(a2) C1/R4: JS e CSS herdados são byte a byte iguais aos de site/ (exceto inicio.js e lingua.js, spec 001d R6)', () => {
+  const iguais = ['tema.js', 'main.js', 'surpresas.js', 'rodape.js', ...readdirSync('site/vendor').map((f) => `vendor/${f}`)];
+  for (const f of iguais) assert.ok(ler(`public/${f}`).equals(ler(`site/${f}`)), `public/${f} igual a site/${f}`);
+  for (const f of readdirSync('src/styles/legado')) assert.ok(ler(`src/styles/legado/${f}`).equals(ler(`site/${f}`)), `src/styles/legado/${f} igual a site/${f}`);
+  // inicio.js: a única diferença é a linha da troca de língua (spec 001d R6).
+  const linhas = readFileSync('public/inicio.js', 'utf8').split('\n');
+  const trocas = linhas.filter((l) => l.includes("getItem('troca-lingua')"));
+  assert.equal(trocas.length, 1, 'uma linha de troca-lingua em public/inicio.js');
+  const semTroca = linhas.filter((l) => l !== trocas[0]).join('\n');
+  assert.equal(semTroca, readFileSync('site/inicio.js', 'utf8'));
+});
+
 test('(z) as fixtures não gravam em src/data/github.json nem em public/dados', () => {
   assert.equal(statSync('src/data/github.json').mtimeMs, mtimeGithubJson, 'src/data/github.json foi regravado');
   assert.equal(existsSync('public/dados'), existiaPublicDados, 'public/dados foi criado ou removido');
