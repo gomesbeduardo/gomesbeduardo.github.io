@@ -76,6 +76,36 @@
       requestAnimationFrame(function () { requestAnimationFrame(tarde); });
     });
   }
+  // ---- R4: sem repetir a abertura ----
+  if (entrada) {
+    var h1 = document.querySelector('.hero h1');
+    if (h1) h1.setAttribute('data-sem-abertura', ''); // fica; o CSS mantém o nome escrito (global.css)
+
+    // Contadores dentro ou acima da janela mostram o valor final e não contam de novo; os de baixo seguem animando.
+    // O main.js zera cada .num no init e cria um ScrollTrigger (once) por contador, que dispara um tween em um
+    // objeto { n }. Aqui: remove o gatilho dos visíveis, completa os tweens {n} já ativos e grava o valor final.
+    var numerosFinais = function () {
+      var nums = document.querySelectorAll('.num');
+      var vis = [];
+      for (var i = 0; i < nums.length; i++) { if (nums[i].getBoundingClientRect().top < window.innerHeight) vis.push(nums[i]); }
+      if (!vis.length) return;
+      if (window.ScrollTrigger) ScrollTrigger.getAll().forEach(function (st) {
+        for (var k = 0; k < vis.length; k++) { if (st.trigger === vis[k]) { st.kill(); return; } }
+      });
+      if (window.gsap) gsap.globalTimeline.getChildren(true, true, false).forEach(function (tw) {
+        var alvo = tw.targets && tw.targets()[0];
+        if (alvo && typeof alvo === 'object' && typeof alvo.n === 'number' && !alvo.nodeType) { tw.progress(1); tw.kill(); }
+      });
+      vis.forEach(function (el) {
+        var cheio = el.querySelector('.sr-only'), tela = el.querySelector('[aria-hidden]');
+        if (cheio && tela) tela.textContent = cheio.textContent;
+      });
+    };
+    Promise.all([window.pageShown || Promise.resolve(), window.libsReady || Promise.resolve()]).then(function () {
+      numerosFinais(); // logo depois do init, antes de pintar o zero
+      requestAnimationFrame(function () { numerosFinais(); requestAnimationFrame(numerosFinais); });
+    });
+  }
   // O atributo que o inicio.js pôs no <html> sai depois do primeiro quadro.
   requestAnimationFrame(function () { requestAnimationFrame(function () { raiz.removeAttribute('data-troca-lingua'); }); });
 })();

@@ -63,3 +63,11 @@
 @import "./legado/style.css" layer(components);
 @import "./legado/surpresas.css" layer(components);
 @import "./legado/transicoes.css" layer(components);
+
+/* Troca de língua (spec 001d R4): a página aberta pelo seletor PT/EN não repete a escrita do nome. Enquanto o
+   <html> tem data-troca-lingua (primeiro quadro) e depois, pela marca que o lingua.js põe no h1, as letras ficam
+   cheias e sem animação, mesmo com a classe .run do main.js. Em carga normal nenhuma das duas existe. */
+@layer components {
+  html[data-troca-lingua] .hero h1 .fill .ch,
+  .hero h1[data-sem-abertura] .fill .ch { opacity: 1; animation: none; }
+}
