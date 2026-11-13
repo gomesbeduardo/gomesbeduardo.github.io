@@ -46,21 +46,7 @@ async function trocar(page) {
   await espera(1000);
 }
 
-// As fontes do Google (folha de estilo que bloqueia o load) vêm da rede: a primeira resposta de cada URL fica guardada
-// e serve todos os contextos. Sem isso, centenas de cargas em paralelo dependem da rede e um goto pode estourar 30 s.
-const fontes = new Map();
-async function servirFonte(route) {
-  const u = route.request().url();
-  if (!fontes.has(u)) {
-    const r = await route.fetch();
-    if (!r.ok()) return route.abort();
-    fontes.set(u, { status: r.status(), headers: r.headers(), body: await r.body() });
-  }
-  return route.fulfill(fontes.get(u));
-}
 const browser = await chromium.launch();
-const novoContexto = browser.newContext.bind(browser);
-browser.newContext = async (opcoes) => { const c = await novoContexto(opcoes); await c.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, servirFonte); return c; };
 try {
   const ctx0 = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'no-preference' });
 
