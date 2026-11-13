@@ -255,10 +255,10 @@ try {
       await ctx.close();
     }
   }
-  if (SO.length === 0) {
+  if (SO.length === 0 || SO.includes('T2')) {
 
   // ---- T1 (C1): InfoHub a 120 px, PT->EN em 1280 e 390; EN->PT em 1280 ----
-  for (const [larg, alt, de, para, rot, dpr] of [[1280, 800, '', 'en/', 'PT->EN 1280'], [390, 844, '', 'en/', 'PT->EN 390'], [1280, 800, 'en/', '', 'EN->PT 1280'], [390, 844, '', 'en/', 'PT->EN 390 DPR2', 2]]) {
+  if (SO.length === 0) for (const [larg, alt, de, para, rot, dpr] of [[1280, 800, '', 'en/', 'PT->EN 1280'], [390, 844, '', 'en/', 'PT->EN 390'], [1280, 800, 'en/', '', 'EN->PT 1280'], [390, 844, '', 'en/', 'PT->EN 390 DPR2', 2]]) {
     const ctx = await browser.newContext({ viewport: { width: larg, height: alt }, deviceScaleFactor: dpr || 1, reducedMotion: 'no-preference' });
     const page = await ctx.newPage();
     await page.addInitScript(() => { addEventListener('pagereveal', () => requestAnimationFrame(() => { window.__primeiro = window.scrollY; })); });
@@ -282,7 +282,9 @@ try {
   }
 
   // ---- T2 (C2): todas as âncoras, home e 3 projetos, PT<->EN, 390 e 1280 ----
-  const paginas = ['', 'projeto-leadgate.html', 'projeto-infohub.html', 'projeto-lms.html'];
+  const todas = ['', 'projeto-leadgate.html', 'projeto-infohub.html', 'projeto-lms.html'];
+  const so = argumento('paginas', '').split(',').filter(Boolean); // --paginas projeto-lms.html restringe a varredura
+  const paginas = so.length ? todas.filter((p) => so.includes(p)) : todas;
   const resumo = { testadas: 0, fimDePagina: 0, falhas: [], maxDif: 0 };
   async function varrer(larg, alt, pg, dir) {
     const ctx = await browser.newContext({ viewport: { width: larg, height: alt }, reducedMotion: 'no-preference' });
@@ -304,7 +306,8 @@ try {
       resumo.testadas++;
       const dif = depois === null ? null : depois - antes;
       if (dif !== null && Math.abs(dif) <= 0.5) { resumo.maxDif = Math.max(resumo.maxDif, Math.abs(dif)); continue; }
-      const nofim = m1.y >= m1.max - 1 || m0.y >= m0.max - 1;
+      if (m0.y >= m0.max - 1) log(`T2 origem ${origem}#${id} estava no fim (y=${m0.y}/${m0.max})`);
+      const nofim = m1.y >= m1.max - 1; // só vale o fim da página de destino
       if (nofim) { resumo.fimDePagina++; log(`T2 ${dir} ${larg} ${origem}#${id}: fim de página, dif=${dif}`); continue; }
       resumo.falhas.push(`${dir} ${larg} ${origem} ${id}: antes=${antes} depois=${depois}`);
     }
@@ -316,7 +319,7 @@ try {
   ok(`T2 âncoras testadas=${resumo.testadas} (fim de página aceitos=${resumo.fimDePagina}) com diferença <= 0.5 px (máx ${resumo.maxDif.toFixed(3)})`, resumo.falhas.length === 0, resumo.falhas.slice(0, 15).join(' | '));
 
   // ---- T3: fim da página ----
-  {
+  if (SO.length === 0) {
     const page = await ctx0.newPage();
     await abrir(page, '');
     await page.evaluate(() => { const y = document.documentElement.scrollHeight; if (window.__lenis) window.__lenis.scrollTo(y, { immediate: true }); else window.scrollTo(0, y); });
@@ -330,7 +333,7 @@ try {
   }
 
   // ---- T6 (C5): entrada velha ou de outro caminho é ignorada e apagada ----
-  for (const [rot, entrada] of [['(a) 6 s atrás', { caminho: '/en/', ancora: 'proj-infohub', top: 120, quando: Date.now() - 6000 }], ['(b) outro caminho', { caminho: '/projeto-lms.html', ancora: 'proj-infohub', top: 120, quando: Date.now() }]]) {
+  if (SO.length === 0) for (const [rot, entrada] of [['(a) 6 s atrás', { caminho: '/en/', ancora: 'proj-infohub', top: 120, quando: Date.now() - 6000 }], ['(b) outro caminho', { caminho: '/projeto-lms.html', ancora: 'proj-infohub', top: 120, quando: Date.now() }]]) {
     const page = await ctx0.newPage();
     await page.goto(url + 'en/', { waitUntil: 'load' });
     await page.evaluate((e) => sessionStorage.setItem('troca-lingua', JSON.stringify(e)), entrada);
@@ -343,7 +346,7 @@ try {
   }
 
   // ---- T7 (C6): sem JS a troca abre a outra página no topo ----
-  {
+  if (SO.length === 0) {
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, javaScriptEnabled: false });
     const page = await ctx.newPage();
     await page.goto(url, { waitUntil: 'load' });
