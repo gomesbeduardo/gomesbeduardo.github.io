@@ -1,5 +1,5 @@
 // Paridade de capturas (spec 001a R7): compara duas pastas que servem o mesmo site, página a página, com 0 pixel de diferença
-// e com as mesmas cores computadas em cada elemento renderizado (o limiar do pixelmatch deixa passar um cinza sólido que muda uns 26 níveis).
+// e com as mesmas cores computadas em cada elemento renderizado (com o limiar 0,03 o pixelmatch deixa passar uns 8 níveis por canal; a cor computada cobre o resto).
 //   node scripts/site/paridade.e2e.mjs [--a site] [--b dist] [--limiar 0.03]
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';

@@ -1,5 +1,5 @@
-// Troca de língua no mesmo ponto de leitura (spec 001d R2 e R3). Script clássico, carregado com defer
-// nas páginas que têm o seletor PT/EN. Sem JS, o link continua abrindo a outra página no topo.
+// Troca de língua no mesmo ponto de leitura (spec 001d R2 e R3). Script clássico no fim do <body>, sem defer
+// (001d R6), nas páginas que têm o seletor PT/EN; o <i id="lingua-pronta"> depois dele e o <link rel="expect"> que o inicio.js acrescenta seguram a 1ª pintura até a página estar posicionada. Sem JS, o link continua abrindo a outra página no topo.
 (function () {
   var CHAVE = 'troca-lingua';
   var ESPERA_MAX = 5000;
@@ -49,7 +49,7 @@
 
   function achar(id) { return id ? document.querySelector('[data-ancora="' + id + '"]') : null; }
 
-  // R5: a primeira ação do visitante encerra todas as correções pendentes (fontes, quadro seguinte, load, init).
+  // R3: a primeira ação do visitante encerra todas as correções pendentes (fontes, quadro seguinte, load, init).
   var cancelado = false;
   var ENTRADAS = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
   function parar() {
