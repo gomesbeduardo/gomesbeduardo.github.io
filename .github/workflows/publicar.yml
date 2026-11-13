@@ -1,8 +1,10 @@
 # Publica o site no GitHub Pages (spec 002, seção "Workflow e secret"; spec 003, R5).
 #
-# Dispara em push na main, toda segunda às 06:00 UTC (03:00 em Brasília) e à mão (spec 001a R10).
-# Jobs: testes -> coletar (números do GitHub; commit do JSON em schedule/dispatch na main) -> build -> deploy (só na main).
-# Rodado à mão em outra branch, vai até o build: não commita o JSON nem publica.
+# Dispara em push na main e à mão (spec 001a R10).
+# Jobs: testes -> coletar (números do GitHub, só para o build) -> build -> deploy (só na main).
+# Sem schedule e sem commit do JSON até o site/ sair na etapa 3: o build.test e a paridade comparam o dist/ com o site/
+# congelado, e um github.json novo na main quebraria os dois (001a R10, emenda de 13/11/2026).
+# Rodado à mão em outra branch, vai até o build: não publica.
 # Secret necessário: GH_TOKEN_LEITURA (fine-grained PAT do usuário, só leitura). Nunca escreva o token aqui.
 # Versões das actions fixadas por SHA de commit; a tag vai no comentário.
 name: Publicar site
@@ -10,8 +12,6 @@ name: Publicar site
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: '0 6 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -44,34 +44,15 @@ jobs:
     name: Coletar números do GitHub
     needs: testes
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # commit semanal do JSON (spec 002, R8: mantém o cron vivo e guarda o último dado bom)
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Coletar (estrito no run agendado, para falhar e avisar por e-mail)
+      - name: Coletar (sem --estrito; se falhar, mantém o github.json existente, 002 R6)
         env:
           GH_TOKEN_LEITURA: ${{ secrets.GH_TOKEN_LEITURA }}
-        run: |
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            node scripts/github/coletar.mjs --estrito
-          else
-            node scripts/github/coletar.mjs
-          fi
-      - name: Commit do JSON quando mudou (só schedule e workflow_dispatch, na main)
-        if: github.event_name != 'push' && github.ref == 'refs/heads/main'
-        run: |
-          if git diff --quiet -- src/data/github.json; then
-            echo "src/data/github.json sem mudança; nada a commitar"
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/data/github.json
-          git commit -m "chore(dados): números do GitHub de $(date -u +%F)"
-          git push
+        run: node scripts/github/coletar.mjs
       - name: Guardar o JSON para o build
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
         with:
