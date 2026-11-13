@@ -166,30 +166,34 @@ try {
   // A âncora 'numeros' tem ancestral com parallax, então o top assentado difere do da origem; o que se mede é o salto
   // (milhares de px sem a correção antes do quadro) em relação ao top em que a página assenta.
   // Mede no primeiro rAF depois do pagereveal (o que entra no quadro pintado) e em todo rAF até o load.
-  if (quero('T11')) for (const movimento of ['no-preference', 'reduce']) {
+  if (quero('T11')) for (const [pag, movimento] of [['', 'no-preference'], ['', 'reduce'], ['projeto-lms.html', 'no-preference'], ['projeto-lms.html', 'reduce']]) {
+    const rot = `${pag ? 'LMS' : 'home'} ${movimento}`;
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: movimento });
     const page = await ctx.newPage();
     await page.addInitScript(PRIMEIRO_QUADRO);
     await page.addInitScript(() => {
-      const ancora = () => { const e = document.querySelector('[data-ancora="numeros"]'); return e ? e.getBoundingClientRect().top : null; };
+      const ancora = () => { const e = document.querySelector('[data-ancora="' + (window.__alvo || '') + '"]'); return e ? e.getBoundingClientRect().top : null; };
       window.__quadros = [];
       const laco = () => { window.__quadros.push({ y: scrollY, top: ancora() }); if (document.readyState !== 'complete') requestAnimationFrame(laco); };
       const inicio = () => requestAnimationFrame(laco);
       if ('onpagereveal' in window) addEventListener('pagereveal', inicio); else addEventListener('DOMContentLoaded', inicio);
     });
-    await abrir(page, '');
-    await colocar(page, 'numeros', 300);
-    const antes = await topo(page, 'numeros');
+    await abrir(page, pag);
+    const alvo = pag ? await page.evaluate(() => [...document.querySelectorAll('h2[data-ancora]')].pop().dataset.ancora) : 'numeros';
+    await page.evaluate((a) => { sessionStorage.setItem('alvo-t11', a); }, alvo);
+    await page.addInitScript(() => { try { window.__alvo = sessionStorage.getItem('alvo-t11'); } catch {} });
+    await colocar(page, alvo, 300);
+    const antes = await topo(page, alvo);
     await trocar(page);
-    const depois = await topo(page, 'numeros');
+    const depois = await topo(page, alvo);
     const q = await page.evaluate(() => window.__primeiroQuadro);
     const quadros = await page.evaluate(() => window.__quadros);
     const primeiro = quadros[0];
     const e0 = q ? errosAbertura(q) : ['sem snapshot do primeiro quadro'];
-    if (q && !q.marca) e0.push('nome sem marca data-sem-abertura');
-    ok(`T11 (${movimento}) primeiro quadro: âncora onde a página assenta (±2 px), contadores finais, nome escrito`, !!primeiro && primeiro.top !== null && Math.abs(primeiro.top - depois) <= 2 && primeiro.y > 0 && e0.length === 0 && q.nums.length > 0, `y=${primeiro && primeiro.y} top=${primeiro && primeiro.top} antes=${antes} depois=${depois} ${e0.slice(0, 3).join('; ')} nums=${q && q.nums.length}`);
+    if (q && !pag && !q.marca) e0.push('nome sem marca data-sem-abertura');
+    ok(`T11 (${rot}) primeiro quadro: âncora onde a página assenta (±2 px), contadores finais, nome escrito`, !!primeiro && primeiro.top !== null && Math.abs(primeiro.top - depois) <= 2 && primeiro.y > 0 && e0.length === 0 && (pag ? true : q.nums.length > 0), `y=${primeiro && primeiro.y} top=${primeiro && primeiro.top} antes=${antes} depois=${depois} ${e0.slice(0, 3).join('; ')} nums=${q && q.nums.length}`);
     const errados = quadros.filter((f) => f.top === null || Math.abs(f.top - depois) > 2);
-    ok(`T11 (${movimento}) nenhum quadro até o load fora da posição`, quadros.length > 0 && errados.length === 0, `quadros=${quadros.length} errados=${JSON.stringify(errados.slice(0, 3))}`);
+    ok(`T11 (${rot}) nenhum quadro até o load fora da posição`, quadros.length > 0 && errados.length === 0, `quadros=${quadros.length} errados=${JSON.stringify(errados.slice(0, 3))}`);
     await ctx.close();
   }
 
