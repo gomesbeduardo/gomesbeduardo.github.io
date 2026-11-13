@@ -161,6 +161,38 @@ try {
     }
   }
 
+  // ---- T11 (spec 001d R3, R4, R5): o primeiro quadro pintado da página nova já está na posição guardada ----
+  // Com as fontes em cache a página pinta antes de um script com defer rodar; o quadro errado aparece com ou sem esmaecimento.
+  // A âncora 'numeros' tem ancestral com parallax, então o top assentado difere do da origem; o que se mede é o salto
+  // (milhares de px sem a correção antes do quadro) em relação ao top em que a página assenta.
+  // Mede no primeiro rAF depois do pagereveal (o que entra no quadro pintado) e em todo rAF até o load.
+  if (quero('T11')) for (const movimento of ['no-preference', 'reduce']) {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: movimento });
+    const page = await ctx.newPage();
+    await page.addInitScript(PRIMEIRO_QUADRO);
+    await page.addInitScript(() => {
+      const ancora = () => { const e = document.querySelector('[data-ancora="numeros"]'); return e ? e.getBoundingClientRect().top : null; };
+      window.__quadros = [];
+      const laco = () => { window.__quadros.push({ y: scrollY, top: ancora() }); if (document.readyState !== 'complete') requestAnimationFrame(laco); };
+      const inicio = () => requestAnimationFrame(laco);
+      if ('onpagereveal' in window) addEventListener('pagereveal', inicio); else addEventListener('DOMContentLoaded', inicio);
+    });
+    await abrir(page, '');
+    await colocar(page, 'numeros', 300);
+    const antes = await topo(page, 'numeros');
+    await trocar(page);
+    const depois = await topo(page, 'numeros');
+    const q = await page.evaluate(() => window.__primeiroQuadro);
+    const quadros = await page.evaluate(() => window.__quadros);
+    const primeiro = quadros[0];
+    const e0 = q ? errosAbertura(q) : ['sem snapshot do primeiro quadro'];
+    if (q && !q.marca) e0.push('nome sem marca data-sem-abertura');
+    ok(`T11 (${movimento}) primeiro quadro: âncora onde a página assenta (±2 px), contadores finais, nome escrito`, !!primeiro && primeiro.top !== null && Math.abs(primeiro.top - depois) <= 2 && primeiro.y > 0 && e0.length === 0 && q.nums.length > 0, `y=${primeiro && primeiro.y} top=${primeiro && primeiro.top} antes=${antes} depois=${depois} ${e0.slice(0, 3).join('; ')} nums=${q && q.nums.length}`);
+    const errados = quadros.filter((f) => f.top === null || Math.abs(f.top - depois) > 2);
+    ok(`T11 (${movimento}) nenhum quadro até o load fora da posição`, quadros.length > 0 && errados.length === 0, `quadros=${quadros.length} errados=${JSON.stringify(errados.slice(0, 3))}`);
+    await ctx.close();
+  }
+
   if (quero('T5')) {
     const normal = async (page, rot) => {
       await page.waitForFunction(() => document.querySelector('.hero h1.run'), null, { timeout: 5000 }).catch(() => {});

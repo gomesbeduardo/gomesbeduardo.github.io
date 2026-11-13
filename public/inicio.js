@@ -5,7 +5,7 @@
   try { theme = localStorage.getItem('tema'); } catch (e) {}
   if (theme === 'light' || theme === 'dark') root.dataset.theme = theme;
   root.dataset.mode = theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  try { var tl = JSON.parse(sessionStorage.getItem('troca-lingua')); if (tl && tl.caminho === location.pathname && Date.now() - tl.quando < 5000) root.dataset.trocaLingua = ''; } catch (e) {}
+  try { var tl = JSON.parse(sessionStorage.getItem('troca-lingua')); if (tl && tl.caminho === location.pathname && Date.now() - tl.quando < 5000) { root.dataset.trocaLingua = ''; var ex = document.createElement('link'); ex.rel = 'expect'; ex.href = '#lingua-pronta'; ex.setAttribute('blocking', 'render'); document.head.appendChild(ex); } } catch (e) {}
 })();
 
 

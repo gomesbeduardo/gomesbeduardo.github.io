@@ -14,6 +14,7 @@ export function normalizarHtml(html) {
     .replace(/<link\b[^>]*href="\/_astro\/[^"]*\.css"[^>]*>/gi, '')
     // Exceção aprovada (spec 001d R6): o dist carrega lingua.js, que o site/ legado não tem.
     .replace(/<script\b[^>]*\bsrc="(?:\.\.\/)?lingua\.js"[^>]*><\/script>/gi, '')
+    .replace(/<i id="lingua-pronta" hidden><\/i>/gi, "") // alvo do <link rel="expect"> que o inicio.js põe na troca de língua
     .replace(/^\s*<!doctype html>/i, '<!doctype html>');
   const itens = [];
   for (const m of semLinksCss.matchAll(/<(!doctype[^>]*|\/?[a-zA-Z][^\s>/]*(?:"[^"]*"|'[^']*'|[^>"'])*)>|([^<]+)/g)) {
