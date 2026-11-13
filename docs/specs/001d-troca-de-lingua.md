@@ -1,6 +1,6 @@
 # Spec 001d: troca de língua sem perder o ponto de leitura
 
-Estado: aprovada pelo responsável em 11/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026; tolerância de 0,5 px aprovada em 12/11/2026; carregamento do `lingua.js` (R6) aprovado em 13/11/2026.
 Parte 5 de 5 da spec 001. Entra na etapa 1, como a última fatia, depois que a paridade de 001a passar. Vale também nas etapas 2 e 3.
 
 ## Pedido literal
@@ -56,7 +56,11 @@ A troca de língua é um link comum para a página equivalente na outra língua 
 
 ### R6. JS nesta etapa
 
-- A regra de 001a R4 (JS copiados de `site/` sem alteração) ganha uma exceção só para esta fatia: o código de R2 a R4 entra num arquivo novo `public/lingua.js`, carregado com `defer` em todas as páginas que têm troca de língua, mais a leitura de `troca-lingua` em `inicio.js`, que roda no `head` com `blocking="render"`. Nenhuma outra linha dos JS herdados muda.
+- A regra de 001a R4 (JS copiados de `site/` sem alteração) ganha uma exceção só para esta fatia: o código de R2 a R4 entra num arquivo novo `public/lingua.js`, carregado em todas as páginas que têm troca de língua (forma de carregar no item seguinte), mais a leitura de `troca-lingua` em `inicio.js`, que roda no `head` com `blocking="render"`. Nenhuma outra linha dos JS herdados muda.
+- Carregamento, ajuste aprovado em 13/11/2026. Com `defer`, o `lingua.js` rodava depois do fim da leitura do HTML, e com a carga rápida (folha de fontes em cache, o caso comum na troca de língua) o primeiro quadro saía no topo, com os contadores em zero, e só no quadro seguinte a página pulava para o ponto de leitura. Agora:
+  - o `lingua.js` é um script clássico, sem `defer`, no fim do `<body>` de toda página com troca de língua, seguido de `<i id="lingua-pronta" hidden></i>`;
+  - a linha do `inicio.js` que lê `troca-lingua`, com entrada válida, também acrescenta ao `head` um `<link rel="expect" href="#lingua-pronta" blocking="render">`, e o navegador segura a primeira pintura até o parser passar desse elemento, quando o `lingua.js` já posicionou a página;
+  - sem entrada válida o link não entra e a navegação pinta como antes.
 - Na etapa 3, `lingua.js` vira o módulo `lingua` de 001c R1, com o mesmo comportamento, coberto pelos testes desta parte.
 - A paridade de 001a C1 não muda: as capturas abrem cada página do zero, sem `troca-lingua`.
 
