@@ -5,6 +5,7 @@
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { argumento, carregarPlaywright, servir } from './lib-e2e.mjs';
+import { fontesDoGoogle } from './fontes-google.mjs';
 
 const { chromium } = await carregarPlaywright();
 const { url, fechar } = await servir(resolve(fileURLToPath(new URL('../../', import.meta.url)), argumento('raiz', 'dist')));
@@ -48,19 +49,10 @@ async function trocar(page) {
 
 // As fontes do Google (folha de estilo que bloqueia o load) vêm da rede: a primeira resposta de cada URL fica guardada
 // e serve todos os contextos. Sem isso, centenas de cargas em paralelo dependem da rede e um goto pode estourar 30 s.
-const fontes = new Map();
-async function servirFonte(route) {
-  const u = route.request().url();
-  if (!fontes.has(u)) {
-    const r = await route.fetch();
-    if (!r.ok()) return route.abort();
-    fontes.set(u, { status: r.status(), headers: r.headers(), body: await r.body() });
-  }
-  return route.fulfill(fontes.get(u));
-}
+const fonte = fontesDoGoogle(() => browser.close().catch(() => {}));
 const browser = await chromium.launch();
 const novoContexto = browser.newContext.bind(browser);
-browser.newContext = async (opcoes) => { const c = await novoContexto(opcoes); await c.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, servirFonte); return c; };
+browser.newContext = async (opcoes) => { const c = await novoContexto(opcoes); await c.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, fonte.servir); return c; };
 try {
   const ctx0 = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'no-preference' });
 
@@ -412,8 +404,11 @@ try {
 
   }
   await ctx0.close();
+} catch (e) {
+  if (!fonte.estado.erro) throw e; // com as fontes inacessíveis a falha já foi dita; o resto é o navegador fechado
+  falhas++;
 } finally {
-  await browser.close();
+  await browser.close().catch(() => {});
   await fechar();
 }
 console.log(falhas ? `\n${falhas} falha(s)` : '\ntudo certo');

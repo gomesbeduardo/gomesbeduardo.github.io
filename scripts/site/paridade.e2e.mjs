@@ -5,6 +5,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { carregarPlaywright, servir, argumento } from './lib-e2e.mjs';
+import { fontesDoGoogle } from './fontes-google.mjs';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 
@@ -40,21 +41,12 @@ async function assentar(page) {
 }
 
 // As fontes vêm do Google: a primeira resposta de cada URL fica guardada e serve todos os contextos, nas duas origens.
-const fontes = new Map();
-async function servirFonte(route) {
-  const url = route.request().url();
-  if (!fontes.has(url)) {
-    const r = await route.fetch();
-    if (!r.ok()) return route.abort();
-    fontes.set(url, { status: r.status(), headers: r.headers(), body: await r.body() });
-  }
-  return route.fulfill(fontes.get(url));
-}
+const fonte = fontesDoGoogle(() => browser.close().catch(() => {}));
 
 async function capturar(url, [w, h], [, tema]) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 1, reducedMotion: 'reduce', colorScheme: tema });
   try {
-    await ctx.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, servirFonte);
+    await ctx.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, fonte.servir);
     await ctx.addInitScript((t) => { try { localStorage.setItem('tema', t); } catch {} }, tema);
     const page = await ctx.newPage();
     await page.goto(url, { waitUntil: 'load' });
@@ -141,7 +133,7 @@ try {
         n = pixelmatch(ia.data, ib.data, diff.data, ia.width, ia.height, { threshold: LIMIAR, includeAA: false });
       }
       if (!linha) linha = n === 0 && !difCores.length ? `ok ${rot} 0 px, cores iguais` : `FALHA ${rot} ${n} px, ${difCores.length} diferença(s) de cor`;
-    } catch (e) { linha = `FALHA ${rot} erro: ${e.message.split('\n')[0]}`; }
+    } catch (e) { if (fonte.estado.erro) throw e; linha = `FALHA ${rot} erro: ${e.message.split('\n')[0]}`; }
     console.log(linha);
     if (linha.startsWith('FALHA')) {
       falhas++;
@@ -154,10 +146,13 @@ try {
       }
     }
   }
+} catch (e) {
+  if (!fonte.estado.erro) throw e; // com as fontes inacessíveis a falha já foi dita; o resto é o navegador fechado
+  falhas++;
 } finally {
-  await browser.close();
+  await browser.close().catch(() => {});
   await A.fechar();
   await B.fechar();
 }
-console.log(falhas ? `${falhas} de ${paginas.length * 4} combinações com diferença` : `${paginas.length * 4} combinações iguais`);
+if (!fonte.estado.erro) console.log(falhas ? `${falhas} de ${paginas.length * 4} combinações com diferença` : `${paginas.length * 4} combinações iguais`);
 process.exit(falhas ? 1 : 0);
