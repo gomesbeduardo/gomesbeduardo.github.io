@@ -1,0 +1,68 @@
+---
+import { dicionario } from '../i18n';
+import type { Lang } from '../i18n/tipos';
+import Base from '../layouts/Base.astro';
+import Topo from './Topo.astro';
+import Hero from './Hero.astro';
+import Sobre from './Sobre.astro';
+import Trajetoria from './Trajetoria.astro';
+import Experiencia from './Experiencia.astro';
+import Sprites from './Sprites.astro';
+import Stack from './Stack.astro';
+import Projetos from './Projetos.astro';
+import NumerosGithub from './NumerosGithub.astro';
+import Contato from './Contato.astro';
+import Rodape from './Rodape.astro';
+import ModalSobreSite from './ModalSobreSite.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const h = dicionario(lang).home;
+const c = h.cabeca;
+const pt = lang === 'pt';
+const PT_URL = 'https://gomesbeduardo.github.io/';
+const EN_URL = 'https://gomesbeduardo.github.io/en/';
+---
+<Base htmlAttrs={{ lang: pt ? "pt-BR" : "en" }} bodyAttrs={{  }}>
+<Fragment slot="head">
+<title>{c.titulo}</title>
+<meta charset="utf-8"><meta name="description" content={c.descricao}><meta name="viewport" content="width=device-width,initial-scale=1">
+{pt
+  ? <Fragment><link rel="alternate" hreflang="pt-BR" href={PT_URL}><link rel="alternate" hreflang="en" href={EN_URL}><link rel="alternate" hreflang="x-default" href={PT_URL}><meta property="og:locale:alternate" content={c.ogLocaleAlternate}><link rel="canonical" href={c.url}><link rel="icon" href={`${h.base}favicon.svg`} type="image/svg+xml"></Fragment>
+  : <Fragment><link rel="canonical" href={c.url}><link rel="alternate" hreflang="pt-BR" href={PT_URL}><link rel="alternate" hreflang="en" href={EN_URL}><link rel="alternate" hreflang="x-default" href={PT_URL}><link rel="icon" href={`${h.base}favicon.svg`} type="image/svg+xml"></Fragment>}<meta property="og:title" content={c.titulo}><meta property="og:description" content={c.descricao}><meta property="og:url" content={c.url}><meta property="og:type" content="website"><meta property="og:locale" content={c.ogLocale}>{!pt && <meta property="og:locale:alternate" content={c.ogLocaleAlternate}>}<meta property="og:site_name" content="Eduardo Gomes">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@700..800&family=Funnel+Sans:wght@400..600&family=Reddit+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500&family=Mona+Sans:wght@500&family=Open+Sans:wght@500&family=Sora:wght@500&family=Manrope:wght@500&family=Inter:wght@500&family=Readex+Pro:wght@500&family=Google+Sans:wght@500&text=.ACGHNPSTVWZabcdegijklmnoprstuwx&display=swap">
+<script is:inline src={`${h.base}vendor/gsap.min.js`} defer></script>
+<link rel="preload" as="script" href={`${h.base}vendor/ScrollTrigger.min.js`}>
+<script is:inline src={`${h.base}vendor/lenis.min.js`} defer></script>
+<script is:inline src={`${h.base}inicio.js`} blocking="render"></script>
+<script is:inline src={`${h.base}tema.js`} defer></script>
+</Fragment>
+<a class="skip" href="#conteudo">{c.skip}</a>
+<Sprites />
+<Topo lang={lang} />
+<main id="conteudo">
+<Hero lang={lang} />
+
+<Sobre lang={lang} />
+
+<Trajetoria lang={lang} />
+
+<Experiencia lang={lang} />
+
+<Stack lang={lang} />
+
+<Projetos lang={lang} />
+
+<NumerosGithub lang={lang} />
+
+<Contato lang={lang} />
+</main>
+<Rodape lang={lang} />
+<ModalSobreSite lang={lang} />
+<script is:inline src={`${h.base}main.js`} defer></script>
+<script is:inline src={`${h.base}surpresas.js`} defer></script>
+<script is:inline src={`${h.base}rodape.js`} defer></script>
+<script is:inline src={`${h.base}lingua.js`}></script>
+<i id="lingua-pronta" hidden></i>
+</Base>

@@ -225,6 +225,14 @@ test('(a2) C1/R4: JS e CSS herdados são byte a byte iguais aos de site/ (exceto
   assert.equal(semTroca, readFileSync('site/inicio.js', 'utf8'));
 });
 
+test('(e3) R1: home PT e EN não duplicam a página', () => {
+  for (const [arq, lang] of [['src/pages/index.astro', 'pt'], ['src/pages/en/index.astro', 'en']]) {
+    const src = readFileSync(arq, 'utf8');
+    for (const proibido of ['<title', '<meta', '<link', 'Ir para o conteúdo', 'Skip to content']) assert.ok(!src.includes(proibido), `${arq} não contém ${proibido}`);
+    assert.ok(src.includes(`<Home lang="${lang}" />`), `${arq} renderiza <Home lang="${lang}" />`);
+  }
+});
+
 test('(z) as fixtures não gravam em src/data/github.json nem em public/dados', () => {
   assert.equal(statSync('src/data/github.json').mtimeMs, mtimeGithubJson, 'src/data/github.json foi regravado');
   assert.equal(existsSync('public/dados'), existiaPublicDados, 'public/dados foi criado ou removido');

@@ -43,8 +43,18 @@ export interface CardProjeto {
 }
 
 // Textos com entidade ou tag inline ficam como HTML e saem com set:html.
+export interface CabecaHome {
+  titulo: string;
+  descricao: string;
+  url: string;
+  ogLocale: string;
+  ogLocaleAlternate: string;
+  skip: string;
+}
+
 export interface Home {
   base: string;
+  cabeca: CabecaHome;
   navLabel: string;
   links: Link[];
   idiomas: Idioma[];
