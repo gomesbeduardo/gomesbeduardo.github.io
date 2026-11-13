@@ -23,12 +23,13 @@
     var a = e.target && e.target.closest ? e.target.closest('.lang a[hreflang], .foot-lang a[hreflang]') : null;
     if (!a || a.hasAttribute('aria-current')) return;
     var blocos = document.querySelectorAll('[data-ancora]');
-    var titulo = null;
     for (var i = 0; i < blocos.length; i++) {
       var b = blocos[i];
-      if (/-titulo$/.test(b.getAttribute('data-ancora'))) titulo = b.getAttribute('data-ancora');
       var r = b.getBoundingClientRect();
       if (r.bottom > 0) {
+        // Título da seção que contém o bloco (R3), pela estrutura: o h2 com âncora da <section> (ou da coluna do rodapé).
+        var sec = b.closest('section, .foot-col'), h = sec ? sec.querySelector('h2[data-ancora]') : null;
+        var titulo = h ? h.getAttribute('data-ancora') : null;
         try {
           sessionStorage.setItem(CHAVE, JSON.stringify({ caminho: new URL(a.href).pathname, ancora: b.getAttribute('data-ancora'), titulo: titulo, top: repouso(b), quando: Date.now() }));
         } catch (err) {}

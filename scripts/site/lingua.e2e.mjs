@@ -232,6 +232,29 @@ try {
     }
   }
 
+  // ---- T10 (item 4; spec 001d R3): sem o id, vale o título da seção que contém o bloco ----
+  if (quero('T10')) {
+    for (const [rot, de, alvo] of [['home', '', 'home'], ['projeto LMS', 'projeto-lms.html', 'lms']]) {
+      const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'no-preference' });
+      const page = await ctx.newPage();
+      await abrir(page, de);
+      const id = await page.evaluate((alvo) => {
+        const ps = [...document.querySelectorAll('p[data-ancora]')].filter((p) => p.closest('section') && p.closest('section').querySelector('h2[data-ancora]'));
+        return ps[Math.floor(ps.length / 2)].dataset.ancora;
+      }, alvo);
+      await colocar(page, id, 80);
+      // nenhum bloco existe na página nova com estes ids, só os títulos
+      await page.evaluate(() => { let n = 0; document.querySelectorAll('[data-ancora]').forEach((e) => { if (e.tagName !== 'H2') e.setAttribute('data-ancora', 'inexistente-' + n++); }); });
+      const guardado = await page.evaluate(() => { document.querySelector('.lang a[hreflang]:not([aria-current]), .foot-lang a[hreflang]:not([aria-current])').click(); return JSON.parse(sessionStorage.getItem('troca-lingua')); });
+      await page.waitForNavigation({ waitUntil: 'load' });
+      await page.waitForFunction(() => !!window.__lenis, null, { timeout: 3000 }).catch(() => {});
+      await espera(1500);
+      const titulo = guardado && guardado.titulo;
+      const t = titulo ? await topo(page, titulo) : null;
+      ok(`T10 ${rot}: sem o id, o título da seção fica no top guardado`, !!guardado && /^inexistente-/.test(guardado.ancora) && !!titulo && t !== null && Math.abs(t - guardado.top) <= 0.5, `guardado=${JSON.stringify(guardado)} top do título=${t}`);
+      await ctx.close();
+    }
+  }
   if (SO.length === 0) {
 
   // ---- T1 (C1): InfoHub a 120 px, PT->EN em 1280 e 390; EN->PT em 1280 ----
