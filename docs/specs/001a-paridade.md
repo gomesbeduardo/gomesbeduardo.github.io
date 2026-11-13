@@ -1,6 +1,6 @@
 # Spec 001a: etapa 1, Astro e Tailwind com paridade do site atual
 
-Estado: aprovada pelo responsável em 11/11/2026; ajuste da R1 (configuração do Astro 7) aprovado em 12/11/2026; ajuste da R7 (limiar 0,03 e cor computada) aprovado em 13/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026; ajuste da R1 (configuração do Astro 7) aprovado em 12/11/2026; ajustes da R7 (limiar 0,03 e cor computada), da R10 (sem `schedule` até a etapa 3) e de C5/T5 aprovados em 13/11/2026.
 Parte 2 de 5 da spec 001. Ordem: `001-astro.md` (índice, decisões, regras transversais), `001a-paridade.md` (esta), `001b-seo-geo.md`, `001c-desempenho.md`. As decisões P1 a P9 e P3b estão no índice.
 
 ## Objetivo da etapa
@@ -111,7 +111,8 @@ Com JS desligado, o HTML gerado mostra o mesmo texto que `site/` mostra sem JS h
 
 ### R10. Troca de deploy e reversão
 
-- No PR da etapa 1, `pages.yml` passa a disparar só por `workflow_dispatch` (deixa de publicar `site/` no push), e `publicar.yml` volta a disparar em `push` na `main` e `workflow_dispatch`. O `schedule` semanal (segunda, 06:00 UTC) também liga nesta etapa (P7): o responsável cria o secret `GH_TOKEN_LEITURA` antes do merge, o run agendado roda o coletor com `--estrito` e faz o commit semanal de `src/data/github.json` na `main` (002 R8). No push, o job `coletar` roda sem `--estrito`: se a coleta falhar, ele avisa e mantém o `github.json` existente (002 R6), e o build segue.
+- No PR da etapa 1, `pages.yml` passa a disparar só por `workflow_dispatch` (deixa de publicar `site/` no push), e `publicar.yml` volta a disparar em `push` na `main` e `workflow_dispatch`. O responsável cria o secret `GH_TOKEN_LEITURA` antes do merge. No push, o job `coletar` roda sem `--estrito`: se a coleta falhar, ele avisa e mantém o `github.json` existente (002 R6), e o build segue com o JSON coletado, sem commitá-lo.
+- O `schedule` semanal (segunda, 06:00 UTC) e o commit semanal de `src/data/github.json` na `main` (002 R8) ficam desligados até o `site/` sair, na etapa 3. Emenda aprovada pelo responsável em 13/11/2026, depois da revisão final: o `build.test` e a paridade comparam o `dist/` com o `site/` congelado, e um `github.json` novo na `main` faria o `npm test` falhar no push seguinte, parando o deploy. O `pages.yml` de hoje não tem `schedule`, então nada que está no ar deixa de rodar. A versão anterior desta regra ligava o `schedule` já na etapa 1 (P7).
 - `ci.yml` ganha, depois dos testes e dos PDFs: `npm ci`, `npm run build`, instalação do Chromium e `npm run e2e`; sobe `scripts/site/paridade/saida/` como artefato quando existir.
 - Reversão: reverter o commit de merge na `main` devolve `pages.yml` ao push e republica `site/`, que não mudou. Nenhum outro passo.
 - Quem edita os workflows é a sessão principal com o ok do responsável; o worker entrega o diff proposto no PR sem aplicá-lo.
@@ -122,12 +123,12 @@ Com JS desligado, o HTML gerado mostra o mesmo texto que `site/` mostra sem JS h
 - C2. Dado `dist/`, então existem exatamente os arquivos de R2 nos caminhos de hoje, `dist/.nojekyll` existe, `dist/404.html` existe, e `dist/_astro/` tem um único `.css` (teste `scripts/site/build.test.mjs`).
 - C3. Dado `dist/`, então nenhum HTML referencia `style.css`, `surpresas.css` ou `transicoes.css`, e cada HTML carrega os scripts de F4 com os mesmos atributos e na mesma ordem relativa que o HTML equivalente em `site/` (teste `build.test.mjs` comparando a lista de `<script>` extraída dos dois).
 - C4. Dado `dist/` servido, quando todos os `scripts/site/*.e2e.mjs` rodam com `--raiz dist`, então todos passam, inclusive os da fila de F1.
-- C5. Dado `npm test`, então todos os testes estáticos de R8 passam lendo `dist/` e `public/`, e nenhum lê `site/`.
+- C5. Dado `npm test`, então todos os testes estáticos de R8 passam lendo `dist/` e `public/`, e nenhum lê `site/`, salvo o `build.test.mjs`, que compara com o `site/` por C3 e R7 (emenda de 13/11/2026; a versão anterior não tinha a exceção e contradizia C3).
 - C6. Dado `src/data/github.json` com `versao: 2`, quando `npm run build` roda, então falha com a mensagem de R5. Dado `amostra: true`, então `dist/index.html` e `dist/en/index.html` têm o aviso de R5; dado `amostra: false`, não têm (teste `build.test.mjs` com fixture).
 - C7. Dado `public/dados/processo.json` presente antes do build, então `dist/dados/processo.json` é idêntico; ausente, o build passa e `dist/dados/` não existe.
 - C8. Dado `npm run build` depois de `node scripts/curriculo/gerar.mjs`, então `dist/curriculo/curriculo-eduardo-gomes-pt.pdf` e `-en.pdf` existem e os links "Baixar currículo" do HTML apontam para eles.
 - C9. Dado `src/styles/global.css`, então o `@theme` tem todos os tokens de R3 com os valores de `site/style.css`, sem valor de cor, espaço ou raio fora dessa lista; `:root` mantém os nomes antigos; não há `@import "tailwindcss"` nem `@import "tailwindcss/preflight"` (teste `scripts/site/tema-tailwind.test.mjs`, regex no CSS fonte).
-- C10. Dado o PR da etapa 1, então `pages.yml` tem só `workflow_dispatch` em `on`, `publicar.yml` tem `push` em `main`, `workflow_dispatch` e o `schedule` da 002, o secret `GH_TOKEN_LEITURA` existe no repositório, `ci.yml` roda `npm run build` e `npm run e2e`, e todo `uses:` segue fixado por SHA de 40 hexadecimais (leitura manual do YAML, registrada no PR).
+- C10. Dado o PR da etapa 1, então `pages.yml` tem só `workflow_dispatch` em `on`, `publicar.yml` tem `push` em `main` e `workflow_dispatch`, sem `schedule` nem commit do JSON (R10), o secret `GH_TOKEN_LEITURA` existe no repositório, `ci.yml` roda `npm run build` e `npm run e2e`, e todo `uses:` segue fixado por SHA de 40 hexadecimais (leitura manual do YAML, registrada no PR).
 - C11. Dado o merge na `main` e o run do `publicar.yml`, então `https://gomesbeduardo.github.io/`, `/en/`, `/projeto-leadgate.html`, `/en/projeto-lms.html`, `/curriculo/curriculo-eduardo-gomes-pt.pdf` e `/dados/processo.json` respondem 200 e uma URL inexistente responde 404 com a página 404 do site (conferência manual do responsável, registrada no PR).
 
 ## Testes de aceite
@@ -138,7 +139,7 @@ Com JS desligado, o HTML gerado mostra o mesmo texto que `site/` mostra sem JS h
 | T2 | C1 | `dist/index.html` com um `padding` alterado em 1 px no `.top` | mesmo comando | falha em `index pt 1280 claro` com `diff.png` gravado; conta > 0 | e2e, caso de rejeição rodado à mão uma vez e registrado no PR |
 | T3 | C2, C3 | `dist/` | `node --test scripts/site/build.test.mjs` | lista de arquivos igual à de R2; scripts e atributos iguais aos de `site/` | unidade |
 | T4 | C4 | `dist/` | `npm run e2e` | todos os `*.e2e.mjs` passam | e2e |
-| T5 | C5 | repositório | `grep -rn "site/" scripts/site/*.test.mjs` | nenhuma ocorrência fora de comentário | manual |
+| T5 | C5 | repositório | `grep -rn "site/" scripts/site/*.test.mjs` | nenhuma ocorrência fora de comentário, salvo no `build.test.mjs` | manual |
 | T6 | C6 | fixture `versao: 2` | `astro build` | código 1 e a mensagem de R5 | integração, `build.test.mjs` |
 | T7 | C6 | fixture `amostra: true` | `astro build` | o aviso PT e EN de R5 no HTML; com `amostra: false`, ausente | integração |
 | T8 | C7, C8 | `public/dados/processo.json` e `public/curriculo/*.pdf` presentes | `astro build` | os três arquivos em `dist/` byte a byte iguais | unidade |
