@@ -86,39 +86,46 @@ O "6º semestre" fica fora; a formação mantém a previsão de conclusão em de
 
 ### Texto do modal (PT)
 
+Texto trocado em 12/11/2026, com o ok do responsável: seções novas "Time de agentes e modelos" (no lugar de "Um agente, uma função") e "Um caso deste site", e o perfil reescrito com 6 itens. O EN segue a mesma regra de tradução fiel.
+
 **Como este site foi feito**
 
 Eu decidi o que o site mostra e aprovei cada mudança. O Claude Code, da Anthropic, escreveu a maior parte do código, das specs e dos testes, dentro de um fluxo que montei para trabalhar com agentes de IA. As specs, os PRs e as revisões estão públicos no repositório.
 
 **Spec antes do código (SDD)**
 
-No desenvolvimento guiado por especificação, a spec é o contrato. Antes de qualquer linha de código, uma spec curta fixa o pedido literal, o problema, os critérios de aceite em Given/When/Then e o que fica fora. O agente que implementa trabalha contra esse contrato, e o revisor confere a entrega contra ele. Se a spec muda no caminho, eu aprovo de novo. Na spec 004 deste site, respondi 18 perguntas, uma decisão por vez, antes de o primeiro arquivo mudar.
+Toda mudança de comportamento começa por uma spec curta: o pedido literal, o problema, os critérios de aceite em Given/When/Then e o que fica fora. O agente que implementa trabalha contra esse texto, e o revisor confere a entrega contra ele. Se a spec muda no caminho, eu aprovo de novo. Na spec 004 deste site, respondi 18 perguntas, uma decisão por vez, antes de o primeiro arquivo mudar.
 
 **Teste antes da implementação (TDD)**
 
-No TDD, o teste vem primeiro e precisa falhar pelo motivo certo. Só depois entra o código que o faz passar. Com agentes, isso resolve um problema específico: um modelo consegue escrever um teste que passa sem provar nada. Ver o teste falhar antes da correção mostra que ele mede o comportamento pedido. Um exemplo daqui: o cabeçalho cortava o botão de tema no topo da página porque duas regras de CSS usavam a mesma classe. O teste que impede essa colisão falhou antes da correção e passou depois.
+O teste vem primeiro e precisa falhar pelo motivo certo. Só depois entra o código que o faz passar. Com agentes, a ordem importa porque um modelo consegue escrever um teste que passa sem provar nada; ver a falha antes da correção mostra que o teste mede o comportamento pedido. Um exemplo daqui: o cabeçalho cortava o botão de tema no topo da página porque duas regras de CSS usavam a mesma classe. O teste que impede essa colisão falhou antes da correção e passou depois.
 
-**Um agente, uma função**
+**Time de agentes e modelos**
 
-Cada agente faz uma coisa. Uma sessão principal coordena e decide. Agentes menores leem o código, escrevem o código com TDD ou pesquisam documentação externa. Quem escreve o código não revisa o próprio trabalho. O modelo mais capaz, e mais caro, entra só em regra de negócio, cálculo, dado ou área sensível.
+Cada agente faz uma coisa. A sessão principal roda no Claude Opus: conversa comigo, planeja, distribui o trabalho e confere cada entrega pelo diff. Ela não troca de modelo no meio da sessão, porque a troca relê todo o contexto. Agentes no Claude Sonnet fazem o volume: um mapeia o código, outro escreve o código com TDD, outro pesquisa documentação externa. O Claude Fable, o modelo mais capaz e com limite semanal de uso, entra só em alto risco: escreve a spec de regra de negócio, cálculo ou modelo de dados e faz a revisão final dos PRs desse tipo. Quem escreve o código não revisa o próprio trabalho, e as instruções para os agentes vão em inglês, que gasta menos tokens.
 
 **Revisão e aprovação**
 
-Cada entrega passa por no máximo duas revisões de agente. Cada achado chega com o cenário de falha e a prova no código. Achado crítico, alto ou médio é corrigido com um teste novo. O merge na branch principal espera a minha aprovação.
+Cada entrega passa por no máximo duas revisões de agente. O revisor aponta cada achado com o cenário de falha e a prova no código. Quem implementou corrige achado crítico, alto ou médio com um teste novo, e o merge na branch principal espera a minha aprovação.
 
 **Travas**
 
-Hooks do Claude Code bloqueiam o que um agente não deve fazer sozinho: push direto na branch principal, PR sem as seções e o veredito da revisão, merge sem a minha aprovação e servidor local sem tempo limite. Quando uma trava nega, o agente ajusta o pedido e segue a regra. Neste site, a trava negou o push da branch principal, e eu mesmo publiquei.
+Hooks do Claude Code bloqueiam o que um agente não deve fazer sozinho: push direto na branch principal, PR sem as seções e o veredito da revisão, merge sem a minha aprovação e servidor local sem tempo limite. Quando uma trava nega, o agente ajusta o pedido e segue a regra. Neste site, a trava negou o push na branch principal, e eu publiquei à mão.
+
+**Um caso deste site**
+
+Em 12/11/2026, abri este painel e ele apareceu de uma vez, sem animação. Pedi um design system fixo, em que todo elemento clicável tenha animação, e no meio do pedido mandei o agente só registrar o problema. Ele abriu a [issue #29](https://github.com/gomesbeduardo/gomesbeduardo.github.io/issues/29) com o pedido e um rascunho dos critérios de aceite. Em seguida, pedi que toda sessão lesse as issues abertas antes de começar trabalho novo e encaixasse as que tratam do mesmo assunto. O agente escreveu essa regra nas minhas instruções globais, pôs a leitura como primeiro passo do processo e criou um hook local que lista as issues abertas quando uma sessão começa neste projeto. Na primeira execução, o hook mostrou a #29. O design system ainda espera a spec.
 
 **Meu perfil de uso de IA**
 
-O Claude analisou a minha configuração e o histórico deste repositório. Esta é a leitura dele:
+O Claude leu a minha configuração e o histórico deste repositório e descreveu assim o meu jeito de trabalhar com IA:
 
-- Eduardo usa a IA como uma equipe com papéis e regras escritas. As regras ficam em arquivos de instrução e em skills, e valem para toda sessão.
-- Ele guarda para si as decisões de produto e de regra de negócio. Quando falta informação, o agente pergunta com um exemplo concreto e uma recomendação.
-- Ele mede o custo. Uma skill compara o gasto de tokens de cada semana com uma linha de base, e cada sessão tem um teto de contexto antes de passar o trabalho adiante.
-- Ele revisa o texto. Tudo o que alguém vai ler passa por uma checagem de padrões de escrita de IA, como frase de efeito e travessão.
-- O método custa tempo: uma mudança de comportamento passa por spec, teste e revisão antes do merge. Correção de texto e ajuste pequeno seguem só com critérios de aceite.
+- Eduardo organiza a IA como uma equipe, com papéis definidos e regras por escrito. As regras ficam em arquivos de instrução, skills e hooks, e valem para toda sessão, em qualquer projeto.
+- Ele guarda para si as decisões de produto e de regra de negócio. Quando falta informação, o agente pergunta com um exemplo concreto e uma recomendação, uma decisão por pergunta.
+- Ele cobra prova. Uma tarefa só fecha com o comando, o teste ou a tela que mostra o resultado, e o relatório final marca cada critério de aceite como atendido, não atendido ou não verificado.
+- Ele controla o custo. Uma skill compara o gasto de tokens de cada semana com uma linha de base, cada sessão passa o trabalho adiante ao chegar a 350 mil tokens de contexto, e servidor local roda com tempo limite para não disputar memória com o resto da máquina.
+- Ele revisa o texto. Tudo o que alguém vai ler passa por uma checagem de padrões de escrita de IA, como frase de efeito, contraste retórico e travessão.
+- Ele aceita pagar em tempo. Uma mudança de comportamento passa por spec, teste e revisão antes do merge; correção de texto e ajuste pequeno seguem só com critérios de aceite.
 
 [Ver as specs e os PRs no GitHub](https://github.com/gomesbeduardo/gomesbeduardo.github.io)
 
