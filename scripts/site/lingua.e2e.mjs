@@ -173,6 +173,31 @@ try {
     ok('T5 (b) clique em card de projeto: sem data-troca-lingua', !tl, page.url());
     await ctx.close();
   }
+
+  // ---- T8 (item 1; spec 001d R5): rolar antes do load não é desfeito pelas correções tardias ----
+  if (quero('T8')) {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'no-preference' });
+    const page = await ctx.newPage();
+    await abrir(page, '');
+    await colocar(page, 'projetos-titulo', 80);
+    await ctx.route(/\/img\//, async (route) => { await espera(3500); await route.continue().catch(() => {}); });
+    const nav = page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+    await clicarOutra(page);
+    await nav;
+    await espera(800);
+    const chegada = await page.evaluate(() => window.scrollY);
+    await page.mouse.move(600, 400);
+    await page.mouse.wheel(0, 600);
+    await espera(1000);
+    const durante = await page.evaluate(() => ({ y: window.scrollY, load: document.readyState }));
+    await page.waitForLoadState('load');
+    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(r)))));
+    await espera(800);
+    const depois = await page.evaluate(() => window.scrollY);
+    ok('T8 rolou antes do load: a posição do visitante é mantida depois do load', durante.load !== 'complete' && depois > chegada + 300 && Math.abs(depois - durante.y) <= 2, `chegada=${chegada} durante=${durante.y} (${durante.load}) depois=${depois}`);
+    await ctx.close();
+  }
+
   if (SO.length === 0) {
 
   // ---- T1 (C1): InfoHub a 120 px, PT->EN em 1280 e 390; EN->PT em 1280 ----

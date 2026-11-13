@@ -48,8 +48,17 @@
 
   function achar(id) { return id ? document.querySelector('[data-ancora="' + id + '"]') : null; }
 
+  // R5: a primeira ação do visitante encerra todas as correções pendentes (fontes, quadro seguinte, load, init).
+  var cancelado = false;
+  var ENTRADAS = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
+  function parar() {
+    cancelado = true;
+    for (var i = 0; i < ENTRADAS.length; i++) window.removeEventListener(ENTRADAS[i], parar, { capture: true });
+  }
+
   // Leva o bloco à mesma distância do topo da janela. Sem animação; não passa do fim da página.
   function aplicar(tolerancia) {
+    if (cancelado) return;
     var el = achar(entrada.ancora), ref = entrada.top;
     if (!el) { el = achar(entrada.titulo); }
     if (!el) return;
@@ -62,6 +71,7 @@
   }
 
   if (entrada) {
+    for (var q = 0; q < ENTRADAS.length; q++) window.addEventListener(ENTRADAS[q], parar, { passive: true, capture: true });
     aplicar();
     var fontes = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
     fontes.then(function () {
@@ -70,8 +80,10 @@
     });
     // Correção tardia: o main.js (init) e o carregamento mexem na altura depois do primeiro quadro; só corrige
     // se o bloco saiu mais de 0,5 px do lugar.
-    var tarde = function () { aplicar(0.5); };
-    window.addEventListener('load', tarde);
+    // Quando as duas correções tardias terminam, os ouvintes de entrada saem.
+    var faltam = 2;
+    var tarde = function () { aplicar(0.5); if (--faltam === 0) parar(); };
+    if (document.readyState === 'complete') tarde(); else window.addEventListener('load', tarde);
     Promise.all([window.pageShown || Promise.resolve(), window.libsReady || Promise.resolve()]).then(function () {
       requestAnimationFrame(function () { requestAnimationFrame(tarde); });
     });
