@@ -1,6 +1,6 @@
 # Spec 001: migração do portfólio para Astro e Tailwind v4
 
-Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (o calendário sem JS sai da etapa 2 e entra com a 002b, em D7) aguardando aprovação do responsável.
+Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (o calendário sem JS sai da etapa 2 e entra com a 002b, em D7) aprovada pelo responsável em 16/11/2026.
 Parte 1 de 5. Ordem de leitura: `001-astro.md` (esta: pedido, decisões, etapas, regras transversais, dependências, perguntas abertas), `001a-paridade.md` (etapa 1), `001b-seo-geo.md` (etapa 2), `001c-desempenho.md` (etapa 3), `001d-troca-de-lingua.md` (troca de língua, última fatia da etapa 1). Cada parte tem os próprios critérios (C) e testes (T); as pendências (P) estão só aqui e as partes as citam pelo número.
 
 ## Pedido literal
