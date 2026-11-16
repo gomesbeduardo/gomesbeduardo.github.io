@@ -1,7 +1,7 @@
 # Spec 009: design system com movimento obrigatório em todo elemento interativo
 
 Estado: rascunho, aguardando aprovação do responsável.
-Issue: #29. Implementação depois da etapa 3 da migração para o Astro (spec 001c), ver D1 e P1.
+Issue: #29. Implementação depois da etapa 3 da migração para o Astro (spec 001c), num PR próprio (D1, D6).
 
 ## Pedido
 
@@ -22,6 +22,9 @@ Da issue #29 (13/11/2026): "Criar um design system fixo, pensado para Astro e Ta
 - D3. O diálogo abre e fecha com a mesma sensação do menu do celular, que já usa uma mola com leve passagem do ponto (`cubic-bezier(.34,1.4,.64,1)`), no estilo do iOS. O responsável aceitou também um fade simples (16/11/2026); a spec fixa a mola, por coerência com o menu, e C4 descreve os valores.
 - D4. Com `prefers-reduced-motion: reduce`, tudo que se desloca, escala ou gira deixa de se mover, e as mudanças de opacidade e cor continuam, em 150 ms (decisão de 16/11/2026, a mesma da spec 005 C8).
 - D5. Tokens em `@theme` do Tailwind, como manda a 001 R4. O token `--ease` existente passa a se chamar `--ease-saida`, e o teste `scripts/site/tema-tailwind.test.mjs`, que compara `--ease` com o legado, é atualizado junto.
+- D6. O código entra num PR próprio, `feat/design-system` para `staging`, logo depois do merge da etapa 3, e não dentro do PR da etapa 3 (decisão de 16/11/2026).
+- D7. Ao pressionar, botão e cartão encolhem para `--escala-pressionado` (0,97) e voltam com a mola (decisão de 16/11/2026).
+- D8. As animações de rolagem do GSAP (reveal, parallax, contadores, frase digitada, hoje em `main.js` com 0,4 s a 1 s e `expo.out`) ficam fora dos tokens e de R2. O documento de R5 as cita como exceção (decisão de 16/11/2026).
 
 ## Regras
 
@@ -53,7 +56,7 @@ Definidos uma vez, no `@theme` de `src/styles/global.css`, com estes nomes e val
 Fora do `@theme` de `global.css`, nenhum arquivo de `src/styles/`, `<style>` de `src/components/` ou `src/pages/`, nem `src/scripts/` (o JS depois da 001c R1) contém duração, atraso, curva ou distância de movimento escritos à mão. Na prática:
 
 - CSS: em `transition*`, `animation*` e nos `transform` de estado (hover, active, aberto, fechado), só `var(--…)` dos tokens de R1, `0s` e `calc()` sobre tokens. Palavras `ease`, `ease-in`, `ease-out`, `ease-in-out` e `cubic-bezier(` não aparecem. `linear` é aceito só em animação contínua (faixa da Stack).
-- JS: tempo de interação (o `setTimeout` de reserva do menu, hoje 320 ms; atrasos do aviso de cópia) vem dos tokens, lidos por `getComputedStyle(document.documentElement)`. As animações de rolagem do GSAP seguem P3.
+- JS: tempo de interação (o `setTimeout` de reserva do menu, hoje 320 ms; atrasos do aviso de cópia) vem dos tokens, lidos por `getComputedStyle(document.documentElement)`. As animações de rolagem do GSAP ficam de fora (D8): os módulos `revelar` e `topo` da 001c R1 são excluídos da verificação de C2 só nas chamadas de GSAP de rolagem.
 
 ### R3. Estados de cada elemento interativo
 
@@ -63,7 +66,7 @@ Elemento interativo: `a[href]`, `button`, `summary`, `[role="button"]`, `[tabind
 |---|---|---|
 | Hover (só com `@media (hover:hover)`) | muda cor ou fundo, e pode deslocar um ícone ou rótulo | cor em `--duration-rapida` + `--ease-saida`; deslocamento em `--duration-mola` + `--ease-saida`, com `--distancia-curta` ou `--distancia-media` |
 | Foco visível | o anel `2px solid var(--accent)` aparece com `outline-offset` indo de `6px` a `2px` | `--duration-rapida` + `--ease-saida` |
-| Pressionado (`:active`) | botão e cartão escalam para `--escala-pressionado`; links de texto mudam opacidade ou fundo, como hoje; ao soltar, voltam com a mola | descer em `--duration-rapida` + `--ease-saida`; voltar em `--duration-mola` + `--ease-mola` (pendente P2 para a escala) |
+| Pressionado (`:active`) | botão e cartão escalam para `--escala-pressionado`; links de texto mudam opacidade ou fundo, como hoje; ao soltar, voltam com a mola | descer em `--duration-rapida` + `--ease-saida`; voltar em `--duration-mola` + `--ease-mola` (D7) |
 | Abrir (menu, diálogo, aviso) | ver R4 e o menu atual | `--duration-media`, `--duration-mola`, `--ease-mola` |
 | Fechar | caminho inverso, mais curto | `--duration-rapida` ou `--duration-media`, `--ease-entrada` |
 
@@ -144,13 +147,7 @@ Em `src/components/ui/`, cada um com o markup e o CSS do próprio estado, só co
 ## Fora do escopo
 
 - Redesenho visual das páginas (cores, tipografia, layout), como diz a issue.
-- Animações de entrada na rolagem, parallax, contadores e frase digitada, exceto o que P3 decidir.
+- Animações de entrada na rolagem, parallax, contadores e frase digitada (D8).
 - Migrar todas as seções para os componentes (D2): só os primeiros usos de R6.
 - A frase "O design system ainda espera a spec", do painel "Como este site foi feito" (branch `feat/texto-painel`, ainda sem push). Ela muda na entrega daquela branch ou numa emenda dela, não aqui.
 - Fundo com nuances, grão e brilho (001 D8), que tem spec própria.
-
-## Perguntas abertas
-
-- P1. Onde entra o código: num PR próprio, `feat/design-system` para `staging`, logo depois do merge da etapa 3; ou dentro do PR da etapa 3. Exemplo: a etapa 3 já reescreve os JS em `src/scripts/` e liga o Preflight, e juntar o design system ali deixa a revisão e a paridade de 001c C7 mais difíceis de ler. Recomendação: PR próprio, logo depois da etapa 3.
-- P2. Escala ao pressionar: hoje `.btn:active` só escurece o fundo. Com a mola (D3), botão e cartão também encolhem para 0,97 enquanto pressionados. Alternativa: manter só a cor e animar a transição dela. Recomendação: escala 0,97, porque é o que dá a sensação do iOS que o menu já tem.
-- P3. As animações de rolagem do GSAP (reveal, parallax, contadores, frase digitada em `main.js`, que vira `src/scripts/revelar` e `topo` na 001c R1) também passam a usar os tokens? Exemplo: em `main.js` há durações de 0,4 s, 0,5 s, 0,65 s, 0,8 s e 1 s com `expo.out` e `none`, além de `S.reveal.dur` e `S.count.dur`, valores que não cabem nos tokens de R1. Recomendação: não nesta spec; R2 vale só para o que é interativo, e a rolagem fica como está, citada no documento de R5 como exceção.
