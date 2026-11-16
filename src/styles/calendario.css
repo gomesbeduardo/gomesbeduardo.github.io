@@ -1,0 +1,54 @@
+/* Calendário do GitHub gerado no build (spec 002b R2). Grade em CSS grid: coluna 1 com os dias da semana, uma coluna por semana.
+   As linhas (.cal-linha) e a fileira dos meses usam display:contents, então os filhos entram direto na grade. */
+/* position: relative prende os .sr-only (absolutos) de cada dia à caixa de rolagem; sem isso eles vazam e alargam a página. */
+.cal-scroll { position: relative; overflow-x: auto; min-width: 0; }
+.cal-tabela {
+  display: grid;
+  grid-template-columns: auto repeat(var(--semanas), minmax(10px, 1fr));
+  gap: 3px;
+}
+@media (max-width: 600px) { .cal-tabela { gap: 2px; } }
+.cal-meses, .cal-linha { display: contents; }
+.cal-meses span, .cal-ds, .cal-legenda span {
+  font-family: var(--f-mono);
+  font-size: var(--t-label);
+  color: var(--muted);
+}
+/* Cada linha ocupa a sua fileira da grade (1 = meses, 2 a 8 = domingo a sábado): sem fileira definida o primeiro .cal-ds cairia na fileira dos meses. */
+.cal-tabela > .cal-linha:nth-child(2) > * { grid-row: 2; }
+.cal-tabela > .cal-linha:nth-child(3) > * { grid-row: 3; }
+.cal-tabela > .cal-linha:nth-child(4) > * { grid-row: 4; }
+.cal-tabela > .cal-linha:nth-child(5) > * { grid-row: 5; }
+.cal-tabela > .cal-linha:nth-child(6) > * { grid-row: 6; }
+.cal-tabela > .cal-linha:nth-child(7) > * { grid-row: 7; }
+.cal-tabela > .cal-linha:nth-child(8) > * { grid-row: 8; }
+.cal-meses span { grid-row: 1; line-height: 1; white-space: nowrap; overflow: visible; }
+.cal-ds {
+  grid-column: 1;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--bg);
+  padding-right: var(--s2);
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  white-space: nowrap;
+}
+.cal-dia, .cal-vazio, .cal-legenda i { display: block; aspect-ratio: 1; border-radius: 2px; }
+.cal-vazio { visibility: hidden; }
+.cal-dia[data-l="0"], .cal-legenda i[data-l="0"] { background: color-mix(in srgb, var(--muted2) 38%, var(--bg)); }
+.cal-dia[data-l="1"], .cal-legenda i[data-l="1"] { background: color-mix(in srgb, var(--accent) 48%, var(--bg)); }
+.cal-dia[data-l="2"], .cal-legenda i[data-l="2"] { background: color-mix(in srgb, var(--accent) 66%, var(--bg)); }
+.cal-dia[data-l="3"], .cal-legenda i[data-l="3"] { background: color-mix(in srgb, var(--accent) 84%, var(--bg)); }
+.cal-dia[data-l="4"], .cal-legenda i[data-l="4"] { background: var(--accent); }
+.cal-legenda {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--s1);
+  margin-top: var(--s2);
+}
+.cal-legenda i { width: 10px; height: 10px; aspect-ratio: auto; }
+.cal-legenda span:first-child { margin-right: var(--s1); }
+.cal-legenda span:last-child { margin-left: var(--s1); }

@@ -17,7 +17,9 @@ const larguras = [[390, 844], [1280, 800]];
 const temas = [['claro', 'light'], ['escuro', 'dark']];
 const LIMIAR = Number(argumento('limiar', '0.03'));
 const PROPS = ['color', 'background-color', 'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color', 'outline-color', 'fill', 'stroke'];
-const CSS = '*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; }';
+// Spec 002b R6: o calendário (site/ tem a grade antiga, dist/ a gerada no build) sai da comparação nas duas origens, antes da leitura de cores e da captura:
+// a altura some igual dos dois lados e o resto da página segue em 0 px de diferença; os elementos do corte saem da lista de cores.
+const CSS = '*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; } .cal > :not(h3) { display: none !important; }';
 
 const { chromium } = await carregarPlaywright();
 const A = await servir(resolve(raiz, argumento('a', 'site')));
@@ -76,6 +78,7 @@ function coletarCores(props) {
   for (const el of document.querySelectorAll('*')) {
     const cs = getComputedStyle(el);
     if (cs.display === 'none') continue;
+    if (el.closest('.cal > :not(h3)')) continue; // spec 002b R6: os descendentes do corte têm display próprio (não 'none') e também saem da lista
     const cls = typeof el.className === 'string' ? el.className.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((c) => '.' + c).join('') : '';
     const pai = el.parentElement;
     const nth = pai ? [...pai.children].indexOf(el) + 1 : 1;
