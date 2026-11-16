@@ -1,6 +1,6 @@
 # Spec 002b: calendário de contribuições com eixos e dica por dia
 
-Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (ordem de entrega: o mesmo PR gera o calendário no HTML do build) aprovada pelo responsável em 16/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (ordem de entrega: o mesmo PR gera o calendário no HTML do build) aprovada pelo responsável em 16/11/2026. Alteração de 16/11/2026 (R6, C9 e T8: o calendário sai da comparação com `site/`), pendente de aprovação.
 Parte de tela da spec 002 (números do GitHub). Implementada junto da coleta da 002, num PR próprio logo depois do PR da etapa 1 da spec 001. O mesmo PR gera o calendário no HTML do build (001b R4) e cumpre os critérios C7 e T9 da 001b e a parte do calendário no C4 dela (decisão do responsável de 13/11). Não muda o contrato de `src/data/github.json`.
 
 ## Pedido literal
@@ -51,6 +51,17 @@ O calendário da seção "Números do GitHub" é uma grade de 53 colunas por 7 l
 - O HTML do build traz a grade completa, os eixos, a legenda e, em cada dia, o texto da dica num elemento `sr-only` (assim o texto existe sem JS e o leitor de tela o lê). Sem JS não há dica visual, mas a grade, os meses e a legenda aparecem.
 - Isto substitui o `title` de 001b R4: o dia não tem mais `title`.
 
+### R6. Comparação com `site/` (decisão do responsável de 16/11/2026)
+
+O `site/` segue congelado até a etapa 3 e não recebe o calendário novo. Por isso o calendário vira uma exceção declarada à paridade (001 R2), com este recorte:
+
+- Recorte: dentro de `.cal`, tudo menos o `h3`. Em `site/` isso é a `.cal-scroll` e o `#cal-dados`; em `dist/`, a grade nova, os eixos e a legenda. O `h3` com o título e a janela continua comparado.
+- Paridade de pixels e de cores (001a R7): antes da captura e da leitura das cores, nas duas origens, o script injeta `.cal > :not(h3) { display: none !important; }`. A altura some igual dos dois lados, então o resto da página continua com 0 pixels de diferença, e os elementos do recorte saem da lista de cores.
+- Equivalência de HTML (`build.test.mjs`, teste e2): o recorte sai das duas páginas antes da comparação. No teste f2, que compara as tags `<script>`, o `#cal-dados` sai do lado do `site/` e o script do calendário novo sai do lado do `dist/`.
+- JS e CSS herdados (teste a2): `public/main.js` é igual a `site/main.js` depois de tirar deste a função `buildCalendar` e a chamada `buildCalendar();`. Os arquivos de `src/styles/legado/` não mudam; o CSS do calendário novo fica num arquivo próprio fora de `legado/`, e as regras antigas de `.cal-grid` em `legado/style.css` ficam até a etapa 3.
+- Dado no HTML (teste T8 de `build.test.mjs`): em vez de ler o `#cal-dados`, confere que o dia da fixture com `contagem` 9 tem o texto da dica em `sr-only` com o número 9.
+- Os testes de 001b que este PR cumpre ficam nos arquivos desta spec, porque `seo.test.mjs` e `sem-js.e2e.mjs` só nascem na etapa 2: o T9 da 001b vai para `calendario.test.mjs` e a parte do calendário no C4 da 001b (365 ou 371 dias em HTML, sem JS) vai para o T6 desta spec.
+
 ## Critérios de aceite
 
 - C1. Dado `github.json` com o dia `2026-03-02` com `contagem: 7`, quando o mouse passa sobre esse quadrado em `/`, então a dica "7 contribuições em 2 de mar. de 2026" aparece em até 100 ms acima dele; em `/en/`, "7 contributions on Mar 2, 2026".
@@ -61,6 +72,7 @@ O calendário da seção "Números do GitHub" é uma grade de 53 colunas por 7 l
 - C6. Dado `dist/index.html`, então a grade tem os nomes dos meses na ordem da janela, "seg", "qua" e "sex", a legenda com cinco níveis, nenhum `title` nos dias, e cada dia da janela tem o texto da dica em `sr-only` (contagem de dias = `calendario.totalDias`).
 - C7. Dado o site com JS desligado, então a grade, os meses, os dias da semana e a legenda aparecem.
 - C8. Dado o tema claro e o escuro, então o texto da dica, dos eixos e da legenda passa em AA.
+- C9. Dado `npm test` e `npm run e2e` com o recorte de R6, então a paridade (36 comparações com 0 pixels e cores iguais) e os testes e2, f2, a2 e T8 de `build.test.mjs` passam, e nenhum arquivo de `site/` ou de `src/styles/legado/` mudou.
 
 ## Testes de aceite
 
@@ -73,6 +85,7 @@ O calendário da seção "Números do GitHub" é uma grade de 53 colunas por 7 l
 | T5 | C6 | `dist/` | ler o HTML | meses em ordem, eixos, legenda, nenhum `title`, `sr-only` por dia igual a `totalDias` | unidade, `scripts/site/calendario.test.mjs` |
 | T6 | C7 | `javaScriptEnabled: false` | abrir `/` e rolar até a seção | grade, meses, dias e legenda visíveis | e2e |
 | T7 | C8 | claro e escuro | medir as cores computadas | contraste ≥ 4,5:1 no texto | e2e |
+| T8 | C9 | `dist/` e `site/` | `npm test`; `npm run e2e`; `git diff --stat origin/staging -- site src/styles/legado` | tudo passa; o diff sai vazio | unidade e e2e, `build.test.mjs` e `paridade.e2e.mjs` |
 
 ## Fora do escopo
 

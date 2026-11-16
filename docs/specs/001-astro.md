@@ -1,6 +1,6 @@
 # Spec 001: migração do portfólio para Astro e Tailwind v4
 
-Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (o calendário sem JS sai da etapa 2 e entra com a 002b, em D7) aprovada pelo responsável em 16/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (o calendário sem JS sai da etapa 2 e entra com a 002b, em D7) aprovada pelo responsável em 16/11/2026. Alteração de 16/11/2026 (R2 cita o recorte do calendário de 002b R6), pendente de aprovação.
 Parte 1 de 5. Ordem de leitura: `001-astro.md` (esta: pedido, decisões, etapas, regras transversais, dependências, perguntas abertas), `001a-paridade.md` (etapa 1), `001b-seo-geo.md` (etapa 2), `001c-desempenho.md` (etapa 3), `001d-troca-de-lingua.md` (troca de língua, última fatia da etapa 1). Cada parte tem os próprios critérios (C) e testes (T); as pendências (P) estão só aqui e as partes as citam pelo número.
 
 ## Pedido literal
@@ -42,7 +42,7 @@ Pré-condição da etapa 1: a implementação da spec 007 entrar na `staging`. A
 ## Regras transversais
 
 - R1. Nada do que as specs 003 a 007 entregaram muda de comportamento, e a 008, implementada depois da etapa 1, segue o mesmo contrato a partir do PR dela: surpresas (`surpresas.js` e `.css`), virada da foto com ficha no verso (005), menu animado (#14), contato e rodapé com aviso de cópia (006), modal "Feito com o Claude Code" com a linha dos números do processo (008), PDFs em `/curriculo/`, tema (`tema.js`, `inicio.js`), transições (`transicoes.css`), correções de texto (007). O contrato é o conjunto dos `scripts/site/*.e2e.mjs` mais a paridade de capturas.
-- R2. A paridade (001a C1 e C4) vale no fim de cada etapa, com as únicas exceções declaradas em 001b R5 (texto que passa a vir de `curriculo.json`, listado no PR) e 001c R6 (máscara de imagem e fontes locais).
+- R2. A paridade (001a C1 e C4) vale no fim de cada etapa, com as únicas exceções declaradas em 001b R5 (texto que passa a vir de `curriculo.json`, listado no PR) e 001c R6 (máscara de imagem e fontes locais), e o recorte do calendário em 002b R6 (alteração de 16/11/2026, pendente de aprovação).
 - R3. Área sensível: dependências (R5 abaixo), `.github/workflows/*`, secrets. O worker propõe o diff no PR; a sessão principal aplica com o ok do responsável.
 - R4. Tailwind: tokens em `@theme` apontando para as variáveis atuais, sem Preflight nas etapas 1 e 2 e com Preflight na etapa 3 (P1, 001c R9), sem valor literal onde há token, conversão para utilitário permitida por componente desde que a paridade passe (001a R3).
 - R5. Dependências, lista fechada, aprovada em 11/11 (P9). Versões: a última estável no dia do scaffold, fixadas no `package-lock.json`; Node 24 (já nos workflows).
