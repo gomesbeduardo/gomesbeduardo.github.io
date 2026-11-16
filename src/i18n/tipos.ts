@@ -98,6 +98,13 @@ export interface Home {
     linguagens: string;
     calTitulo: string;
     calAria: string;
+    calMeses: string[];
+    calDiasSemana: [string, string, string];
+    calMenos: string;
+    calMais: string;
+    calDiaZero: string;
+    calDiaUm: string;
+    calDiaMuitos: string;
   };
   contato: SecaoTitulo & {
     local: string;

@@ -63,6 +63,7 @@
 @import "./legado/style.css" layer(components);
 @import "./legado/surpresas.css" layer(components);
 @import "./legado/transicoes.css" layer(components);
+@import "./calendario.css" layer(components);
 
 /* Troca de língua (spec 001d R4): a página aberta pelo seletor PT/EN não repete a escrita do nome. Enquanto o
    <html> tem data-troca-lingua (primeiro quadro) e depois, pela marca que o lingua.js põe no h1, as letras ficam

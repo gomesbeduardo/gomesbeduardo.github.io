@@ -189,15 +189,6 @@
     });
   }
 
-  // ---------- Calendário (dados reais, ver #cal-dados no HTML) ----------
-  function buildCalendar() {
-    var cal = $('#cal'), src = $('#cal-dados'); if (!cal || !src) return;
-    var dias = JSON.parse(src.textContent), h = '';
-    for (var i = 0; i < dias.pad; i++) h += '<i data-l="0" style="visibility:hidden"></i>';
-    dias.d.forEach(function (x) { h += '<i data-l="' + x[1] + '" title="' + x[0] + ': ' + x[2] + '"></i>'; });
-    cal.innerHTML = h;
-  }
-
   // ---------- Menu (abaixo de 900px) ----------
   function setupMenu() {
     var btn = $('#menu-btn'), menu = $('#menu'); if (!btn || !menu) return;
@@ -254,7 +245,7 @@
   function fmt(n) { return n.toLocaleString(EN ? 'en-US' : 'pt-BR'); }
 
   function init() {
-    buildCalendar(); setupMenu(); setupMore();
+    setupMenu(); setupMore();
     var tj = $('.traj'); if (tj) { placeTraj(tj); addEventListener('resize', function () { placeTraj(tj); }); addEventListener('load', function () { placeTraj(tj); }); }
     var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     setupNav(reduce);
