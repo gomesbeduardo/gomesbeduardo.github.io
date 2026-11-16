@@ -238,6 +238,13 @@ export const pt: Dicionario = {
       linguagens: "Linguagens por volume de código",
       calTitulo: "Contribuições por dia, de {de} a {ate}",
       calAria: "Calendário de contribuições por dia, incluindo privadas, com {total} no total",
+      calMeses: ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],
+      calDiasSemana: ["seg", "qua", "sex"],
+      calMenos: "menos",
+      calMais: "mais",
+      calDiaZero: "Nenhuma contribuição em {data}",
+      calDiaUm: "1 contribuição em {data}",
+      calDiaMuitos: "{n} contribuições em {data}",
     },
     contato: {
       label: "07 / CONTATO",

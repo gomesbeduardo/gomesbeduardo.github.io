@@ -34,8 +34,18 @@ export function normalizarHtml(html) {
   return itens;
 }
 
+// Exceção aprovada (spec 002b R6): o calendário é outro markup em dist/; fica só o h3 de dentro de .cal.
+function semCalendario(html) {
+  const ini = html.indexOf('<div class="cal reveal">');
+  if (ini < 0) return html;
+  const h3 = html.indexOf('</h3>', ini) + 5;
+  let fim = html.indexOf('</div></section>', ini);
+  if (fim < 0) fim = html.indexOf('</div>\n</div></section>', ini);
+  return html.slice(0, h3) + html.slice(fim);
+}
+
 export function htmlEquivalente(arquivoA, arquivoB) {
-  return [normalizarHtml(readFileSync(arquivoA, 'utf8')), normalizarHtml(readFileSync(arquivoB, 'utf8'))];
+  return [normalizarHtml(semCalendario(readFileSync(arquivoA, 'utf8'))), normalizarHtml(semCalendario(readFileSync(arquivoB, 'utf8')))];
 }
 
 test('(a) estáticos do dist/ são cópias byte a byte de public/', () => {
@@ -95,12 +105,10 @@ test('(e2) home PT e EN: dist equivale a site', () => {
   }
 });
 
-test('(f2) home PT e EN: tags <script> iguais e JSON do calendário idêntico', () => {
-  const json = (a) => readFileSync(a, 'utf8').match(/<script[^>]*id="cal-dados"[^>]*>([\s\S]*?)<\/script>/)?.[1];
+test('(f2) home PT e EN: tags <script> iguais, sem o #cal-dados do site/ (spec 002b R6)', () => {
   for (const f of homes) {
-    assert.deepEqual(scripts(`dist/${f}`), scripts(`site/${f}`), f);
-    assert.ok(json(`site/${f}`), `site/${f} sem cal-dados`);
-    assert.equal(json(`dist/${f}`), json(`site/${f}`), `${f}: cal-dados`);
+    assert.ok(readFileSync(`site/${f}`, 'utf8').includes('id="cal-dados"'), `site/${f} sem cal-dados`);
+    assert.deepEqual(scripts(`dist/${f}`), scripts(`site/${f}`).filter((s) => !/\bid="cal-dados"/.test(s)), f);
   }
 });
 
@@ -208,14 +216,23 @@ test('(T8) C6: números e calendário vêm do github.json', () => {
     execFileSync('npx', ['astro', 'build', '--outDir', join(tmp, 'o')], { stdio: 'pipe', env });
     const h = readFileSync(join(tmp, 'o/index.html'), 'utf8');
     assert.ok(h.includes('data-v="3001"'));
-    const cal = h.match(/id="cal-dados">([^<]*)</)[1];
-    assert.ok(cal.includes(`["${primeiroDia}",${nivel},9]`), cal.slice(0, 80));
+    // Spec 002b R6: o dia da fixture com contagem 9 traz o número no texto sr-only (não há mais #cal-dados).
+    assert.ok(new RegExp(`data-data="${primeiroDia}"[^>]*><span class="sr-only">9 contribuições em `).test(h), primeiroDia);
   });
 });
 
 test('(a2) C1/R4: JS e CSS herdados são byte a byte iguais aos de site/ (exceto inicio.js e lingua.js, spec 001d R6)', () => {
   const iguais = ['tema.js', 'main.js', 'surpresas.js', 'rodape.js', ...readdirSync('site/vendor').map((f) => `vendor/${f}`)];
-  for (const f of iguais) assert.ok(ler(`public/${f}`).equals(ler(`site/${f}`)), `public/${f} igual a site/${f}`);
+  for (const f of iguais.filter((f) => f !== 'main.js')) assert.ok(ler(`public/${f}`).equals(ler(`site/${f}`)), `public/${f} igual a site/${f}`);
+  // main.js: igual ao de site/ sem a função buildCalendar e sem a chamada (spec 002b R6).
+  const ini = '  // ---------- Calendário (dados reais, ver #cal-dados no HTML) ----------\n  function buildCalendar() {';
+  const fimFn = '    cal.innerHTML = h;\n  }\n\n';
+  const orig = readFileSync('site/main.js', 'utf8');
+  const a = orig.indexOf(ini);
+  const b = orig.indexOf(fimFn, a) + fimFn.length;
+  assert.ok(a > 0 && b > a, 'buildCalendar não achada em site/main.js');
+  const semCal = (orig.slice(0, a) + orig.slice(b)).replace('buildCalendar(); setupMenu();', 'setupMenu();');
+  assert.equal(readFileSync('public/main.js', 'utf8'), semCal, 'public/main.js = site/main.js sem buildCalendar');
   for (const f of readdirSync('src/styles/legado')) assert.ok(ler(`src/styles/legado/${f}`).equals(ler(`site/${f}`)), `src/styles/legado/${f} igual a site/${f}`);
   // inicio.js: a única diferença é a linha da troca de língua (spec 001d R6).
   const linhas = readFileSync('public/inicio.js', 'utf8').split('\n');

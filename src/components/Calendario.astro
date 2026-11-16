@@ -1,0 +1,56 @@
+---
+// Calendário de contribuições gerado no build: grade, eixos, legenda e o texto de cada dia (spec 002b R1-R5).
+import { dicionario } from '../i18n';
+import type { Lang } from '../i18n/tipos';
+interface Dia { data: string; contagem: number; nivel: number; diaSemana: number }
+interface Props { lang: Lang; semanas: { dias: Dia[] }[]; total: string }
+const { lang, semanas, total } = Astro.props;
+const s = dicionario(lang).home.numeros;
+
+const loc = lang === 'en' ? 'en-US' : 'pt-BR';
+const fmtData = new Intl.DateTimeFormat(loc, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+// A data é um dia civil: formata em UTC para não deslocar pelo fuso.
+const dataCivil = (iso: string) => {
+  const [a, m, d] = iso.split('-').map(Number);
+  return fmtData.format(Date.UTC(a, m - 1, d));
+};
+const texto = (d: Dia) => {
+  const modelo = d.contagem === 0 ? s.calDiaZero : d.contagem === 1 ? s.calDiaUm : s.calDiaMuitos;
+  return modelo.replace('{n}', d.contagem.toLocaleString(loc)).replace('{data}', dataCivil(d.data));
+};
+
+// Rótulo de mês acima da primeira semana em que o mês aparece; rótulos a menos de 3 colunas do seguinte caem.
+const vistos = new Set<string>();
+const meses: { col: number; nome: string }[] = [];
+semanas.forEach((w, i) => {
+  for (const d of w.dias) {
+    const chave = d.data.slice(0, 7);
+    if (vistos.has(chave)) continue;
+    vistos.add(chave);
+    meses.push({ col: i + 2, nome: s.calMeses[Number(chave.slice(5)) - 1] });
+  }
+});
+const mostrados = meses.filter((m, i) => i === meses.length - 1 || meses[i + 1].col - m.col >= 3);
+
+const ultimo = semanas.at(-1)!.dias.at(-1)!.data;
+const linhas = Array.from({ length: 7 }, (_, r) => {
+  const eixo = [1, 3, 5].indexOf(r);
+  let h = `<span class="cal-ds" aria-hidden="true">${eixo >= 0 ? s.calDiasSemana[eixo] : ''}</span>`;
+  semanas.forEach((w, i) => {
+    const d = w.dias.find((x) => x.diaSemana === r);
+    if (d) {
+      h += `<i class="cal-dia" role="gridcell" data-l="${d.nivel}" data-data="${d.data}" tabindex="${d.data === ultimo ? 0 : -1}"><span class="sr-only">${texto(d)}</span></i>`;
+    } else if (i === 0) {
+      h += '<i class="cal-vazio" aria-hidden="true"></i>';
+    }
+  });
+  return `<div class="cal-linha" role="row">${h}</div>`;
+});
+---
+<div class="cal-scroll" data-lenis-prevent-horizontal>
+  <div class="cal-tabela" role="grid" aria-label={s.calAria.replace('{total}', total)} style={`--semanas:${semanas.length}`}>
+    <div class="cal-meses" aria-hidden="true"><Fragment set:html={mostrados.map((m) => `<span style="grid-column:${m.col}">${m.nome}</span>`).join('')} /></div>
+    <Fragment set:html={linhas.join('')} />
+  </div>
+</div>
+<div class="cal-legenda"><span>{s.calMenos}</span><i data-l="0" aria-hidden="true"></i><i data-l="1" aria-hidden="true"></i><i data-l="2" aria-hidden="true"></i><i data-l="3" aria-hidden="true"></i><i data-l="4" aria-hidden="true"></i><span>{s.calMais}</span></div>

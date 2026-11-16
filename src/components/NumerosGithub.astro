@@ -2,6 +2,7 @@
 import { dicionario } from '../i18n';
 import type { Lang } from '../i18n/tipos';
 import github from '../data/github.json';
+import Calendario from './Calendario.astro';
 interface Props { lang: Lang }
 const lang = Astro.props.lang;
 const { home: t } = dicionario(lang);
@@ -32,9 +33,6 @@ const tons = [
   'var(--muted2)',
 ];
 const langs = github.linguagens.map((l, i) => ({ nome: l.nome, p: l.percentual, cor: tons[i] }));
-
-const dias = github.calendario.semanas.flatMap((w) => w.dias);
-const json = JSON.stringify({ pad: dias[0].diaSemana, d: dias.map((d) => [d.data, d.nivel, d.contagem]) });
 ---
 <section id="numeros"><div class="wrap">
   <p class="sec-label reveal" aria-hidden="true" set:html={s.label}></p>
@@ -56,7 +54,6 @@ const json = JSON.stringify({ pad: dias[0].diaSemana, d: dias.map((d) => [d.data
   </div>
   <div class="cal reveal">
     <h3>{s.calTitulo.replace('{de}', de).replace('{ate}', ate)}</h3>
-    <div class="cal-scroll" data-lenis-prevent-horizontal><div class="cal-grid" id="cal" role="img" aria-label={s.calAria.replace('{total}', total)}></div></div>
-    <script is:inline type="application/json" id="cal-dados" set:html={json}></script>
+    <Calendario lang={lang} semanas={github.calendario.semanas} total={total} />
   </div>
 </div></section>
