@@ -18,6 +18,8 @@ export function normalizarHtml(html) {
     .replace(/<link\b[^>]*href="\/_astro\/[^"]*\.css"[^>]*>/gi, '')
     // Exceção aprovada (spec 001d R6): o dist carrega lingua.js, que o site/ legado não tem.
     .replace(/<script\b[^>]*\bsrc="(?:\.\.\/)?lingua\.js"[^>]*><\/script>/gi, '')
+    // Spec 002b R6: o dist carrega calendario.js (dica e teclado do calendário), que o site/ legado não tem.
+    .replace(/<script\b[^>]*\bsrc="(?:\.\.\/)?calendario\.js"[^>]*><\/script>/gi, '')
     .replace(/<i id="lingua-pronta" hidden><\/i>/gi, "") // alvo do <link rel="expect"> que o inicio.js põe na troca de língua
     .replace(/^\s*<!doctype html>/i, '<!doctype html>');
   const itens = [];
@@ -108,7 +110,9 @@ test('(e2) home PT e EN: dist equivale a site', () => {
 test('(f2) home PT e EN: tags <script> iguais, sem o #cal-dados do site/ (spec 002b R6)', () => {
   for (const f of homes) {
     assert.ok(readFileSync(`site/${f}`, 'utf8').includes('id="cal-dados"'), `site/${f} sem cal-dados`);
-    assert.deepEqual(scripts(`dist/${f}`), scripts(`site/${f}`).filter((s) => !/\bid="cal-dados"/.test(s)), f);
+    // R6: o dist carrega calendario.js (dica e teclado do calendário), que o site/ legado não tem.
+    const semCalendario = scripts(`dist/${f}`).filter((s) => !/\bsrc="(\.\.\/)?calendario\.js"/.test(s));
+    assert.deepEqual(semCalendario, scripts(`site/${f}`).filter((s) => !/\bid="cal-dados"/.test(s)), f);
   }
 });
 
