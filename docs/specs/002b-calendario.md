@@ -1,6 +1,6 @@
 # Spec 002b: calendário de contribuições com eixos e dica por dia
 
-Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (ordem de entrega: o mesmo PR gera o calendário no HTML do build) aprovada pelo responsável em 16/11/2026. Alteração de 16/11/2026 (R6, C9 e T8: o calendário sai da comparação com `site/`), pendente de aprovação.
+Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (ordem de entrega: o mesmo PR gera o calendário no HTML do build) aprovada pelo responsável em 16/11/2026. Alteração de 16/11/2026 (R6, C9 e T8: o calendário sai da comparação com `site/`) aprovada pelo responsável em 16/11/2026.
 Parte de tela da spec 002 (números do GitHub). Implementada junto da coleta da 002, num PR próprio logo depois do PR da etapa 1 da spec 001. O mesmo PR gera o calendário no HTML do build (001b R4) e cumpre os critérios C7 e T9 da 001b e a parte do calendário no C4 dela (decisão do responsável de 13/11). Não muda o contrato de `src/data/github.json`.
 
 ## Pedido literal
