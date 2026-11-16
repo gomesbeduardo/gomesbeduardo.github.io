@@ -1,6 +1,6 @@
 # Spec 009: design system com movimento obrigatório em todo elemento interativo
 
-Estado: rascunho, aguardando aprovação do responsável.
+Estado: aprovada pelo responsável em 16/11/2026.
 Issue: #29. Implementação depois da etapa 3 da migração para o Astro (spec 001c), num PR próprio (D1, D6).
 
 ## Pedido
