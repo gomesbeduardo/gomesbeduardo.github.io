@@ -1,6 +1,6 @@
 # Spec 001: migração do portfólio para Astro e Tailwind v4
 
-Estado: aprovada pelo responsável em 11/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (o calendário sem JS sai da etapa 2 e entra com a 002b, em D7) aguardando aprovação do responsável.
 Parte 1 de 5. Ordem de leitura: `001-astro.md` (esta: pedido, decisões, etapas, regras transversais, dependências, perguntas abertas), `001a-paridade.md` (etapa 1), `001b-seo-geo.md` (etapa 2), `001c-desempenho.md` (etapa 3), `001d-troca-de-lingua.md` (troca de língua, última fatia da etapa 1). Cada parte tem os próprios critérios (C) e testes (T); as pendências (P) estão só aqui e as partes as citam pelo número.
 
 ## Pedido literal
@@ -23,7 +23,7 @@ Quem usa: o visitante (recrutador, tech lead) e os buscadores e assistentes de I
 - D4. Três etapas, um PR cada: etapa 1 Astro e Tailwind com paridade visual e de comportamento; etapa 2 SEO e GEO; etapa 3 metas de desempenho e teste no CI.
 - D5. Critério de paridade: comparação de capturas por página (PT e EN: home, três projetos, 404) a 390 px e 1280 px, nos dois temas, rígida até o limite (0 pixels diferentes fora do anti-aliasing do texto, animações congeladas, mesmo Chromium, fontes carregadas), mais todos os e2e existentes passando contra o build. Detalhe em 001a R7.
 - D6. Os testes que leem `site/*.html` e `site/*.css` por regex passam a ler `dist/`; o que não faz sentido sob Tailwind vira e2e ou sai, com justificativa por arquivo (001a R8).
-- D7. A spec 002 (números do GitHub) está aprovada e é implementada depois da etapa 1, não dentro da 001. A 001 define como o Astro lê `src/data/github.json` no build e o aviso de "dados de exemplo" (001a R5); o calendário sem JS entra na etapa 2 (001b R4).
+- D7. A spec 002 (números do GitHub) está aprovada e é implementada depois da etapa 1, não dentro da 001. A 001 define como o Astro lê `src/data/github.json` no build e o aviso de "dados de exemplo" (001a R5); o calendário sem JS (001b R4) entra junto da spec 002b, num PR próprio logo depois do PR da etapa 1, e não mais na etapa 2 (decisão do responsável de 13/11).
 - D8. Fundo com nuances, grão e brilho fica fora da 001; vira spec de UI própria depois da etapa 3.
 - D9. Troca de deploy: o PR da etapa 1 desliga o `pages.yml` e liga o `publicar.yml`; `site/` fica no repositório até o fim da etapa 3 como referência; reversão é reverter o merge na `main` (001a R10). CI e deploy são área sensível: só a sessão principal edita workflows, com o ok do responsável.
 - D10. Branches de feature saem da `staging`, PR para `staging`, depois `staging` para `main`.
