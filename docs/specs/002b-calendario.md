@@ -1,6 +1,6 @@
 # Spec 002b: calendário de contribuições com eixos e dica por dia
 
-Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (ordem de entrega: o mesmo PR gera o calendário no HTML do build) aprovada pelo responsável em 16/11/2026. Alteração de 16/11/2026 (R6, C9 e T8: o calendário sai da comparação com `site/`) aprovada pelo responsável em 16/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (ordem de entrega: o mesmo PR gera o calendário no HTML do build) aprovada pelo responsável em 16/11/2026. Alteração de 16/11/2026 (R6, C9 e T8: o calendário sai da comparação com `site/`) aprovada pelo responsável em 16/11/2026. Esclarecimento de 16/11/2026 (Home e End em R4) feito pelo responsável.
 Parte de tela da spec 002 (números do GitHub). Implementada junto da coleta da 002, num PR próprio logo depois do PR da etapa 1 da spec 001. O mesmo PR gera o calendário no HTML do build (001b R4) e cumpre os critérios C7 e T9 da 001b e a parte do calendário no C4 dela (decisão do responsável de 13/11). Não muda o contrato de `src/data/github.json`.
 
 ## Pedido literal
@@ -43,7 +43,7 @@ O calendário da seção "Números do GitHub" é uma grade de 53 colunas por 7 l
 ### R4. Teclado e leitor de tela
 
 - A grade vira `role="grid"`, com uma linha por dia da semana (`role="row"`) e um `role="gridcell"` por dia, com o texto da dica como nome acessível (`aria-label` ou texto `sr-only`). Os dias de preenchimento antes da janela ficam fora da árvore de acessibilidade.
-- Um só ponto de Tab na grade (o dia mais recente). Setas movem entre dias (direita e esquerda: semana seguinte e anterior; cima e baixo: dia anterior e seguinte), Home e End vão ao primeiro e ao último dia da semana corrente da linha. O foco visível usa o anel de foco do site.
+- Um só ponto de Tab na grade (o dia mais recente). Setas movem entre dias (direita e esquerda: semana seguinte e anterior; cima e baixo: dia anterior e seguinte), Home e End vão ao primeiro e ao último dia da linha (o mesmo dia da semana na primeira e na última semana da janela, como no padrão de grade do ARIA; esclarecimento do responsável em 16/11/2026). O foco visível usa o anel de foco do site.
 - O resumo atual ("Calendário de contribuições por dia, incluindo privadas, com 2.897 no total") continua como rótulo da grade.
 
 ### R5. Sem JS
