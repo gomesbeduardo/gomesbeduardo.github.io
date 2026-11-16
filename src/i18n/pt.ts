@@ -3,6 +3,14 @@ import type { Dicionario } from './tipos';
 export const pt: Dicionario = {
   home: {
     base: "",
+    cabeca: {
+      titulo: "Eduardo Gomes, desenvolvedor full stack, IA aplicada e automação",
+      descricao: "Portfólio de Eduardo Gomes, desenvolvedor full stack, IA aplicada e automação, IA aplicada e automação: projetos, trajetória e contato.",
+      url: "https://gomesbeduardo.github.io/",
+      ogLocale: "pt_BR",
+      ogLocaleAlternate: "en_US",
+      skip: "Ir para o conteúdo",
+    },
     navLabel: "Principal",
     links: [
       {"href":"#sobre","label":"Sobre"},

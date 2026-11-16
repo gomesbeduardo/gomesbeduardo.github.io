@@ -3,6 +3,14 @@ import type { Dicionario } from './tipos';
 export const en: Dicionario = {
   home: {
     base: "../",
+    cabeca: {
+      titulo: "Eduardo Gomes, full-stack developer, applied AI and automation",
+      descricao: "Portfolio of Eduardo Gomes, full-stack developer, applied AI and automation, applied AI and automation: projects, background and contact.",
+      url: "https://gomesbeduardo.github.io/en/",
+      ogLocale: "en_US",
+      ogLocaleAlternate: "pt_BR",
+      skip: "Skip to content",
+    },
     navLabel: "Main",
     links: [
       {"href":"#sobre","label":"About"},
