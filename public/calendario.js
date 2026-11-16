@@ -21,26 +21,37 @@
     var x = r.left + r.width / 2 - w / 2;
     x = Math.min(x, dir - w);
     x = Math.max(x, esq);
+    var topo = document.querySelector('.top'); // cabeçalho fixo: a dica não fica sob ele
+    var limite = topo ? Math.max(0, topo.getBoundingClientRect().bottom) : 0;
     var y = r.top - h - 6;
-    if (y < 0) y = r.bottom + 6;
+    if (y < limite) y = r.bottom + 6;
     dica.style.left = Math.round(x) + 'px';
     dica.style.top = Math.round(y) + 'px';
   }
 
+  // Enquanto aberta, a dica acompanha o quadrado a cada quadro (a seção ainda sobe no reveal do GSAP).
+  function seguir() {
+    if (!ABRE) return;
+    posicionar(ABRE.dica, ABRE.cel, ABRE.scroll);
+    ABRE.raf = requestAnimationFrame(seguir);
+  }
+
   function fechar() {
     if (!ABRE) return;
+    cancelAnimationFrame(ABRE.raf);
     ABRE.dica.classList.remove('vista', 'aberta');
     ABRE = null;
   }
 
   function abrir(cal, cel) {
     var dica = cal._dica;
-    if (ABRE && ABRE.dica !== dica) fechar();
+    if (ABRE) fechar();
     dica.textContent = texto(cel);
     dica.classList.add('aberta'); // display: block, para medir; fechada ela fica display: none (fora da comparação de paridade)
     posicionar(dica, cel, cal._scroll);
     dica.classList.add('vista');
-    ABRE = { dica: dica, cel: cel };
+    ABRE = { dica: dica, cel: cel, scroll: cal._scroll, raf: 0 };
+    ABRE.raf = requestAnimationFrame(seguir);
   }
 
   function celula(alvo) {

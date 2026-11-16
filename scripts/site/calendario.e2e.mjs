@@ -114,6 +114,9 @@ const aguardaDica = (page, aberta = true) => page.waitForFunction((a) => {
 }, aberta, { timeout: 1500 }).then(() => true, () => false);
 const visorScroll = (page) => page.evaluate(() => { const r = document.querySelector('.cal-scroll').getBoundingClientRect(); return { l: Math.max(0, r.left), r: Math.min(innerWidth, r.right) }; });
 
+// espera a rolagem (Lenis) assentar: scrollY e scrollLeft iguais por ~2 quadros
+const assenta = (page) => page.evaluate(() => new Promise((res) => { const pos = () => [scrollY, document.querySelector('.cal-scroll').scrollLeft].join(); let ult = pos(), n = 0; const f = () => { const p = pos(); n = p === ult ? n + 1 : 0; ult = p; n >= 2 ? res() : requestAnimationFrame(f); }; requestAnimationFrame(f); }));
+
 async function t1() {
   for (const caminho of ['', 'en/']) {
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
@@ -123,8 +126,7 @@ async function t1() {
       const sel = `.cal-dia[data-data="${data}"]`;
       await page.locator(sel).scrollIntoViewIfNeeded();
       await page.mouse.move(0, 0);
-      // espera a rolagem (Lenis) assentar: scrollY e scrollLeft iguais por ~2 quadros
-      await page.evaluate(() => new Promise((res) => { const pos = () => [scrollY, document.querySelector('.cal-scroll').scrollLeft].join(); let ult = pos(), n = 0; const f = () => { const p = pos(); n = p === ult ? n + 1 : 0; ult = p; n >= 2 ? res() : requestAnimationFrame(f); }; requestAnimationFrame(f); }));
+      await assenta(page);
       const cx = await retDia(page, data);
       const t0 = Date.now();
       await page.mouse.move(cx.cx, cx.top + 4);
@@ -133,7 +135,7 @@ async function t1() {
       const d = await dicaAberta(page), q = await retDia(page, data);
       const rot = `T1 /${caminho} ${data}`;
       ok(`${rot}: dica com o texto exato`, !!d && d.texto === texto, JSON.stringify(d && d.texto));
-      ok(`${rot}: abre em até 100 ms do hover (hover incluso)`, abriu && dt <= 100 + 150, `${dt} ms`);
+      ok(`${rot}: abre em até 100 ms do hover`, abriu && dt <= 100, `${dt} ms`);
       ok(`${rot}: acima do quadrado e centrada`, !!d && d.bottom <= q.top + 0.5 && Math.abs((d.left + d.right) / 2 - q.cx) < 1.5, JSON.stringify({ d, q }));
     }
     await ctx.close();
@@ -200,17 +202,59 @@ async function t4() {
     const ctx = await browser.newContext({ viewport: { width: w, height: h } });
     const page = await ctx.newPage();
     await page.goto(urlF, { waitUntil: 'load' });
-    const datas = await page.evaluate(() => { const l = [...document.querySelectorAll('.cal-dia')].map((e) => e.dataset.data); return [l[0], l[l.length - 1]]; });
+    const datas = await page.evaluate(() => { const l = [...document.querySelectorAll('.cal-dia')].map((e) => e.dataset.data).sort(); return [l[0], l[l.length - 1]]; });
     for (const data of datas) {
       const sel = `.cal-dia[data-data="${data}"]`;
       await page.locator(sel).scrollIntoViewIfNeeded();
-      await page.locator(sel).focus();
+      await page.mouse.move(0, 0);
+      await assenta(page);
+      const q = await retDia(page, data);
+      await page.mouse.move(q.cx, q.top + 4);
       await aguardaDica(page);
       const d = await dicaAberta(page), v = await visorScroll(page);
       ok(`T4 ${w}px ${data}: dica dentro da janela e do .cal-scroll`, !!d && d.left >= 0 && d.right <= w && d.left >= v.l - 0.5 && d.right <= v.r + 0.5, JSON.stringify({ d, v }));
     }
     await ctx.close();
   }
+}
+
+// Revisão 002b, achado 1: no primeiro Tab a seção ainda sobe (reveal do GSAP); a dica acompanha o quadrado.
+async function t3pos() {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await ctx.newPage();
+  await page.goto(urlF, { waitUntil: 'load' });
+  for (let i = 0; i < 80; i++) { await page.keyboard.press('Tab'); if (await page.evaluate(() => document.activeElement.classList.contains('cal-dia'))) break; }
+  await page.waitForTimeout(700);
+  const m = await page.evaluate(() => {
+    const f = document.activeElement, r = f.getBoundingClientRect(), d = document.querySelector('.cal-dica').getBoundingClientRect();
+    const alvo = document.elementFromPoint((r.left + r.right) / 2, (r.top + r.bottom) / 2);
+    return { foco: f.classList.contains('cal-dia'), cel: { top: r.top, cx: (r.left + r.right) / 2 }, dica: { bottom: d.bottom, cx: (d.left + d.right) / 2 }, topoOk: alvo === f || f.contains(alvo) };
+  });
+  ok('T3 posição: dica acima do quadrado focado após o reveal', m.foco && m.dica.bottom <= m.cel.top + 0.5, JSON.stringify(m));
+  const v = await visorScroll(page), dd = await dicaAberta(page);
+  const preso = !!dd && (Math.abs(dd.right - v.r) < 0.5 || Math.abs(dd.left - v.l) < 0.5); // perto da borda a dica desloca para dentro
+  ok('T3 posição: dica centrada no quadrado focado (ou presa à borda do .cal-scroll)', m.foco && (Math.abs(m.dica.cx - m.cel.cx) < 1.5 || preso), JSON.stringify({ m, v }));
+  ok('T3 posição: quadrado focado não fica coberto', m.topoOk, JSON.stringify(m));
+  await ctx.close();
+}
+
+// Revisão 002b, achado 2: perto do cabeçalho fixo a dica vai para baixo do quadrado, nunca sob o cabeçalho.
+async function t4topo() {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await ctx.newPage();
+  await page.goto(urlF, { waitUntil: 'load' });
+  const data = '2026-03-03', sel = `.cal-dia[data-data="${data}"]`;
+  await page.locator(sel).scrollIntoViewIfNeeded();
+  await assenta(page);
+  await page.evaluate((s) => { const h = document.querySelector('.top').getBoundingClientRect().bottom; scrollBy(0, document.querySelector(s).getBoundingClientRect().top - (h + 5)); }, sel);
+  await assenta(page);
+  await page.mouse.move(0, 0);
+  const q = await page.evaluate((s) => { const r = document.querySelector(s).getBoundingClientRect(), h = document.querySelector('.top').getBoundingClientRect(); return { top: r.top, bottom: r.bottom, cx: (r.left + r.right) / 2, hb: h.bottom, ht: h.top }; }, sel);
+  await page.mouse.move(q.cx, q.top + 4);
+  await aguardaDica(page);
+  const d = await dicaAberta(page);
+  ok('T4 topo: dica não cruza o cabeçalho fixo e fica abaixo do quadrado', !!d && (d.top >= q.hb - 0.5 || d.bottom <= q.ht + 0.5) && d.top >= q.bottom - 0.5, JSON.stringify({ d, q }));
+  await ctx.close();
 }
 
 async function t7dica() {
@@ -240,6 +284,6 @@ async function t7dica() {
   await ctx.close();
 }
 
-try { await t6(); await t7(); await t1(); await t2(); await t3(); await t4(); await t7dica(); } finally { await browser.close(); await fechar(); await srvFix.fechar(); rmSync(tmpFix, { recursive: true, force: true }); }
+try { await t6(); await t7(); await t1(); await t2(); await t3(); await t4(); await t3pos(); await t4topo(); await t7dica(); } finally { await browser.close(); await fechar(); await srvFix.fechar(); rmSync(tmpFix, { recursive: true, force: true }); }
 console.log(falhas ? `\n${falhas} falha(s)` : '\ntodos passaram');
 process.exit(falhas ? 1 : 0);

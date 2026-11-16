@@ -58,7 +58,7 @@
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 10;
+  z-index: 60; /* acima do cabeçalho fixo (.top, z-index 50) */
   padding: var(--s1) var(--s2);
   background: var(--raised);
   border: 1px solid var(--line);
