@@ -1,13 +1,13 @@
 # Spec 001b: etapa 2, SEO e GEO
 
-Estado: aprovada pelo responsável em 11/11/2026. Alteração de 12/11/2026 (favicon com a marca pessoal em R8, C10, T13 e T14; fundo da imagem OG em R2 e P10) aprovada pelo responsável em 12/11/2026. Alteração de 16/11/2026 (o item do calendário em R4, com C7, T9 e a parte do calendário em C4, sai desta etapa e entra no PR da 002b) aprovada pelo responsável em 16/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026. Alteração de 12/11/2026 (favicon com a marca pessoal em R8, C10, T13 e T14; fundo da imagem OG em R2 e P10) aprovada pelo responsável em 12/11/2026. Alteração de 16/11/2026 (o item do calendário em R4, com C7, T9 e a parte do calendário em C4, sai desta etapa e entra no PR da 002b) aprovada pelo responsável em 16/11/2026. Alteração de 16/11/2026 (R5, C5, C6 e T8 saem desta etapa e vão para a spec 001e; C8 e T11 perdem a parte de R5) proposta em 16/11/2026, aguarda a aprovação do responsável.
 Parte 3 de 5 da spec 001. Ordem: `001-astro.md`, `001a-paridade.md`, `001b-seo-geo.md` (esta), `001c-desempenho.md`. Decisões P1 a P9 e P3b no índice.
 
 ## Objetivo da etapa
 
-O site gerado pelo Astro passa a ser indexável e legível por buscadores e por assistentes de IA (GEO): mapa do site, `robots.txt`, dados estruturados, `hreflang`, canonical, Open Graph com imagem por página, `llms.txt`, título e descrição únicos por página, todo texto no HTML do build, e fatos iguais entre site, currículo e LinkedIn. Um PR só, de `feat/astro-seo` para `staging`, depois da etapa 1 entrar na `staging`.
+O site gerado pelo Astro passa a ser indexável e legível por buscadores e por assistentes de IA (GEO): mapa do site, `robots.txt`, dados estruturados, `hreflang`, canonical, Open Graph com imagem por página, `llms.txt`, título e descrição únicos por página, todo texto no HTML do build. Os fatos iguais entre site, currículo e LinkedIn ficam para a spec 001e (R5). Um PR só, de `feat/astro-seo` para `staging`, depois da etapa 1 entrar na `staging`.
 
-A paridade de 001a (C1 e C4) continua valendo no fim desta etapa: tudo aqui entra no `head`, em arquivos novos ou em texto já visível; onde o texto muda (R5), a diferença é declarada no PR e a base (`site/`) recebe o mesmo texto antes da captura.
+A paridade de 001a (C1 e C4) continua valendo no fim desta etapa: tudo aqui entra no `head`, em arquivos novos ou em texto já visível. Esta etapa não muda texto visível.
 
 ## Fatos
 
@@ -67,6 +67,9 @@ Toda informação que a página mostra existe no HTML de `dist/` como texto: nom
 
 ### R5. Fonte única de fatos
 
+Alteração de 16/11/2026: esta regra, com C5, C6 e T8, sai da etapa 2 e vai para a spec 001e, com PR próprio depois do PR desta etapa. Motivo: hoje a linha do tempo da home tem 9 itens escritos à mão em `src/i18n/`, que juntam experiência, prêmios, formação e voluntariado, e o `curriculo.json` tem 5 experiências (uma delas fora do site), nomes de empresa mais longos e períodos com início e fim. Renderizar do JSON muda o texto visível e pede regras que esta spec não tem: quais itens entram, como escrever o período em aberto, o nome curto da empresa, de onde vem o parágrafo de cada item e como manter os `span` de surpresa. O texto abaixo fica como ponto de partida da 001e e não vale para esta etapa. O JSON-LD (R6) e o `llms.txt` (R1) continuam lendo o `curriculo.json` direto nesta etapa.
+
+
 - Experiência, formação, prêmios e projetos do site passam a ser renderizados de `src/data/curriculo.json` (`pt` e `en`), o mesmo arquivo dos PDFs, em vez de texto escrito à mão nos `.astro`. Onde o site mostra menos que o currículo (frase mais curta, menos itens), o componente escolhe campos e corta; nunca escreve um fato que não esteja no JSON. Onde o site de hoje mostra algo que o JSON não tem (texto de Sobre, as curiosidades, a Trajetória com 13 marcos), o texto fica no dicionário `src/i18n/` e a diferença é listada no PR.
 - Sobre o LinkedIn: não há leitura automática. O PR desta etapa traz uma tabela "site × currículo × LinkedIn" com cargo atual, empresa, período de cada experiência, formação e cidade, preenchida pelo responsável a partir do perfil; divergência é corrigida no JSON (e vira regeração dos PDFs) ou no LinkedIn, nunca no `.astro`.
 - `datePublished`/`dateModified` não entram no JSON-LD (sem fonte).
@@ -109,10 +112,10 @@ A marca é a de `docs/design/marca.md`: "eg" em Funnel Display 800 com um ponto 
 - C9. Dado um modelo de imagem OG removido (fixture), quando `node scripts/site/og.mjs` roda, então sai com código 1 e nomeia a imagem que falta (caso rejeitado).
 - C3. Dado o JSON-LD de cada página, então é JSON válido, tem os tipos e campos de R6, `sameAs` tem exatamente o GitHub e o LinkedIn de `curriculo.json`, nenhum campo vazio, e o `@id` do `Person` é o mesmo em todas as páginas (teste `seo.test.mjs`). Validação externa: o responsável cola a home no Rich Results Test do Google e no validator.schema.org e registra "sem erro" no PR (manual).
 - C4. Dado o site servido com `javaScriptEnabled: false` no Playwright, a 390 px e 1280 px, então cada `h2` e cada parágrafo das seções está visível (`opacity` computada 1, dentro da viewport depois de rolar até ele), os contadores mostram o valor final igual ao do `github.json`, o calendário tem 365 ou 371 dias em HTML, e o e-mail aparece como texto (teste `scripts/site/sem-js.e2e.mjs`).
-- C5. Dado `src/data/curriculo.json`, então cada experiência (`empresa`, `cargo`, `periodo`), formação e prêmio da chave `pt` aparece em `dist/index.html`, e os de `en` em `dist/en/index.html`; nenhum nome de empresa, cargo ou período no HTML está ausente do JSON (teste `seo.test.mjs`, comparando por string).
-- C6. Dado o PR da etapa, então a tabela de R5 (site × currículo × LinkedIn) está no corpo do PR, sem linha divergente (manual do responsável).
+- C5. (Vai para a 001e; não vale nesta etapa.) Dado `src/data/curriculo.json`, então cada experiência (`empresa`, `cargo`, `periodo`), formação e prêmio da chave `pt` aparece em `dist/index.html`, e os de `en` em `dist/en/index.html`; nenhum nome de empresa, cargo ou período no HTML está ausente do JSON (teste `seo.test.mjs`, comparando por string).
+- C6. (Vai para a 001e; não vale nesta etapa.) Dado o PR da etapa, então a tabela de R5 (site × currículo × LinkedIn) está no corpo do PR, sem linha divergente (manual do responsável).
 - C7. Dado `main.js` em `public/`, então não contém mais o desenho do calendário (nenhuma referência a `cal-dados`), e `dist/index.html` não tem `#cal-dados` (teste `seo.test.mjs`).
-- C8. Dado `npm run e2e` no fim da etapa, então a paridade de 001a C1 passa, com `site/` atualizado conforme a lista de diferenças de texto do PR (R5), e todos os e2e passam (001a C4).
+- C8. Dado `npm run e2e` no fim da etapa, então a paridade de 001a C1 passa sem mudança de texto em `site/`, e todos os e2e passam (001a C4).
 
 ## Testes de aceite
 
@@ -125,10 +128,10 @@ A marca é a de `docs/design/marca.md`: "eg" em Funnel Display 800 com um ponto 
 | T5 | C3 | `dist/projeto-lms.html` | idem | `SoftwareSourceCode` sem `codeRepository`; `BreadcrumbList` com 2 itens | unidade |
 | T6 | C3 | JSON-LD com `sameAs` vazio (fixture) | função `montarJsonLd` | lança erro `sameAs vazio` (caso rejeitado) | unidade |
 | T7 | C4 | `dist/` servido, JS desligado, 390 e 1280 | `node scripts/site/sem-js.e2e.mjs --raiz dist` | todos os `h2` e `p` visíveis; contadores = `github.json`; e-mail em texto | e2e |
-| T8 | C5 | `curriculo.json` | `seo.test.mjs` | cada empresa e cargo do JSON está no HTML; HTML não tem empresa fora do JSON | unidade |
+| T8 | C5 | vai para a 001e | | | |
 | T9 | C7 | `public/main.js`, `dist/index.html` | `grep -c "cal-dados"` | 0 nos dois | unidade |
 | T10 | C8 | `site/` e `dist/` | `npm run e2e` | paridade 0 px nas 36 comparações; e2e todos verdes | e2e |
-| T11 | C3, C6 | site publicado | Rich Results Test, schema.org validator, tabela do LinkedIn | sem erro; sem divergência | manual, no PR |
+| T11 | C3 | site publicado | Rich Results Test e schema.org validator | sem erro | manual, no PR |
 | T13 | C10 | `dist/` | `seo.test.mjs` | 7 arquivos; ICO 32×32; PNG 180, 192, 512, 512; SVG sem `<text>`; manifest com `maskable`; 4 `link` e 2 `theme-color` nos 9 HTML | unidade |
 | T14 | C10 | site servido | captura da aba com o favicon em 16 e 32 px, temas claro e escuro | marca reconhecível; o responsável registra no PR | manual, no PR |
 | T12 | C9 | `dist/` sem `og/leadgate-en.html` | `node scripts/site/og.mjs` | código 1, mensagem cita `leadgate-en.png` | unidade, `og.test.mjs` |
@@ -136,6 +139,7 @@ A marca é a de `docs/design/marca.md`: "eg" em Funnel Display 800 com um ponto 
 ## Fora do escopo da etapa 2
 
 - Domínio próprio, Google Search Console, analytics de qualquer tipo.
+- Experiência, formação, prêmios e projetos renderizados de `curriculo.json`, e a tabela site × currículo × LinkedIn (R5, C5, C6, T8): spec 001e.
 - Blog, feed RSS, páginas novas.
 - Metas de desempenho e fontes locais (001c).
 - Bloquear ou liberar agentes de IA por nome no `robots.txt` além de R1.
