@@ -1,6 +1,6 @@
 # Spec 001: migração do portfólio para Astro e Tailwind v4
 
-Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (o calendário sem JS sai da etapa 2 e entra com a 002b, em D7) aprovada pelo responsável em 16/11/2026. Alteração de 16/11/2026 (R2 cita o recorte do calendário de 002b R6) aprovada pelo responsável em 16/11/2026.
+Estado: aprovada pelo responsável em 11/11/2026. Alteração de 16/11/2026 (o calendário sem JS sai da etapa 2 e entra com a 002b, em D7) aprovada pelo responsável em 16/11/2026. Alteração de 16/11/2026 (R2 cita o recorte do calendário de 002b R6) aprovada pelo responsável em 16/11/2026. Alteração de 16/11/2026 (a fonte única de fatos, 001b R5, sai da etapa 2 e vira a spec 001e; prazo da P10 passa a ser a fatia das imagens OG) aprovada pelo responsável em 16/11/2026.
 Parte 1 de 5. Ordem de leitura: `001-astro.md` (esta: pedido, decisões, etapas, regras transversais, dependências, perguntas abertas), `001a-paridade.md` (etapa 1), `001b-seo-geo.md` (etapa 2), `001c-desempenho.md` (etapa 3), `001d-troca-de-lingua.md` (troca de língua, última fatia da etapa 1). Cada parte tem os próprios critérios (C) e testes (T); as pendências (P) estão só aqui e as partes as citam pelo número.
 
 ## Pedido literal
@@ -42,7 +42,7 @@ Pré-condição da etapa 1: a implementação da spec 007 entrar na `staging`. A
 ## Regras transversais
 
 - R1. Nada do que as specs 003 a 007 entregaram muda de comportamento, e a 008, implementada depois da etapa 1, segue o mesmo contrato a partir do PR dela: surpresas (`surpresas.js` e `.css`), virada da foto com ficha no verso (005), menu animado (#14), contato e rodapé com aviso de cópia (006), modal "Feito com o Claude Code" com a linha dos números do processo (008), PDFs em `/curriculo/`, tema (`tema.js`, `inicio.js`), transições (`transicoes.css`), correções de texto (007). O contrato é o conjunto dos `scripts/site/*.e2e.mjs` mais a paridade de capturas.
-- R2. A paridade (001a C1 e C4) vale no fim de cada etapa, com as únicas exceções declaradas em 001b R5 (texto que passa a vir de `curriculo.json`, listado no PR) e 001c R6 (máscara de imagem e fontes locais), e o recorte do calendário em 002b R6 (alteração aprovada pelo responsável em 16/11/2026).
+- R2. A paridade (001a C1 e C4) vale no fim de cada etapa, com as únicas exceções declaradas em 001e (texto que passa a vir de `curriculo.json`, listado no PR dela) e 001c R6 (máscara de imagem e fontes locais), e o recorte do calendário em 002b R6 (alteração aprovada pelo responsável em 16/11/2026).
 - R3. Área sensível: dependências (R5 abaixo), `.github/workflows/*`, secrets. O worker propõe o diff no PR; a sessão principal aplica com o ok do responsável.
 - R4. Tailwind: tokens em `@theme` apontando para as variáveis atuais, sem Preflight nas etapas 1 e 2 e com Preflight na etapa 3 (P1, 001c R9), sem valor literal onde há token, conversão para utilitário permitida por componente desde que a paridade passe (001a R3).
 - R5. Dependências, lista fechada, aprovada em 11/11 (P9). Versões: a última estável no dia do scaffold, fixadas no `package-lock.json`; Node 24 (já nos workflows).
@@ -58,7 +58,7 @@ Pré-condição da etapa 1: a implementação da spec 007 entrar na `staging`. A
 | Arquivo | Quem gera | Como o Astro lê | Onde |
 |---|---|---|---|
 | `src/data/github.json` | `scripts/github/coletar.mjs` (spec 002), versionado | `import` no componente `NumerosGithub`; `versao` ≠ 1 falha o build; `amostra: true` mostra o aviso | 001a R5 |
-| `src/data/curriculo.json` | o responsável, versionado | etapa 1: só o gerador de PDF; etapa 2: experiência, formação, prêmios, projetos, JSON-LD e `llms.txt` | 001b R5, R6 |
+| `src/data/curriculo.json` | o responsável, versionado | etapa 1: só o gerador de PDF; etapa 2: JSON-LD e `llms.txt`; spec 001e: experiência, formação, prêmios e projetos | 001b R1, R6; 001e |
 | `public/dados/processo.json` | gerador da spec 008, no CI, antes do `astro build`, não versionado | não lê; copia para `dist/dados/`; a página busca em tempo de execução, como a 008 manda | 001a R5 |
 | `public/curriculo/*.pdf` | `scripts/curriculo/gerar.mjs`, no CI, antes do `astro build`, não versionado | copia para `dist/curriculo/` | 001a R6 |
 
@@ -84,7 +84,7 @@ Respostas do responsável em 11/11/2026, já aplicadas nas partes:
 - P9. Dependências de R5 e Node 24: aprovadas como estão, sem React nem `shadcn`. Qualquer pacote novo volta ao responsável.
 
 - P3b. Ferramenta das imagens OG: Playwright, já na lista de R5, com o mesmo Chromium da paridade. Escolhido em 11/11 entre o Chrome do runner, Playwright, `satori` com `@resvg/resvg-js`, `astro-og-canvas`, `@vercel/og`, `sharp` com SVG e `astro-opengraph-images`, porque reaproveita o Tailwind e as fontes do site, espera `document.fonts.ready` antes da captura e não traz dependência nova (001b R2).
-- P10. Fundo das imagens OG (001b R2), pedido em 12/11: uma imagem gerada por IA, 1200×630, na paleta P1 Ocre escura, sem texto e com espaço livre à esquerda para o nome. Ferramenta: o Dream Lab do Canva (cota do plano gratuito renova em 30/11) ou o Higgsfield, com o responsável logado e confirmando o gasto de créditos. O responsável escolhe entre as opções geradas antes da etapa 2 começar. Aberta.
+- P10. Fundo das imagens OG (001b R2), pedido em 12/11: uma imagem gerada por IA, 1200×630, na paleta P1 Ocre escura, sem texto e com espaço livre à esquerda para o nome. Ferramenta: o Dream Lab do Canva (cota do plano gratuito renova em 30/11) ou o Higgsfield, com o responsável logado e confirmando o gasto de créditos. O responsável escolhe entre as opções geradas antes da fatia das imagens OG, que é a última da etapa 2; as outras fatias da etapa não dependem do fundo (decisão do responsável de 16/11/2026). Decidida em 16/11/2026: o responsável escolheu, entre duas opções geradas no Higgsfield com o modelo Z Image (0,3 crédito), a de brilho ocre mais contido à direita e lado esquerdo mais escuro.
 
 ## Suposições de baixo impacto
 
